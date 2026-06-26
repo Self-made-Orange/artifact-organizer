@@ -227,6 +227,21 @@ const CANVAS_JS = `
     }
   }
 
+  // Doc-title tag → scroll the active document back to the top.
+  var tagEl = document.querySelector('.op-canvas-section-tag');
+  if (tagEl) {
+    function scrollDocTop() {
+      var sc = document.querySelector('.op-hero-slide-active .op-canvas-slide-body')
+            || document.querySelector('.op-canvas-slide-body');
+      if (sc && sc.scrollTo) sc.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.scrollTo) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    tagEl.addEventListener('click', scrollDocTop);
+    tagEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollDocTop(); }
+    });
+  }
+
   show(0);
 }());
 `.trim();
@@ -383,9 +398,9 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
       `</nav>`
     : "";
   const sectionTagHtml = meta.title
-    ? `<aside class="op-canvas-section-tag" aria-hidden="true">` +
+    ? `<aside class="op-canvas-section-tag" role="button" tabindex="0" title="맨 위로">` +
       `<span class="op-cst-label">${escapeHtml(meta.title)}</span>` +
-      `<span class="op-cst-arrow">↘</span>` +
+      `<span class="op-cst-arrow">↑</span>` +
       `</aside>`
     : "";
 
@@ -719,11 +734,13 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 18px 13px;
+  padding: 18px 20px;
   background: var(--op-color-fg);
   color: var(--op-color-bg);
   border-radius: 0;
+  cursor: pointer;
 }
+.op-canvas-section-tag:hover { opacity: 0.9; }
 .op-cst-label {
   writing-mode: vertical-rl;
   font-family: var(--op-font-display, var(--op-font-sans));
