@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Callout } from "../../plugins/outprint/scripts/components/callout.mjs";
+import { Callout } from "../../plugins/artifact-organizer/scripts/components/callout.mjs";
 
 test("Callout: wraps with severity class", () => {
   const html = Callout({ severity: "warn", body: "hi" });

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Heading } from "../../plugins/outprint/scripts/components/heading.mjs";
+import { Heading } from "../../plugins/artifact-organizer/scripts/components/heading.mjs";
 
 test("Heading: renders h2", () => {
   const html = Heading({ level: 2, text: "Title" });

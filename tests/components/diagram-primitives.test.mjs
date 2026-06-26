@@ -1,16 +1,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { render } from "../../plugins/outprint/scripts/render.mjs";
+import { render } from "../../plugins/artifact-organizer/scripts/render.mjs";
 
 function envelope(child) {
   return {
     a2ui_version: "0.9",
-    catalog: "outprint/v1",
+    catalog: "artifact-organizer/v1",
     is_task_complete: true,
     parts: [
       {
-        component: "outprint/Page",
+        component: "artifact-organizer/Page",
         props: { title: "Diagram Gallery" },
         children: [child]
       }
@@ -20,7 +20,7 @@ function envelope(child) {
 
 test("render: Quadrant outputs labeled quadrants and plotted points", async () => {
   const html = await render(envelope({
-    component: "outprint/Quadrant",
+    component: "artifact-organizer/Quadrant",
     props: {
       xLabel: "Effort",
       yLabel: "Impact",
@@ -47,7 +47,7 @@ test("render: Quadrant outputs labeled quadrants and plotted points", async () =
 
 test("render: Swimlane outputs lanes, steps, and edge labels", async () => {
   const html = await render(envelope({
-    component: "outprint/Swimlane",
+    component: "artifact-organizer/Swimlane",
     props: {
       lanes: [
         { id: "user", title: "User", subtitle: "Prompt source" },
@@ -74,6 +74,6 @@ test("render: Swimlane outputs lanes, steps, and edge labels", async () => {
 });
 
 test("Quadrant CSS: uses theme variables for divider lines", () => {
-  const css = readFileSync(new URL("../../plugins/outprint/assets/components/quadrant.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../../plugins/artifact-organizer/assets/components/quadrant.css", import.meta.url), "utf8");
   assert.match(css, /var\(--op-color-fg-muted\)/);
 });

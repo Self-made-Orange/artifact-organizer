@@ -3,14 +3,14 @@ import assert from "node:assert/strict";
 import { readFileSync, writeFileSync, existsSync, readdirSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve, join, basename } from "node:path";
-import { render, resolveRenderer } from "../plugins/outprint/scripts/render.mjs";
-import { renderCanvas } from "../plugins/outprint/scripts/canvas.mjs";
-import { Page } from "../plugins/outprint/scripts/components/page.mjs";
-import { Prose } from "../plugins/outprint/scripts/components/prose.mjs";
+import { render, resolveRenderer } from "../plugins/artifact-organizer/scripts/render.mjs";
+import { renderCanvas } from "../plugins/artifact-organizer/scripts/canvas.mjs";
+import { Page } from "../plugins/artifact-organizer/scripts/components/page.mjs";
+import { Prose } from "../plugins/artifact-organizer/scripts/components/prose.mjs";
 
 const MINIMAL_REGISTRY = {
-  "outprint/Page":  Page,
-  "outprint/Prose": Prose,
+  "artifact-organizer/Page":  Page,
+  "artifact-organizer/Prose": Prose,
 };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -24,7 +24,7 @@ const fixtures = readdirSync(FIXTURES).filter(f => f.endsWith(".json"));
 // ── Canvas-first routing ─────────────────────────────────────────────────────
 
 test("resolveRenderer: defaults to canvas for bare component", () => {
-  assert.equal(resolveRenderer({ component: "outprint/Prose", props: {} }), "canvas");
+  assert.equal(resolveRenderer({ component: "artifact-organizer/Prose", props: {} }), "canvas");
 });
 
 test("resolveRenderer: returns page when parts[] present", () => {
@@ -42,7 +42,7 @@ test("resolveRenderer: returns canvas when template=canvas", () => {
 // ── Standalone bare component ────────────────────────────────────────────────
 
 test("canvas: bare component renders without error", () => {
-  const doc = { component: "outprint/Prose", props: { markdown: "standalone prose" } };
+  const doc = { component: "artifact-organizer/Prose", props: { markdown: "standalone prose" } };
   const html = renderCanvas(doc, MINIMAL_REGISTRY);
   assert.ok(html.includes("standalone prose"), "content should appear in output");
   assert.ok(html.includes("<!doctype html>"), "should produce full HTML document");
@@ -58,8 +58,8 @@ test("canvas: history content array renders all components", () => {
       {
         title: "Slide A",
         content: [
-          { component: "outprint/Prose", props: { markdown: "first item" } },
-          { component: "outprint/Prose", props: { markdown: "second item" } },
+          { component: "artifact-organizer/Prose", props: { markdown: "first item" } },
+          { component: "artifact-organizer/Prose", props: { markdown: "second item" } },
         ],
       },
     ],
@@ -76,7 +76,7 @@ test("canvas: history content single object still works (backward compat)", () =
     history: [
       {
         title: "Slide B",
-        content: { component: "outprint/Prose", props: { markdown: "single item" } },
+        content: { component: "artifact-organizer/Prose", props: { markdown: "single item" } },
       },
     ],
   };

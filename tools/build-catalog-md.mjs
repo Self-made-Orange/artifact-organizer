@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generate plugins/outprint/references/catalog.md from plugins/outprint/spec/catalog.json.
+ * Generate plugins/artifact-organizer/references/catalog.md from plugins/artifact-organizer/spec/catalog.json.
  * The markdown is the authoritative reference Claude loads when building JSON.
  */
 
@@ -69,17 +69,17 @@ for (const [name, schema] of Object.entries(catalog.components)) {
   (byCategory[cat] ||= []).push([name, schema]);
 }
 
-const SLIDE_COMPONENTS = new Set(["outprint/SlideDeck", "outprint/Slide"]);
+const SLIDE_COMPONENTS = new Set(["artifact-organizer/SlideDeck", "artifact-organizer/Slide"]);
 const totalComponents = Object.keys(catalog.components).length;
 const defaultComponents = Object.keys(catalog.components).filter(name => !SLIDE_COMPONENTS.has(name)).length;
 
-let md = `# Hyperscribe Component Catalog — ${catalog.version}
+let md = `# Artifact Organizer Component Catalog — ${catalog.version}
 
-**This file is auto-generated from \`plugins/outprint/spec/catalog.json\`. Do not edit by hand. Run \`node tools/build-catalog-md.mjs\` to regenerate.**
+**This file is auto-generated from \`plugins/artifact-organizer/spec/catalog.json\`. Do not edit by hand. Run \`node tools/build-catalog-md.mjs\` to regenerate.**
 
 ## Envelope
 
-Every Hyperscribe document uses this envelope:
+Every Artifact Organizer document uses this envelope:
 
 \`\`\`json
 {
@@ -98,7 +98,7 @@ Root component must be \`${catalog.envelope.root_component}\`.
 
 The default \`/outprint\` page mode uses the components below.
 
-\`hyperscribe/SlideDeck\` and \`hyperscribe/Slide\` are **slide-mode-only** components owned by \`/outprint:slides\`.
+\`artifact-organizer/SlideDeck\` and \`artifact-organizer/Slide\` are **slide-mode-only** components owned by \`/outprint:slides\`.
 
 `;
 

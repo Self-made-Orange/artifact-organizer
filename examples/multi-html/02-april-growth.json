@@ -1,9 +1,9 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": {
         "title": "April 2026 Growth Report",
         "subtitle": "MoM metrics, channel analysis, and pipeline snapshot",
@@ -12,14 +12,14 @@
       },
       "children": [
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "headline",
             "title": "Headline Numbers"
           },
           "children": [
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Monthly Active Users",
                 "value": "41,200",
@@ -31,7 +31,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "ARR",
                 "value": "$1.04 M",
@@ -43,7 +43,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Paying Customers",
                 "value": "312",
@@ -54,7 +54,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Churn Rate",
                 "value": "1.8%",
@@ -68,14 +68,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "mau-trend",
             "title": "MAU Trend (Jan – Apr)"
           },
           "children": [
             {
-              "component": "outprint/Chart",
+              "component": "artifact-organizer/Chart",
               "props": {
                 "kind": "line",
                 "xLabel": "Month",
@@ -104,14 +104,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "channels",
             "title": "Channel Breakdown — April"
           },
           "children": [
             {
-              "component": "outprint/DataTable",
+              "component": "artifact-organizer/DataTable",
               "props": {
                 "caption": "Sign-ups by acquisition channel",
                 "columns": [
@@ -205,14 +205,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "retention",
             "title": "Retention Cohorts"
           },
           "children": [
             {
-              "component": "outprint/Callout",
+              "component": "artifact-organizer/Callout",
               "props": {
                 "severity": "info",
                 "title": "D30 retention: 42%",
@@ -222,7 +222,7 @@
           ]
         },
         {
-          "component": "outprint/Callout",
+          "component": "artifact-organizer/Callout",
           "props": {
             "severity": "warn",
             "title": "Watch: paid CAC creeping up",

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { FileCard } from "../../plugins/outprint/scripts/components/file-card.mjs";
+import { FileCard } from "../../plugins/artifact-organizer/scripts/components/file-card.mjs";
 
 test("FileCard: base wrapper + name", () => {
   const html = FileCard({ name: "index.ts", responsibility: "entry point" });

@@ -7,7 +7,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-RENDER="$REPO_ROOT/plugins/outprint/scripts/render.mjs"
+RENDER="$REPO_ROOT/plugins/artifact-organizer/scripts/render.mjs"
 OUT_DIR="$SCRIPT_DIR"
 
 THEME="${THEME:-notion}"

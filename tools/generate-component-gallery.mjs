@@ -5,7 +5,7 @@ import { writeFileSync, existsSync, rmSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
-import { render } from "../plugins/outprint/scripts/render.mjs";
+import { render } from "../plugins/artifact-organizer/scripts/render.mjs";
 import {
   GALLERY_COMPONENTS,
   GALLERY_ASSET_DIR,

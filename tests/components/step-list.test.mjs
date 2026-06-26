@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { StepList } from "../../plugins/outprint/scripts/components/step-list.mjs";
+import { StepList } from "../../plugins/artifact-organizer/scripts/components/step-list.mjs";
 
 test("StepList: renders ol by default", () => {
   const html = StepList({ steps: [{ title: "A", body: "x" }] });

@@ -6,7 +6,7 @@
 
 ## 1. Context and goals
 
-Hyperscribe is a Claude Code plugin and cross-agent skill that turns A2UI-style component JSON into self-contained HTML. Current state: 22 components, two themes (`notion`, `linear`), light/dark per theme, zero persistent user settings.
+Artifact Organizer is a Claude Code plugin and cross-agent skill that turns A2UI-style component JSON into self-contained HTML. Current state: 22 components, two themes (`notion`, `linear`), light/dark per theme, zero persistent user settings.
 
 User goal: **"see-at-a-glance wow" quality for codebase explanations** — enough components to describe a codebase structurally, and four theme presets that feel distinctly branded without copying vendor identity (`notion`, `linear`, or the Framer/Apple visual sources).
 
@@ -29,7 +29,7 @@ This spec covers four sub-areas that ship together:
 
 Five new components join `hyperscribe/v1`. All follow the existing conventions: `props` carries semantic data only, styling is owned by the renderer + theme CSS.
 
-### 3.1 `hyperscribe/FileTree`
+### 3.1 `artifact-organizer/FileTree`
 
 Directory/file structure visualization. Primary codebase-overview element.
 
@@ -41,7 +41,7 @@ Directory/file structure visualization. Primary codebase-overview element.
 
 Children: forbidden. Tree is purely data-driven.
 
-### 3.2 `hyperscribe/DependencyGraph`
+### 3.2 `artifact-organizer/DependencyGraph`
 
 Module/import dependency visualization.
 
@@ -54,7 +54,7 @@ Module/import dependency visualization.
 
 Children: forbidden. Rendered as native SVG, not Mermaid.
 
-### 3.3 `hyperscribe/FileCard`
+### 3.3 `artifact-organizer/FileCard`
 
 Summary card for a single file — name, LOC, responsibility, exports. Grid-friendly (multiple cards fit per row like `KPICard`).
 
@@ -70,7 +70,7 @@ Summary card for a single file — name, LOC, responsibility, exports. Grid-frie
 
 Children: forbidden.
 
-### 3.4 `hyperscribe/AnnotatedCode`
+### 3.4 `artifact-organizer/AnnotatedCode`
 
 Code block with numbered pins that link to side annotations. Static-page equivalent of Slidev's click-highlight.
 
@@ -84,7 +84,7 @@ Code block with numbered pins that link to side annotations. Static-page equival
 
 Children: forbidden. Layout: code on the left, annotation list on the right; stacks on mobile.
 
-### 3.5 `hyperscribe/ERDDiagram`
+### 3.5 `artifact-organizer/ERDDiagram`
 
 Entity-relationship diagram (DB schemas, type models).
 
@@ -175,7 +175,7 @@ No changes to `scripts/lib/theme.mjs` — `listThemes()` auto-enumerates `themes
 
 ### 5.1 Trigger condition
 
-At the start of every Hyperscribe invocation (main skill and all three sub-skills), before building the envelope:
+At the start of every Artifact Organizer invocation (main skill and all three sub-skills), before building the envelope:
 
 ```
 if ! exists(resolve_pref_path()):
@@ -199,7 +199,7 @@ Both paths are probed; the first existing file wins. When writing for the first 
 **Other agents (Codex, Cursor, OpenCode, terminal-only):**
 - Single text prompt:
   ```
-  Hyperscribe first-run setup. Pick a theme and mode.
+  Artifact Organizer first-run setup. Pick a theme and mode.
 
   Themes:  1) studio (warm, paper-feel)
            2) midnight (cool, developer-dark)
@@ -237,7 +237,7 @@ mode: light
 created_at: 2026-04-19T15:42:08Z
 ---
 
-# Hyperscribe preferences
+# Artifact Organizer preferences
 
 Edit the values above to change your defaults. Delete this file to re-run first-run setup.
 
@@ -252,7 +252,7 @@ Valid values:
 
 ### 6.3 Reader/writer helper
 
-New file: `plugins/outprint/scripts/lib/preference.mjs`
+New file: `plugins/artifact-organizer/scripts/lib/preference.mjs`
 
 ```js
 export function resolvePreferencePath() { /* project-local → global → null */ }
@@ -273,7 +273,7 @@ Bash equivalent inlined in SKILL.md (`awk -F': *' '/^theme:/{print $2; exit}' "$
 ## 7. Touched files
 
 ```
-plugins/outprint/
+plugins/artifact-organizer/
   SKILL.md                              # add Step 0 preference block + component inventory rows
   .claude-plugin/plugin.json            # version bump
   themes/studio.css                     # rename from notion.css
@@ -299,10 +299,10 @@ plugins/outprint/
   assets/components/annotated-code.css
   assets/components/erd-diagram.css
 
-skills/outprint/                     # sync-copy all of the above engine files
-skills/outprint-slides/SKILL.md      # reference Step 0 from main skill
-skills/outprint-diff/SKILL.md        # reference Step 0 from main skill
-skills/outprint-share/SKILL.md       # (no change)
+skills/artifact-organizer/                     # sync-copy all of the above engine files
+skills/artifact-organizer-slides/SKILL.md      # reference Step 0 from main skill
+skills/artifact-organizer-diff/SKILL.md        # reference Step 0 from main skill
+skills/artifact-organizer-share/SKILL.md       # (no change)
 
 README.md                               # Themes section rewrite, new theme list
 package.json                            # version bump

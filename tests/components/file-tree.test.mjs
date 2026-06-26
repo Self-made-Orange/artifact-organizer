@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { FileTree } from "../../plugins/outprint/scripts/components/file-tree.mjs";
+import { FileTree } from "../../plugins/artifact-organizer/scripts/components/file-tree.mjs";
 
 const sample = {
   nodes: [

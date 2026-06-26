@@ -1,13 +1,13 @@
 {
   "$schema": "https://raw.githubusercontent.com/anthropics/claude-code/main/schemas/marketplace.json",
-  "name": "outprint-marketplace",
+  "name": "artifact-organizer-marketplace",
   "owner": {
-    "name": "Self-made-Orange"
+    "name": "Artifact Organizer"
   },
   "plugins": [
     {
-      "name": "outprint",
-      "source": "./plugins/outprint",
+      "name": "artifact-organizer",
+      "source": "./plugins/artifact-organizer",
       "description": "A2UI-style visual explainer — LLM emits component JSON, zero-dep Node renders self-contained HTML"
     }
   ]

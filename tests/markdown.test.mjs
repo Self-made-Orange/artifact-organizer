@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { renderMarkdown } from "../plugins/outprint/scripts/lib/markdown.mjs";
+import { renderMarkdown } from "../plugins/artifact-organizer/scripts/lib/markdown.mjs";
 
 test("renders plain paragraph", () => {
   assert.equal(renderMarkdown("hello"), "<p>hello</p>");

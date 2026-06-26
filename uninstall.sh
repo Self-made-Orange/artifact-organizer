@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Outprint uninstaller.
 # Removes all outprint skills from every agent directory in one shot.
-# Works with installations made via `npx skills add Self-made-Orange/agent-outprint-skills`.
+# Works with installations made via `npx skills add keepYaoung/artifact-organizer`.
 
 set -e
 
@@ -36,7 +36,7 @@ echo ""
 echo -e "${GREEN}✓${NC} Uninstall complete."
 echo ""
 echo "If you also installed via Claude Code plugin marketplace, remove it with:"
-echo "  /plugin uninstall outprint@outprint-marketplace"
+echo "  /plugin uninstall outprint@artifact-organizer-marketplace"
 echo ""
 echo "Rendered output files live at ~/.outprint/out/ and are NOT removed."
 echo "Delete them manually if desired:"

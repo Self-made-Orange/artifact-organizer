@@ -1,9 +1,9 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": {
         "title": "Week 18 Team Update",
         "subtitle": "Apr 28 – May 2, 2026  ·  Engineering & Product",
@@ -12,7 +12,7 @@
       },
       "children": [
         {
-          "component": "outprint/Callout",
+          "component": "artifact-organizer/Callout",
           "props": {
             "severity": "success",
             "title": "Big win this week",
@@ -20,14 +20,14 @@
           }
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "engineering",
             "title": "Engineering"
           },
           "children": [
             {
-              "component": "outprint/StepList",
+              "component": "artifact-organizer/StepList",
               "props": {
                 "steps": [
                   {
@@ -61,14 +61,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "product",
             "title": "Product"
           },
           "children": [
             {
-              "component": "outprint/StepList",
+              "component": "artifact-organizer/StepList",
               "props": {
                 "steps": [
                   {
@@ -102,14 +102,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "adr",
             "title": "Architecture Decision"
           },
           "children": [
             {
-              "component": "outprint/Callout",
+              "component": "artifact-organizer/Callout",
               "props": {
                 "severity": "note",
                 "title": "ADR-09: Canvas as default render mode",
@@ -119,14 +119,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "action-items",
             "title": "Action Items"
           },
           "children": [
             {
-              "component": "outprint/StepList",
+              "component": "artifact-organizer/StepList",
               "props": {
                 "numbered": false,
                 "steps": [

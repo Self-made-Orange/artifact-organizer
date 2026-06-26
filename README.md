@@ -1,4 +1,4 @@
-# agent-outprint-skills
+# artifact-organizer
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
@@ -24,8 +24,8 @@ LLMs are bad at HTML. Token cost is high, output is inconsistent, and a single m
 ## Quick start
 
 ```bash
-git clone https://github.com/Self-made-Orange/agent-outprint-skills.git
-cd agent-outprint-skills
+git clone https://github.com/keepYaoung/artifact-organizer.git
+cd artifact-organizer
 
 cat > /tmp/hello.json <<'EOF'
 {
@@ -35,7 +35,7 @@ cat > /tmp/hello.json <<'EOF'
     "agent": "Claude"
   },
   "featured": {
-    "component": "outprint/StepList",
+    "component": "artifact-organizer/StepList",
     "props": { "steps": [
       { "title": "Run test suite",    "state": "done"  },
       { "title": "DB migration",      "state": "doing" },
@@ -45,7 +45,7 @@ cat > /tmp/hello.json <<'EOF'
 }
 EOF
 
-node plugins/outprint/scripts/render.mjs --in /tmp/hello.json --out /tmp/hello.html
+node plugins/artifact-organizer/scripts/render.mjs --in /tmp/hello.json --out /tmp/hello.html
 open /tmp/hello.html      # macOS — use xdg-open on Linux
 ```
 
@@ -72,13 +72,13 @@ Full-viewport dashboard the agent updates over time. A hero carousel cycles thro
     "topic": "Growth",
     "divisionsLabel": "Past Reports",
     "statement": {
-      "eyebrow": "Self-made Orange",
+      "eyebrow": "Artifact Organizer",
       "text": "One agent. Every output, beautifully rendered.",
       "cta": { "label": "Browse archive", "href": "#canvas-divisions" }
     }
   },
   "featured": {
-    "component": "outprint/Chart",
+    "component": "artifact-organizer/Chart",
     "props": { "kind": "bar", "data": { "labels": ["Jan","Feb","Mar"], "series": [{ "name": "MAU", "values": [1200, 3400, 8100] }] } }
   },
   "history": [
@@ -89,7 +89,7 @@ Full-viewport dashboard the agent updates over time. A hero carousel cycles thro
       "description": "MAU up 140% MoM. Channel breakdown inside.",
       "date": "2026-03-31",
       "href": "march-report.html",
-      "content": { "component": "outprint/KPICard", "props": { "label": "MAU", "value": "8 100" } }
+      "content": { "component": "artifact-organizer/KPICard", "props": { "label": "MAU", "value": "8 100" } }
     }
   ]
 }
@@ -129,9 +129,9 @@ A traditional one-shot document. Every component sits inside a `Page` (or `Slide
 ```json
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [{
-    "component": "outprint/Page",
+    "component": "artifact-organizer/Page",
     "props": {
       "title": "Q1 Metrics",
       "subtitle": "January – March 2026",
@@ -139,8 +139,8 @@ A traditional one-shot document. Every component sits inside a `Page` (or `Slide
       "backLabel": "← All Reports"
     },
     "children": [
-      { "component": "outprint/Section", "props": { "id": "kpis", "title": "KPIs" }, "children": [
-        { "component": "outprint/KPICard", "props": { "label": "Revenue", "value": "$1.2 M" } }
+      { "component": "artifact-organizer/Section", "props": { "id": "kpis", "title": "KPIs" }, "children": [
+        { "component": "artifact-organizer/KPICard", "props": { "label": "Revenue", "value": "$1.2 M" } }
       ]}
     ]
   }]
@@ -160,8 +160,8 @@ A traditional one-shot document. Every component sits inside a `Page` (or `Slide
 Default is `canvas`. Force either side:
 
 ```bash
-node plugins/outprint/scripts/render.mjs --in envelope.json --out out.html --renderer page
-node plugins/outprint/scripts/render.mjs --in envelope.json --out out.html --renderer canvas
+node plugins/artifact-organizer/scripts/render.mjs --in envelope.json --out out.html --renderer page
+node plugins/artifact-organizer/scripts/render.mjs --in envelope.json --out out.html --renderer canvas
 ```
 
 ---
@@ -186,7 +186,7 @@ index.html  (canvas hub)
 **Sub-page side** — add `backHref` to the `Page` props:
 
 ```json
-{ "component": "outprint/Page", "props": { "title": "April Growth", "backHref": "index.html" } }
+{ "component": "artifact-organizer/Page", "props": { "title": "April Growth", "backHref": "index.html" } }
 ```
 
 See [`examples/multi-html/`](examples/multi-html/) for a fully rendered working example with `build.sh`.
@@ -209,7 +209,7 @@ See [`examples/multi-html/`](examples/multi-html/) for a fully rendered working 
 
 Components carry **semantic data only** — styling props (`color`, `backgroundColor`, `fontSize`, `className`, …) are rejected by the schema. If you want a red warning box, ask for `Callout severity="warn"`, never a hex code.
 
-Full prop schemas: [`plugins/outprint/references/catalog.md`](plugins/outprint/references/catalog.md).
+Full prop schemas: [`plugins/artifact-organizer/references/catalog.md`](plugins/artifact-organizer/references/catalog.md).
 
 ### Slide deck modes
 
@@ -240,16 +240,16 @@ Respects `prefers-reduced-motion` — scroll animations are suppressed when the 
 Default: `notion`. Override per call:
 
 ```bash
-node plugins/outprint/scripts/render.mjs --in envelope.json --out out.html --theme stripe
+node plugins/artifact-organizer/scripts/render.mjs --in envelope.json --out out.html --theme stripe
 ```
 
-Themes live as pure CSS-variable overrides under [`plugins/outprint/themes/`](plugins/outprint/themes/).
+Themes live as pure CSS-variable overrides under [`plugins/artifact-organizer/themes/`](plugins/artifact-organizer/themes/).
 
 ---
 
 ## Configuration
 
-User preferences live in `~/.outprint/preference.md` (global) or `./.outprint/preference.md` (project-local; takes priority).
+User preferences live in `~/.artifact-organizer/preference.md` (global) or `./.artifact-organizer/preference.md` (project-local; takes priority).
 
 ```yaml
 ---
@@ -285,22 +285,22 @@ The skill prompts for these on first run via `Step 0` in `SKILL.md` and writes t
 ### Claude Code
 
 ```
-/plugin marketplace add Self-made-Orange/agent-outprint-skills
-/plugin install outprint@outprint-marketplace
+/plugin marketplace add keepYaoung/artifact-organizer
+/plugin install outprint@artifact-organizer-marketplace
 ```
 
 ### Any agent (Codex, Cursor, Gemini CLI, …)
 
 ```bash
-npx skills add Self-made-Orange/agent-outprint-skills
+npx skills add keepYaoung/artifact-organizer
 ```
 
 ### Manual
 
 ```bash
-git clone https://github.com/Self-made-Orange/agent-outprint-skills.git
-cd agent-outprint-skills
-node plugins/outprint/scripts/render.mjs --in envelope.json --out out.html
+git clone https://github.com/keepYaoung/artifact-organizer.git
+cd artifact-organizer
+node plugins/artifact-organizer/scripts/render.mjs --in envelope.json --out out.html
 ```
 
 ---
@@ -310,9 +310,9 @@ node plugins/outprint/scripts/render.mjs --in envelope.json --out out.html
 | Command | Description |
 |---|---|
 | `/outprint` | Canvas-first output — dashboard, report, recap |
-| `/outprint:slides` | Forces `SlideDeck` root |
-| `/outprint:diff` | PR / diff review with `CodeDiff` + `ArchitectureGrid` |
-| `/outprint:share` | Deploy output to Vercel, return public URL |
+| `/artifact-organizer:slides` | Forces `SlideDeck` root |
+| `/artifact-organizer:diff` | PR / diff review with `CodeDiff` + `ArchitectureGrid` |
+| `/artifact-organizer:share` | Deploy output to Vercel, return public URL |
 
 ---
 
@@ -352,7 +352,7 @@ The tunnel prints a URL like `https://xxxx.trycloudflare.com`. Anyone with the l
 npx vercel examples/multi-html --prod
 ```
 
-Or use `/outprint:share` in Claude Code — it runs the deploy and returns the URL automatically.
+Or use `/artifact-organizer:share` in Claude Code — it runs the deploy and returns the URL automatically.
 
 ---
 
@@ -360,7 +360,7 @@ Or use `/outprint:share` in Claude Code — it runs the deploy and returns the U
 
 ```
 .
-├── plugins/outprint/        # Renderer + components + themes
+├── plugins/artifact-organizer/        # Renderer + components + themes
 │   ├── scripts/
 │   │   ├── render.mjs            # CLI entry + resolveRenderer()
 │   │   ├── canvas.mjs            # Canvas-mode renderer
@@ -409,7 +409,7 @@ See [`tools/claw/README.md`](tools/claw/README.md) for install and env vars.
 
 Node 20+. Run `npm test` before opening a PR. Keep the renderer (`render.mjs` / `canvas.mjs`) and the catalog (`spec/catalog.json` + `references/catalog.md`) in sync when touching component schemas.
 
-Issues: [github.com/Self-made-Orange/agent-outprint-skills/issues](https://github.com/Self-made-Orange/agent-outprint-skills/issues)
+Issues: [github.com/keepYaoung/artifact-organizer/issues](https://github.com/keepYaoung/artifact-organizer/issues)
 
 ---
 

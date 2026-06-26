@@ -1,14 +1,14 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": { "title": "Headings" },
       "children": [
-        { "component": "outprint/Heading", "props": { "level": 2, "text": "H2 Title" } },
-        { "component": "outprint/Heading", "props": { "level": 3, "text": "H3 Title", "anchor": "h3" } },
-        { "component": "outprint/Heading", "props": { "level": 4, "text": "H4 Title" } }
+        { "component": "artifact-organizer/Heading", "props": { "level": 2, "text": "H2 Title" } },
+        { "component": "artifact-organizer/Heading", "props": { "level": 3, "text": "H3 Title", "anchor": "h3" } },
+        { "component": "artifact-organizer/Heading", "props": { "level": 4, "text": "H4 Title" } }
       ]
     }
   ]

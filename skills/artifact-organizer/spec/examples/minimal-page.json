@@ -1,0 +1,14 @@
+{
+  "a2ui_version": "0.9",
+  "catalog": "artifact-organizer/v1",
+  "is_task_complete": true,
+  "parts": [
+    {
+      "component": "artifact-organizer/Page",
+      "props": { "title": "Hello" },
+      "children": [
+        { "component": "artifact-organizer/Prose", "props": { "markdown": "This is a minimal page." } }
+      ]
+    }
+  ]
+}

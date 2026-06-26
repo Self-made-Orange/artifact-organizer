@@ -19,20 +19,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 SITE_MODE_COMPONENTS = {
-    "hyperscribe/SiteHeader",
-    "hyperscribe/SiteFooter",
-    "hyperscribe/HeroCarousel",
-    "hyperscribe/MosaicGrid",
-    "hyperscribe/ProjectTile",
-    "hyperscribe/DivisionCard",
-    "hyperscribe/WorkTypeRow",
-    "hyperscribe/PressMentions",
-    "hyperscribe/EditorialStatement",
-    "hyperscribe/CountdownTimer",
+    "artifact-organizer/SiteHeader",
+    "artifact-organizer/SiteFooter",
+    "artifact-organizer/HeroCarousel",
+    "artifact-organizer/MosaicGrid",
+    "artifact-organizer/ProjectTile",
+    "artifact-organizer/DivisionCard",
+    "artifact-organizer/WorkTypeRow",
+    "artifact-organizer/PressMentions",
+    "artifact-organizer/EditorialStatement",
+    "artifact-organizer/CountdownTimer",
 }
 SLIDE_MODE_COMPONENTS = {
-    "hyperscribe/SlideDeck",
-    "hyperscribe/Slide",
+    "artifact-organizer/SlideDeck",
+    "artifact-organizer/Slide",
 }
 
 

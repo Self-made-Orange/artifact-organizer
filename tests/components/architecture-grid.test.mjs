@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ArchitectureGrid } from "../../plugins/outprint/scripts/components/architecture-grid.mjs";
+import { ArchitectureGrid } from "../../plugins/artifact-organizer/scripts/components/architecture-grid.mjs";
 
 test("ArchitectureGrid: renders grid with nodes", () => {
   const html = ArchitectureGrid({

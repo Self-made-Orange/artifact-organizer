@@ -16,7 +16,7 @@ const artifacts = [
   },
   {
     key: "hyperscribe",
-    label: "Hyperscribe",
+    label: "Artifact Organizer",
     artifactPath: resolve(BENCH_DIR, "hyperscribe.json"),
     notesPath: resolve(BENCH_DIR, "hyperscribe-notes.md")
   }

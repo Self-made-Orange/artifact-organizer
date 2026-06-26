@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CodeBlock } from "../../plugins/outprint/scripts/components/code-block.mjs";
+import { CodeBlock } from "../../plugins/artifact-organizer/scripts/components/code-block.mjs";
 
 test("CodeBlock: renders pre/code with lang class", () => {
   const html = CodeBlock({ lang: "js", code: "const x = 1;" });

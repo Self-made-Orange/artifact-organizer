@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Section } from "../../plugins/outprint/scripts/components/section.mjs";
+import { Section } from "../../plugins/artifact-organizer/scripts/components/section.mjs";
 
 test("Section: renders with id anchor", () => {
   const html = Section({ id: "intro", title: "Intro" }, () => "");

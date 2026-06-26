@@ -1,0 +1,335 @@
+#!/usr/bin/env node
+
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { validate, normalizeEnvelope } from "./lib/schema.mjs";
+import { renderTree } from "./lib/tree.mjs";
+import { loadTheme, modeTogglerHtml } from "./lib/theme.mjs";
+import { renderCanvas } from "./canvas.mjs";
+import { Page } from "./components/page.mjs";
+import { Section } from "./components/section.mjs";
+import { Heading } from "./components/heading.mjs";
+import { Prose } from "./components/prose.mjs";
+import { Image } from "./components/image.mjs";
+import { Callout } from "./components/callout.mjs";
+import { CodeBlock } from "./components/code-block.mjs";
+import { DataTable } from "./components/data-table.mjs";
+import { Mermaid } from "./components/mermaid.mjs";
+import { Sequence } from "./components/sequence.mjs";
+import { ArchitectureGrid } from "./components/architecture-grid.mjs";
+import { FlowChart } from "./components/flow-chart.mjs";
+import { Quadrant } from "./components/quadrant.mjs";
+import { Swimlane } from "./components/swimlane.mjs";
+import { StepList } from "./components/step-list.mjs";
+import { Comparison } from "./components/comparison.mjs";
+import { Chart } from "./components/chart.mjs";
+import { CodeDiff } from "./components/code-diff.mjs";
+import { KPICard } from "./components/kpi-card.mjs";
+import { SlideDeck } from "./components/slide-deck.mjs";
+import { Slide } from "./components/slide.mjs";
+import { FileTree } from "./components/file-tree.mjs";
+import { FileCard } from "./components/file-card.mjs";
+import { AnnotatedCode } from "./components/annotated-code.mjs";
+import { ERDDiagram } from "./components/erd-diagram.mjs";
+import { ProjectTile } from "./components/project-tile.mjs";
+import { MosaicGrid } from "./components/mosaic-grid.mjs";
+import { CountdownTimer } from "./components/countdown-timer.mjs";
+import { SiteHeader } from "./components/site-header.mjs";
+import { HeroCarousel } from "./components/hero-carousel.mjs";
+import { EditorialStatement } from "./components/editorial-statement.mjs";
+import { DivisionCard } from "./components/division-card.mjs";
+import { WorkTypeRow } from "./components/work-type-row.mjs";
+import { SiteFooter } from "./components/site-footer.mjs";
+import { PressMentions } from "./components/press-mentions.mjs";
+import { ArticleCard } from "./components/article-card.mjs";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const PLUGIN_ROOT = resolve(__dirname, "..");
+const CATALOG_PATH = resolve(PLUGIN_ROOT, "spec", "catalog.json");
+const BASE_CSS_PATH = resolve(PLUGIN_ROOT, "assets", "base.css");
+const COMPONENTS_CSS_DIR = resolve(PLUGIN_ROOT, "assets", "components");
+const INTERACTIVE_JS_PATH = resolve(PLUGIN_ROOT, "assets", "interactive.js");
+
+export const REGISTRY = {
+  "artifact-organizer/Page": Page,
+  "artifact-organizer/Section": Section,
+  "artifact-organizer/Heading": Heading,
+  "artifact-organizer/Prose": Prose,
+  "artifact-organizer/Image": Image,
+  "artifact-organizer/Callout": Callout,
+  "artifact-organizer/CodeBlock": CodeBlock,
+  "artifact-organizer/DataTable": DataTable,
+  "artifact-organizer/Mermaid": Mermaid,
+  "artifact-organizer/Sequence": Sequence,
+  "artifact-organizer/ArchitectureGrid": ArchitectureGrid,
+  "artifact-organizer/FlowChart": FlowChart,
+  "artifact-organizer/Quadrant": Quadrant,
+  "artifact-organizer/Swimlane": Swimlane,
+  "artifact-organizer/StepList": StepList,
+  "artifact-organizer/Comparison": Comparison,
+  "artifact-organizer/Chart": Chart,
+  "artifact-organizer/CodeDiff": CodeDiff,
+  "artifact-organizer/KPICard": KPICard,
+  "artifact-organizer/SlideDeck": SlideDeck,
+  "artifact-organizer/Slide": Slide,
+  "artifact-organizer/FileTree": FileTree,
+  "artifact-organizer/FileCard": FileCard,
+  "artifact-organizer/AnnotatedCode": AnnotatedCode,
+  "artifact-organizer/ERDDiagram": ERDDiagram,
+  "artifact-organizer/ProjectTile": ProjectTile,
+  "artifact-organizer/MosaicGrid": MosaicGrid,
+  "artifact-organizer/CountdownTimer": CountdownTimer,
+  "artifact-organizer/SiteHeader": SiteHeader,
+  "artifact-organizer/HeroCarousel": HeroCarousel,
+  "artifact-organizer/EditorialStatement": EditorialStatement,
+  "artifact-organizer/DivisionCard": DivisionCard,
+  "artifact-organizer/WorkTypeRow": WorkTypeRow,
+  "artifact-organizer/SiteFooter": SiteFooter,
+  "artifact-organizer/PressMentions": PressMentions,
+  "artifact-organizer/ArticleCard": ArticleCard,
+};
+
+/**
+ * Decide which renderer handles a doc.
+ *
+ * Optional `options.renderer` overrides auto-detection:
+ *   - "auto" (default) → infer from envelope shape
+ *   - "page"   → force page renderer
+ *   - "canvas" → force canvas renderer
+ *
+ * Auto rule: an envelope is "page" iff it explicitly sets `template: "page"`
+ * or carries a `parts[]` array; otherwise it's a canvas doc.
+ *
+ * Exported so tests can assert routing without spawning a subprocess.
+ */
+export function resolveRenderer(doc, options = {}) {
+  const r = options.renderer;
+  if (r === "page" || r === "canvas") return r;
+  if (doc.template === "page" || Array.isArray(doc.parts)) return "page";
+  return "canvas";
+}
+
+export async function render(doc, options = {}) {
+  // Normalize legacy `hyperscribe/X` / `outprint/X` component prefixes + their catalog versions
+  // catalog version to current `outprint/*` form before validation.
+  doc = normalizeEnvelope(doc);
+  if (!Array.isArray(doc.parts) || doc.parts.length === 0) {
+    const err = new Error("render() requires doc.parts[]. For canvas docs use renderCanvas().");
+    err.code = "SCHEMA";
+    err.errors = [{ path: "parts", message: "parts must be a non-empty array" }];
+    throw err;
+  }
+  const catalog = options.catalog || loadCatalog();
+  const errors = validate(doc, catalog);
+  if (errors.length > 0) {
+    const err = new Error("Schema validation failed");
+    err.code = "SCHEMA";
+    err.errors = errors;
+    throw err;
+  }
+
+  const themeName = options.theme || "notion";
+  const themeCss = loadTheme(themeName); // throws if unknown
+
+  const MODES = new Set(["light", "dark", "auto"]);
+  const mode = options.mode;
+  if (mode !== undefined && !MODES.has(mode)) {
+    throw new Error(`Invalid mode "${mode}". Allowed: light|dark|auto`);
+  }
+
+  const toggler = modeTogglerHtml();
+
+  const rootNode = doc.parts[0];
+  const ctx = {};
+  ctx.renderNode = (node) => renderTree(node, REGISTRY, ctx);
+  const bodyHtml = renderTree(rootNode, REGISTRY, ctx);
+  const title = options.title || rootNode.props.title || "Artifact Organizer";
+  const componentCss = options.css !== undefined ? options.css : buildCss(rootNode);
+  const css = `${themeCss}\n${componentCss}`;
+
+  return buildDocument({ title, bodyHtml, css, theme: themeName, mode, toggler });
+}
+
+function componentFileBase(componentName) {
+  return componentName
+    .replace(/^[^/]+\//, "")
+    .replace(/([a-z\d])([A-Z])/g, "$1-$2")
+    .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
+    .toLowerCase();
+}
+
+function collectUsedComponents(node, set = new Set()) {
+  if (!node || typeof node !== "object") return set;
+  if (typeof node.component === "string") set.add(node.component);
+  if (Array.isArray(node.children)) {
+    for (const c of node.children) collectUsedComponents(c, set);
+  }
+  return set;
+}
+
+function buildCss(rootNode) {
+  const base = readFileSync(BASE_CSS_PATH, "utf8");
+  const used = collectUsedComponents(rootNode);
+  let extras = "";
+  for (const component of used) {
+    const fileBase = componentFileBase(component);
+    const path = resolve(COMPONENTS_CSS_DIR, fileBase + ".css");
+    if (existsSync(path)) {
+      extras += "\n/* " + component + " */\n" + readFileSync(path, "utf8");
+    }
+  }
+  return base + extras;
+}
+
+function buildDocument({ title, bodyHtml, css, theme, mode, toggler }) {
+  const modeAttr = (mode === "light" || mode === "dark") ? ` data-mode="${escapeHtml(mode)}"` : "";
+  const interactive = readFileSync(INTERACTIVE_JS_PATH, "utf8");
+  return `<!doctype html>
+<html lang="en" data-theme="${escapeHtml(theme)}"${modeAttr}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escapeHtml(title)}</title>
+  <style>${css}</style>
+</head>
+<body>
+${bodyHtml}
+${toggler}
+<script>${interactive}</script>
+</body>
+</html>
+`;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+
+function loadCatalog() {
+  return JSON.parse(readFileSync(CATALOG_PATH, "utf8"));
+}
+
+function parseArgs(argv) {
+  const args = { in: null, out: null, theme: null, mode: undefined, renderer: null, title: null, quiet: false, validateOnly: false, saveEnvelope: true };
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    switch (a) {
+      case "--in": args.in = argv[++i]; break;
+      case "--out": args.out = argv[++i]; break;
+      case "--theme": args.theme = argv[++i]; break;
+      case "--mode": args.mode = argv[++i]; break;
+      case "--renderer": args.renderer = argv[++i]; break;
+      case "--title": args.title = argv[++i]; break;
+      case "--quiet": args.quiet = true; break;
+      case "--validate-only": args.validateOnly = true; break;
+      case "--no-save-envelope": args.saveEnvelope = false; break;
+      case "--version":
+        console.log("artifact-organizer 0.5.2-alpha");
+        process.exit(0);
+      case "--help":
+        printHelp();
+        process.exit(0);
+    }
+  }
+  return args;
+}
+
+function printHelp() {
+  console.log(`Usage: artifact-organizer --out <path> [--in <path>|<stdin>] [options]
+
+Options:
+  --in <path>          JSON input file (or pipe via stdin)
+  --out <path>         Output HTML file (required unless --validate-only)
+  --theme <name>       Theme name (notion|linear|vercel|stripe|supabase); defaults to "notion"
+  --renderer <mode>    Renderer (auto|canvas|page); defaults to "auto"
+                       auto = infer from envelope (parts[] / template:page → page; else canvas)
+  --mode <light|dark|auto>  Initial color mode. Omit to let the toggle + prefers-color-scheme handle it.
+  --title <string>     Override Page.title
+  --quiet              Suppress progress logs
+  --validate-only      Validate JSON, do not render
+  --no-save-envelope   Don't save the input JSON next to the HTML
+  --version            Print version
+  --help               Print this help
+`);
+}
+
+async function readStdin() {
+  return new Promise((res, rej) => {
+    let data = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", chunk => data += chunk);
+    process.stdin.on("end", () => res(data));
+    process.stdin.on("error", rej);
+  });
+}
+
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  let input;
+  try {
+    input = args.in ? readFileSync(args.in, "utf8") : await readStdin();
+  } catch (e) {
+    console.error(`IO error reading input: ${e.message}`);
+    process.exit(3);
+  }
+
+  let doc;
+  try {
+    doc = JSON.parse(input);
+  } catch (e) {
+    console.error(`JSON parse error: ${e.message}`);
+    process.exit(1);
+  }
+
+  let html;
+  try {
+    if (args.renderer && !["auto", "canvas", "page"].includes(args.renderer)) {
+      throw new Error(`Invalid --renderer "${args.renderer}". Allowed: auto|canvas|page`);
+    }
+    if (resolveRenderer(doc, { renderer: args.renderer || "auto" }) === "page") {
+      html = await render(doc, { theme: args.theme, mode: args.mode, title: args.title });
+    } else {
+      html = renderCanvas(doc, REGISTRY, { theme: args.theme });
+    }
+  } catch (e) {
+    if (e.code === "SCHEMA") {
+      console.error("Schema validation failed:");
+      for (const err of e.errors) {
+        console.error(`  ${err.path}: ${err.message}`);
+      }
+      process.exit(2);
+    }
+    console.error(`Runtime error: ${e.stack || e.message}`);
+    process.exit(4);
+  }
+
+  if (args.validateOnly) {
+    if (!args.quiet) console.log("OK");
+    process.exit(0);
+  }
+
+  if (!args.out) {
+    console.error("Missing --out <path>");
+    process.exit(3);
+  }
+
+  try {
+    const outAbs = resolve(args.out);
+    mkdirSync(dirname(outAbs), { recursive: true });
+    writeFileSync(outAbs, html, "utf8");
+    if (args.saveEnvelope) {
+      const envelopePath = outAbs.replace(/\.html?$/i, "") + ".json";
+      writeFileSync(envelopePath, JSON.stringify(doc, null, 2) + "\n", "utf8");
+    }
+    if (!args.quiet) console.log(outAbs);
+  } catch (e) {
+    console.error(`IO error writing output: ${e.message}`);
+    process.exit(3);
+  }
+}
+
+const isMain = import.meta.url === `file://${process.argv[1]}`;
+if (isMain) {
+  main();
+}

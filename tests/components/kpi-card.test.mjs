@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { KPICard } from "../../plugins/outprint/scripts/components/kpi-card.mjs";
+import { KPICard } from "../../plugins/artifact-organizer/scripts/components/kpi-card.mjs";
 
 test("KPICard: renders label + value", () => {
   const html = KPICard({ label: "Revenue", value: "$4,200" });

@@ -118,4 +118,4 @@ extra=()
 [ "$has_theme" -eq 0 ] && extra+=(--theme "$DEFAULT_THEME")
 [ "$has_mode"  -eq 0 ] && extra+=(--mode  "$DEFAULT_MODE")
 
-exec node "$OUTPRINT_REPO/plugins/outprint/scripts/render.mjs" "${extra[@]}" "${forwarded_args[@]}"
+exec node "$OUTPRINT_REPO/plugins/artifact-organizer/scripts/render.mjs" "${extra[@]}" "${forwarded_args[@]}"

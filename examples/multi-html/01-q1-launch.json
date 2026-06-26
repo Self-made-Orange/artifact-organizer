@@ -1,9 +1,9 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": {
         "title": "Q1 2026 Product Launch Report",
         "subtitle": "Post-launch analysis — Falcon Platform",
@@ -12,14 +12,14 @@
       },
       "children": [
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "launch-metrics",
             "title": "Launch Metrics"
           },
           "children": [
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Day-1 Sign-ups",
                 "value": "14,820",
@@ -31,7 +31,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Activation Rate",
                 "value": "68%",
@@ -43,7 +43,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Median Time-to-Value",
                 "value": "4 min",
@@ -55,7 +55,7 @@
               }
             },
             {
-              "component": "outprint/KPICard",
+              "component": "artifact-organizer/KPICard",
               "props": {
                 "label": "Crash-free Sessions",
                 "value": "99.7%",
@@ -68,14 +68,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "traffic",
             "title": "Traffic by Channel"
           },
           "children": [
             {
-              "component": "outprint/Chart",
+              "component": "artifact-organizer/Chart",
               "props": {
                 "kind": "bar",
                 "xLabel": "Channel",
@@ -108,14 +108,14 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "launch-phases",
             "title": "Launch Phases"
           },
           "children": [
             {
-              "component": "outprint/StepList",
+              "component": "artifact-organizer/StepList",
               "props": {
                 "steps": [
                   {
@@ -149,7 +149,7 @@
           ]
         },
         {
-          "component": "outprint/Callout",
+          "component": "artifact-organizer/Callout",
           "props": {
             "severity": "success",
             "title": "Key Takeaway",

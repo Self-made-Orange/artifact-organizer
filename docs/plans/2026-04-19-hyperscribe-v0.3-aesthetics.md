@@ -1,13 +1,13 @@
-# Hyperscribe v0.3 — Aesthetic Variants, Image, Pretty Charts Implementation Plan
+# Artifact Organizer v0.3 — Aesthetic Variants, Image, Pretty Charts Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Raise the visual ceiling of Hyperscribe output — add inline images, a theme system with light/dark support and a first alternate theme (Linear), plus two native SVG components (PrettyChart, FlowChart) that look better than the current Chart.js / Mermaid defaults.
+**Goal:** Raise the visual ceiling of Artifact Organizer output — add inline images, a theme system with light/dark support and a first alternate theme (Linear), plus two native SVG components (PrettyChart, FlowChart) that look better than the current Chart.js / Mermaid defaults.
 
 **Architecture:**
-- Extract color/typography tokens from `base.css` into `plugins/outprint/themes/*.css` files. `base.css` keeps structural rules only (layout, spacing scale, component structure). Themes override via the same `--hs-*` CSS variables.
+- Extract color/typography tokens from `base.css` into `plugins/artifact-organizer/themes/*.css` files. `base.css` keeps structural rules only (layout, spacing scale, component structure). Themes override via the same `--hs-*` CSS variables.
 - `render.mjs` gains `--theme <name>` flag. HTML output embeds the selected theme CSS inline and, when the catalog has multiple themes, emits a small `<select>` switcher that toggles `data-theme` on `<html>` and persists the choice in `localStorage`.
-- Three new catalog components: `hyperscribe/Image` (URL or local file; local gets base64-inlined at render time), `hyperscribe/PrettyChart` (SVG-native bar/line with gradient fills + soft drop shadow), `hyperscribe/FlowChart` (SVG-native directed graph, nodes + edges, TD/LR layout — alternative to Mermaid for common cases).
+- Three new catalog components: `artifact-organizer/Image` (URL or local file; local gets base64-inlined at render time), `artifact-organizer/PrettyChart` (SVG-native bar/line with gradient fills + soft drop shadow), `artifact-organizer/FlowChart` (SVG-native directed graph, nodes + edges, TD/LR layout — alternative to Mermaid for common cases).
 - Everything stays zero-dep at runtime. Testing continues via `node:test` + assertions against generated HTML strings.
 
 **Tech Stack:** Node 20 stdlib, pure SVG/CSS, no new npm deps. Base64 via `Buffer.from(...).toString("base64")` for image inlining.
@@ -17,7 +17,7 @@
 ## File Structure
 
 ```
-plugins/outprint/
+plugins/artifact-organizer/
 ├── assets/
 │   ├── base.css                       (trimmed: layout/spacing/typography structure only)
 │   └── components/
@@ -59,7 +59,7 @@ tools/build-catalog-md.mjs             (modify: categorize new components)
 - **Image sizing:** `width` and `height` optional props in px. If only one is given, the other scales naturally (CSS `height: auto` / `width: auto`). Captions via optional `caption`.
 - **Theme CSS variable boundary:** `base.css` uses NO color literals except `transparent` and full opacity constants. All chromatic values live in theme files. Typography scale (sizes, line-heights) stays in `base.css`; font families are theme-owned.
 - **Theme switcher UX:** Rendered as a small, fixed-position `<div class="hs-theme-switcher">` in the top-right corner with a `<select>`. Hidden when only one theme is available. Persists to `localStorage['hyperscribe.theme']`. Initial value: `prefers-color-scheme` + default-theme match, overridden by saved choice.
-- **PrettyChart scope for v0.3:** `kind` = `"bar"` | `"line"`. `kind: "pie"` and others stay in `hyperscribe/Chart` (Chart.js). PrettyChart is for cases where visual polish matters; Chart is for "I just need a chart."
+- **PrettyChart scope for v0.3:** `kind` = `"bar"` | `"line"`. `kind: "pie"` and others stay in `artifact-organizer/Chart` (Chart.js). PrettyChart is for cases where visual polish matters; Chart is for "I just need a chart."
 - **FlowChart scope for v0.3:** Directed graph, nodes with `{id, label, shape?: "box"|"pill"|"diamond"}`, edges with `{from, to, label?}`. Layout: manual grid with `layout: "TD"|"LR"` and `ranks: string[][]` (array-of-arrays where each inner array is one rank of node ids). No automatic layout solver — keep it simple; the LLM decides ranks.
 - **Linear theme typography:** Use Inter Variable via Google Fonts CDN (explicitly acknowledge this breaks strict offline rule for the Linear theme only). Notion + Notion-dark stay CDN-free. Document the tradeoff in SKILL.md.
 - **Version bump:** `0.2.0-alpha` → `0.3.0-alpha`.
@@ -74,16 +74,16 @@ tools/build-catalog-md.mjs             (modify: categorize new components)
 
 ---
 
-## Task 1: `hyperscribe/Image` component
+## Task 1: `artifact-organizer/Image` component
 
 **Files:**
-- Create: `plugins/outprint/scripts/components/image.mjs`
-- Create: `plugins/outprint/assets/components/image.css`
+- Create: `plugins/artifact-organizer/scripts/components/image.mjs`
+- Create: `plugins/artifact-organizer/assets/components/image.css`
 - Create: `tests/components/image.test.mjs`
-- Modify: `plugins/outprint/spec/catalog.json` (add Image entry)
-- Modify: `plugins/outprint/scripts/render.mjs` (register Image)
+- Modify: `plugins/artifact-organizer/spec/catalog.json` (add Image entry)
+- Modify: `plugins/artifact-organizer/scripts/render.mjs` (register Image)
 - Modify: `tools/build-catalog-md.mjs` (new category "Media" for Image)
-- Modify: `plugins/outprint/SKILL.md` (list Image under components)
+- Modify: `plugins/artifact-organizer/SKILL.md` (list Image under components)
 
 - [ ] **Step 1: Write failing tests** at `tests/components/image.test.mjs`
 
@@ -93,7 +93,7 @@ import assert from "node:assert/strict";
 import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Image } from "../../plugins/outprint/scripts/components/image.mjs";
+import { Image } from "../../plugins/artifact-organizer/scripts/components/image.mjs";
 
 test("Image: renders https:// URL as passthrough <img>", () => {
   const html = Image({ src: "https://example.com/x.png", alt: "ex" });
@@ -142,7 +142,7 @@ test("Image: throws on missing src", () => {
 cd /Users/seongil/works/hyperscribe && node --test tests/components/image.test.mjs
 ```
 
-- [ ] **Step 3: Implement `plugins/outprint/scripts/components/image.mjs`**
+- [ ] **Step 3: Implement `plugins/artifact-organizer/scripts/components/image.mjs`**
 
 ```javascript
 import { readFileSync, existsSync } from "node:fs";
@@ -171,9 +171,9 @@ export function Image(props) {
 }
 ```
 
-Verify that `plugins/outprint/scripts/lib/html.mjs` exports both `escape` and `attr`. If `attr` is missing, add: `export function attr(s){ return String(s).replace(/"/g,"&quot;").replace(/&/g,"&amp;"); }` — but only if not already present.
+Verify that `plugins/artifact-organizer/scripts/lib/html.mjs` exports both `escape` and `attr`. If `attr` is missing, add: `export function attr(s){ return String(s).replace(/"/g,"&quot;").replace(/&/g,"&amp;"); }` — but only if not already present.
 
-- [ ] **Step 4: Create `plugins/outprint/assets/components/image.css`**
+- [ ] **Step 4: Create `plugins/artifact-organizer/assets/components/image.css`**
 
 ```css
 .hs-image {
@@ -196,7 +196,7 @@ Verify that `plugins/outprint/scripts/lib/html.mjs` exports both `escape` and `a
 }
 ```
 
-- [ ] **Step 5: Register Image in `plugins/outprint/scripts/render.mjs`**
+- [ ] **Step 5: Register Image in `plugins/artifact-organizer/scripts/render.mjs`**
 
 Add import near other component imports:
 ```javascript
@@ -205,13 +205,13 @@ import { Image } from "./components/image.mjs";
 
 Add to `REGISTRY`:
 ```javascript
-"hyperscribe/Image": Image,
+"artifact-organizer/Image": Image,
 ```
 
-- [ ] **Step 6: Add to `plugins/outprint/spec/catalog.json`** (under a new "Media" concept — place between `Prose` and `Callout`)
+- [ ] **Step 6: Add to `plugins/artifact-organizer/spec/catalog.json`** (under a new "Media" concept — place between `Prose` and `Callout`)
 
 ```json
-"hyperscribe/Image": {
+"artifact-organizer/Image": {
   "description": "Inline image. Accepts https:// URLs (passed through) or local paths (base64-inlined at render time to keep the HTML self-contained).",
   "children": "forbidden",
   "props": {
@@ -241,12 +241,12 @@ cd /Users/seongil/works/hyperscribe && node --test tests/components/image.test.m
 ```
 
 - [ ] **Step 9: Update SKILL.md** — in the component inventory table add a row:
-`| Media | \`hyperscribe/Image\` | Inline image. \`src\` accepts URL or local path (local → base64 inlined). Props: \`src\`, \`alt\`, \`caption?\`, \`width?\`, \`height?\`. |`
+`| Media | \`artifact-organizer/Image\` | Inline image. \`src\` accepts URL or local path (local → base64 inlined). Props: \`src\`, \`alt\`, \`caption?\`, \`width?\`, \`height?\`. |`
 
 - [ ] **Step 10: Commit**
 
 ```bash
-git add -A && git commit -m "feat: hyperscribe/Image component with base64 inline for local files"
+git add -A && git commit -m "feat: artifact-organizer/Image component with base64 inline for local files"
 ```
 
 ---
@@ -254,16 +254,16 @@ git add -A && git commit -m "feat: hyperscribe/Image component with base64 inlin
 ## Task 2: Theme system infrastructure
 
 **Files:**
-- Create: `plugins/outprint/themes/notion.css`
-- Create: `plugins/outprint/scripts/lib/theme.mjs`
+- Create: `plugins/artifact-organizer/themes/notion.css`
+- Create: `plugins/artifact-organizer/scripts/lib/theme.mjs`
 - Create: `tests/lib/theme.test.mjs`
 - Create: `tests/render-theme.test.mjs`
-- Modify: `plugins/outprint/assets/base.css` (strip colors/fonts to notion.css; keep structure)
-- Modify: `plugins/outprint/scripts/render.mjs` (`--theme`, theme loader, HTML data-theme attribute)
+- Modify: `plugins/artifact-organizer/assets/base.css` (strip colors/fonts to notion.css; keep structure)
+- Modify: `plugins/artifact-organizer/scripts/render.mjs` (`--theme`, theme loader, HTML data-theme attribute)
 
 ### 2a. Extract tokens
 
-- [ ] **Step 1: Create `plugins/outprint/themes/notion.css`**
+- [ ] **Step 1: Create `plugins/artifact-organizer/themes/notion.css`**
 
 Copy every `--hs-color-*`, `--hs-shadow-*`, `--hs-font-*`, `--hs-border-whisper` line from current `base.css` `:root` into the new file. Wrap with `[data-theme="notion"], :root:not([data-theme])`. Do NOT move `--hs-space-*`, `--hs-radius-*`, `--hs-container-max`.
 
@@ -278,7 +278,7 @@ Start of the new file:
 }
 ```
 
-- [ ] **Step 2: Strip colors/fonts from `plugins/outprint/assets/base.css`**
+- [ ] **Step 2: Strip colors/fonts from `plugins/artifact-organizer/assets/base.css`**
 
 Remove the moved tokens from `:root`. Leave `--hs-space-*`, `--hs-radius-*`, `--hs-container-max`.
 
@@ -289,7 +289,7 @@ Remove the moved tokens from `:root`. Leave `--hs-space-*`, `--hs-radius-*`, `--
 ```javascript
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadTheme, listThemes } from "../../plugins/outprint/scripts/lib/theme.mjs";
+import { loadTheme, listThemes } from "../../plugins/artifact-organizer/scripts/lib/theme.mjs";
 
 test("listThemes: finds bundled themes", () => {
   const names = listThemes();
@@ -307,7 +307,7 @@ test("loadTheme: throws on unknown theme", () => {
 });
 ```
 
-- [ ] **Step 4: Implement `plugins/outprint/scripts/lib/theme.mjs`**
+- [ ] **Step 4: Implement `plugins/artifact-organizer/scripts/lib/theme.mjs`**
 
 ```javascript
 import { readFileSync, readdirSync, existsSync } from "node:fs";
@@ -359,13 +359,13 @@ export function themeSwitcherHtml(themes, defaultTheme) {
 ```javascript
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { render } from "../plugins/outprint/scripts/render.mjs";
+import { render } from "../plugins/artifact-organizer/scripts/render.mjs";
 
 const envelope = {
   a2ui_version: "0.9",
   catalog: "hyperscribe/v1",
   is_task_complete: true,
-  parts: [{ component: "hyperscribe/Page", props: { title: "t" }, children: [] }]
+  parts: [{ component: "artifact-organizer/Page", props: { title: "t" }, children: [] }]
 };
 
 test("render: default theme notion applied", async () => {
@@ -437,7 +437,7 @@ export async function render(doc, options = {}) {
   const ctx = {};
   ctx.renderNode = (node) => renderTree(node, REGISTRY, ctx);
   const bodyHtml = renderTree(rootNode, REGISTRY, ctx);
-  const title = options.title || rootNode.props.title || "Hyperscribe";
+  const title = options.title || rootNode.props.title || "Artifact Organizer";
   const componentCss = options.css !== undefined ? options.css : buildCss(rootNode);
   const css = `${themeCss}\n${componentCss}`;
 
@@ -492,7 +492,7 @@ npm test
 - [ ] **Step 10: Commit**
 
 ```bash
-git add -A && git commit -m "feat(theme): extract theme system — notion tokens in plugins/outprint/themes/, --theme flag, in-page switcher"
+git add -A && git commit -m "feat(theme): extract theme system — notion tokens in plugins/artifact-organizer/themes/, --theme flag, in-page switcher"
 ```
 
 ---
@@ -500,10 +500,10 @@ git add -A && git commit -m "feat(theme): extract theme system — notion tokens
 ## Task 3: `notion-dark` theme + prefers-color-scheme
 
 **Files:**
-- Create: `plugins/outprint/themes/notion-dark.css`
-- Modify: `plugins/outprint/scripts/lib/theme.mjs` (auto-pair dark from prefers-color-scheme)
+- Create: `plugins/artifact-organizer/themes/notion-dark.css`
+- Modify: `plugins/artifact-organizer/scripts/lib/theme.mjs` (auto-pair dark from prefers-color-scheme)
 
-- [ ] **Step 1: Create `plugins/outprint/themes/notion-dark.css`**
+- [ ] **Step 1: Create `plugins/artifact-organizer/themes/notion-dark.css`**
 
 Mirror the token set from `notion.css`, remap to dark. Use these exact values for consistency with v0.2 design direction:
 
@@ -548,7 +548,7 @@ Mirror the token set from `notion.css`, remap to dark. Use these exact values fo
 
 - [ ] **Step 2: Update Sequence + Mermaid component CSS** to use dark-safe values via variables
 
-Ensure `plugins/outprint/assets/components/sequence.css` uses `var(--hs-color-surface-alt)` for `hs-seq-pbox` fill (already does) and that note box colors are theme-neutral. For the note box, change hardcoded `#fef9c3` / `#eab308` / `#713f12` to CSS variables:
+Ensure `plugins/artifact-organizer/assets/components/sequence.css` uses `var(--hs-color-surface-alt)` for `hs-seq-pbox` fill (already does) and that note box colors are theme-neutral. For the note box, change hardcoded `#fef9c3` / `#eab308` / `#713f12` to CSS variables:
 
 Add to `notion.css` and `notion-dark.css`:
 
@@ -566,16 +566,16 @@ Add to `notion.css` and `notion-dark.css`:
   --hs-note-text: #fde68a;
 ```
 
-Update `plugins/outprint/assets/components/sequence.css`:
+Update `plugins/artifact-organizer/assets/components/sequence.css`:
 - `.hs-seq-note-box` fill → `var(--hs-note-bg)`
 - `.hs-seq-note-box` stroke → `var(--hs-note-border)`
 - `.hs-seq-note-text` fill → `var(--hs-note-text)`
 
-Update `plugins/outprint/assets/components/mermaid.css` to reference the same variables where hardcoded (noteBkgColor stays in Mermaid JS init — see Step 3).
+Update `plugins/artifact-organizer/assets/components/mermaid.css` to reference the same variables where hardcoded (noteBkgColor stays in Mermaid JS init — see Step 3).
 
 - [ ] **Step 3: Update Mermaid themeVariables at render time to pick up CSS variable values**
 
-The Mermaid JS init runs in the browser, so it cannot directly read CSS variables at load time from a string template. Use `getComputedStyle(document.documentElement).getPropertyValue('--hs-color-fg').trim()` in the loader, with fallbacks. Replace the `themeVariables` object in `plugins/outprint/scripts/components/mermaid.mjs` LOADER with:
+The Mermaid JS init runs in the browser, so it cannot directly read CSS variables at load time from a string template. Use `getComputedStyle(document.documentElement).getPropertyValue('--hs-color-fg').trim()` in the loader, with fallbacks. Replace the `themeVariables` object in `plugins/artifact-organizer/scripts/components/mermaid.mjs` LOADER with:
 
 ```javascript
 const cs = getComputedStyle(document.documentElement);
@@ -606,7 +606,7 @@ Wrap in the existing `s.onload` so it runs after the mermaid lib loads.
 
 - [ ] **Step 4: Add prefers-color-scheme to theme switcher default**
 
-Modify `themeSwitcherHtml()` in `plugins/outprint/scripts/lib/theme.mjs` so initial value logic becomes:
+Modify `themeSwitcherHtml()` in `plugins/artifact-organizer/scripts/lib/theme.mjs` so initial value logic becomes:
 ```javascript
 var initial = saved;
 if (!initial) {
@@ -622,7 +622,7 @@ if (!initial) initial = fallback;
 
 ```javascript
 test("themeSwitcherHtml: returns empty when <2 themes", () => {
-  const { themeSwitcherHtml } = await import("../../plugins/outprint/scripts/lib/theme.mjs");
+  const { themeSwitcherHtml } = await import("../../plugins/artifact-organizer/scripts/lib/theme.mjs");
   assert.equal(themeSwitcherHtml(["notion"], "notion"), "");
 });
 
@@ -637,9 +637,9 @@ test("themeSwitcherHtml: renders select with all themes", () => {
 - [ ] **Step 6: Render a visual sample**
 
 ```bash
-mkdir -p ~/.hyperscribe/out
-echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"hyperscribe/Page","props":{"title":"Dark test"},"children":[{"component":"hyperscribe/Section","props":{"id":"s","title":"Section"},"children":[{"component":"hyperscribe/Prose","props":{"markdown":"Hello **world**."}}]}]}]}' | \
-  node plugins/outprint/scripts/render.mjs --theme notion-dark --out ~/.hyperscribe/out/dark-sample.html
+mkdir -p ~/.artifact-organizer/out
+echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"artifact-organizer/Page","props":{"title":"Dark test"},"children":[{"component":"artifact-organizer/Section","props":{"id":"s","title":"Section"},"children":[{"component":"artifact-organizer/Prose","props":{"markdown":"Hello **world**."}}]}]}]}' | \
+  node plugins/artifact-organizer/scripts/render.mjs --theme notion-dark --out ~/.hyperscribe/out/dark-sample.html
 open ~/.hyperscribe/out/dark-sample.html
 ```
 
@@ -662,11 +662,11 @@ git add -A && git commit -m "feat(theme): notion-dark variant + prefers-color-sc
 ## Task 4: `linear` theme
 
 **Files:**
-- Create: `plugins/outprint/themes/linear.css`
+- Create: `plugins/artifact-organizer/themes/linear.css`
 
-- [ ] **Step 1: Write `plugins/outprint/themes/linear.css`**
+- [ ] **Step 1: Write `plugins/artifact-organizer/themes/linear.css`**
 
-Dark-native. Values taken directly from the Linear design system reference; tokens remapped to Hyperscribe variables. Inter Variable loaded from Google Fonts — acknowledged tradeoff (not fully offline).
+Dark-native. Values taken directly from the Linear design system reference; tokens remapped to Artifact Organizer variables. Inter Variable loaded from Google Fonts — acknowledged tradeoff (not fully offline).
 
 ```css
 @import url('https://rsms.me/inter/inter.css');
@@ -732,8 +732,8 @@ Dark-native. Values taken directly from the Linear design system reference; toke
 - [ ] **Step 2: Render visual sample**
 
 ```bash
-echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"hyperscribe/Page","props":{"title":"Linear theme","subtitle":"Dark-native, Inter Variable 510"},"children":[{"component":"hyperscribe/Section","props":{"id":"s","title":"First section"},"children":[{"component":"hyperscribe/Prose","props":{"markdown":"Body at 400. **Emphasis at 510.**"}},{"component":"hyperscribe/Callout","props":{"severity":"info","body":"Callouts should pick up the Linear accent naturally."}}]}]}]}' | \
-  node plugins/outprint/scripts/render.mjs --theme linear --out ~/.hyperscribe/out/linear-sample.html
+echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"artifact-organizer/Page","props":{"title":"Linear theme","subtitle":"Dark-native, Inter Variable 510"},"children":[{"component":"artifact-organizer/Section","props":{"id":"s","title":"First section"},"children":[{"component":"artifact-organizer/Prose","props":{"markdown":"Body at 400. **Emphasis at 510.**"}},{"component":"artifact-organizer/Callout","props":{"severity":"info","body":"Callouts should pick up the Linear accent naturally."}}]}]}]}' | \
+  node plugins/artifact-organizer/scripts/render.mjs --theme linear --out ~/.hyperscribe/out/linear-sample.html
 open ~/.hyperscribe/out/linear-sample.html
 ```
 
@@ -753,22 +753,22 @@ git add -A && git commit -m "feat(theme): linear — dark-native Linear-style th
 
 ---
 
-## Task 5: `hyperscribe/PrettyChart` component
+## Task 5: `artifact-organizer/PrettyChart` component
 
 **Files:**
-- Create: `plugins/outprint/scripts/components/pretty-chart.mjs`
-- Create: `plugins/outprint/assets/components/pretty-chart.css`
+- Create: `plugins/artifact-organizer/scripts/components/pretty-chart.mjs`
+- Create: `plugins/artifact-organizer/assets/components/pretty-chart.css`
 - Create: `tests/components/pretty-chart.test.mjs`
-- Modify: `plugins/outprint/spec/catalog.json`
-- Modify: `plugins/outprint/scripts/render.mjs` (register)
+- Modify: `plugins/artifact-organizer/spec/catalog.json`
+- Modify: `plugins/artifact-organizer/scripts/render.mjs` (register)
 - Modify: `tools/build-catalog-md.mjs` (category)
-- Modify: `plugins/outprint/SKILL.md`
+- Modify: `plugins/artifact-organizer/SKILL.md`
 
 **Props schema:**
 
 ```json
-"hyperscribe/PrettyChart": {
-  "description": "Native SVG bar or line chart with gradient fills and soft drop shadow. Prefer over hyperscribe/Chart when visual polish matters.",
+"artifact-organizer/PrettyChart": {
+  "description": "Native SVG bar or line chart with gradient fills and soft drop shadow. Prefer over artifact-organizer/Chart when visual polish matters.",
   "children": "forbidden",
   "props": {
     "kind": { "type": "string", "enum": ["bar", "line"], "required": true },
@@ -802,7 +802,7 @@ git add -A && git commit -m "feat(theme): linear — dark-native Linear-style th
 ```javascript
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { PrettyChart } from "../../plugins/outprint/scripts/components/pretty-chart.mjs";
+import { PrettyChart } from "../../plugins/artifact-organizer/scripts/components/pretty-chart.mjs";
 
 const data1 = { labels: ["A","B","C"], series: [{ name: "s1", values: [10,20,15] }] };
 
@@ -966,7 +966,7 @@ ${xLabels(data.labels)}
 }
 ```
 
-- [ ] **Step 3: Create `plugins/outprint/assets/components/pretty-chart.css`**
+- [ ] **Step 3: Create `plugins/artifact-organizer/assets/components/pretty-chart.css`**
 
 ```css
 .hs-pchart {
@@ -1034,8 +1034,8 @@ node tools/build-catalog-md.mjs && npm test
 - [ ] **Step 6: Visual render sample**
 
 ```bash
-echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"hyperscribe/Page","props":{"title":"PrettyChart demo"},"children":[{"component":"hyperscribe/Section","props":{"id":"a","title":"Bar"},"children":[{"component":"hyperscribe/PrettyChart","props":{"kind":"bar","title":"Incident Report","data":{"labels":["Phishing","Malware","Ransom","DDoS","Insider","APT","Data leak"],"series":[{"name":"cnt","values":[91,72,58,45,36,29,22]}]}}}]}]}]}' | \
-  node plugins/outprint/scripts/render.mjs --out ~/.hyperscribe/out/pretty-chart.html
+echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"artifact-organizer/Page","props":{"title":"PrettyChart demo"},"children":[{"component":"artifact-organizer/Section","props":{"id":"a","title":"Bar"},"children":[{"component":"artifact-organizer/PrettyChart","props":{"kind":"bar","title":"Incident Report","data":{"labels":["Phishing","Malware","Ransom","DDoS","Insider","APT","Data leak"],"series":[{"name":"cnt","values":[91,72,58,45,36,29,22]}]}}}]}]}]}' | \
+  node plugins/artifact-organizer/scripts/render.mjs --out ~/.hyperscribe/out/pretty-chart.html
 open ~/.hyperscribe/out/pretty-chart.html
 ```
 
@@ -1044,23 +1044,23 @@ Expected: matches the reference Incident Report screenshot — rounded bars with
 - [ ] **Step 7: Update SKILL.md with PrettyChart entry, commit**
 
 ```bash
-git add -A && git commit -m "feat: hyperscribe/PrettyChart — native SVG bar+line with gradient fills"
+git add -A && git commit -m "feat: artifact-organizer/PrettyChart — native SVG bar+line with gradient fills"
 ```
 
 ---
 
-## Task 6: `hyperscribe/FlowChart` component
+## Task 6: `artifact-organizer/FlowChart` component
 
 **Files:**
-- Create: `plugins/outprint/scripts/components/flow-chart.mjs`
-- Create: `plugins/outprint/assets/components/flow-chart.css`
+- Create: `plugins/artifact-organizer/scripts/components/flow-chart.mjs`
+- Create: `plugins/artifact-organizer/assets/components/flow-chart.css`
 - Create: `tests/components/flow-chart.test.mjs`
 - Modify: catalog.json, render.mjs, build-catalog-md.mjs, SKILL.md
 
 **Props schema:**
 
 ```json
-"hyperscribe/FlowChart": {
+"artifact-organizer/FlowChart": {
   "description": "Native SVG directed graph. Ranked layout (TD or LR) — caller provides `ranks` (array of arrays of node ids) so no layout solver is needed.",
   "children": "forbidden",
   "props": {
@@ -1104,7 +1104,7 @@ git add -A && git commit -m "feat: hyperscribe/PrettyChart — native SVG bar+li
 ```javascript
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { FlowChart } from "../../plugins/outprint/scripts/components/flow-chart.mjs";
+import { FlowChart } from "../../plugins/artifact-organizer/scripts/components/flow-chart.mjs";
 
 const simple = {
   layout: "LR",
@@ -1259,7 +1259,7 @@ ${nodeSvg}
 }
 ```
 
-- [ ] **Step 3: Create `plugins/outprint/assets/components/flow-chart.css`**
+- [ ] **Step 3: Create `plugins/artifact-organizer/assets/components/flow-chart.css`**
 
 ```css
 .hs-flow {
@@ -1321,8 +1321,8 @@ if (["Mermaid", "Sequence", "ArchitectureGrid", "FlowChart"].some(x => name.ends
 - [ ] **Step 5: Visual sample + full test run**
 
 ```bash
-echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"hyperscribe/Page","props":{"title":"FlowChart demo"},"children":[{"component":"hyperscribe/Section","props":{"id":"s","title":"Pipeline"},"children":[{"component":"hyperscribe/FlowChart","props":{"layout":"LR","nodes":[{"id":"in","label":"Input","shape":"pill","tag":"source"},{"id":"v","label":"Validate","shape":"diamond"},{"id":"t","label":"Transform"},{"id":"out","label":"Output","shape":"pill","tag":"sink"}],"edges":[{"from":"in","to":"v"},{"from":"v","to":"t","label":"ok"},{"from":"t","to":"out"}],"ranks":[["in"],["v"],["t"],["out"]]}}]}]}]}' | \
-  node plugins/outprint/scripts/render.mjs --out ~/.hyperscribe/out/flow-chart.html
+echo '{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"artifact-organizer/Page","props":{"title":"FlowChart demo"},"children":[{"component":"artifact-organizer/Section","props":{"id":"s","title":"Pipeline"},"children":[{"component":"artifact-organizer/FlowChart","props":{"layout":"LR","nodes":[{"id":"in","label":"Input","shape":"pill","tag":"source"},{"id":"v","label":"Validate","shape":"diamond"},{"id":"t","label":"Transform"},{"id":"out","label":"Output","shape":"pill","tag":"sink"}],"edges":[{"from":"in","to":"v"},{"from":"v","to":"t","label":"ok"},{"from":"t","to":"out"}],"ranks":[["in"],["v"],["t"],["out"]]}}]}]}]}' | \
+  node plugins/artifact-organizer/scripts/render.mjs --out ~/.hyperscribe/out/flow-chart.html
 open ~/.hyperscribe/out/flow-chart.html
 npm test
 ```
@@ -1330,7 +1330,7 @@ npm test
 - [ ] **Step 6: Update SKILL.md + commit**
 
 ```bash
-git add -A && git commit -m "feat: hyperscribe/FlowChart — native SVG directed graph with rank-based layout"
+git add -A && git commit -m "feat: artifact-organizer/FlowChart — native SVG directed graph with rank-based layout"
 ```
 
 ---
@@ -1338,16 +1338,16 @@ git add -A && git commit -m "feat: hyperscribe/FlowChart — native SVG directed
 ## Task 7: Integration verification + version bump + push
 
 **Files:**
-- Modify: `package.json`, `plugins/outprint/.claude-plugin/plugin.json`, `plugins/outprint/SKILL.md`, `plugins/outprint/scripts/render.mjs` (version strings)
+- Modify: `package.json`, `plugins/artifact-organizer/.claude-plugin/plugin.json`, `plugins/artifact-organizer/SKILL.md`, `plugins/artifact-organizer/scripts/render.mjs` (version strings)
 - Modify: `README.md` (add v0.3 components + theme flag to feature list)
 
 - [ ] **Step 1: Bump all version strings to `0.3.0-alpha`**
 
 Files + lines:
 - `package.json`: `"version"`
-- `plugins/outprint/.claude-plugin/plugin.json`: `"version"`
-- `plugins/outprint/SKILL.md`: frontmatter `version:`
-- `plugins/outprint/scripts/render.mjs`: `console.log("hyperscribe 0.3.0-alpha")`
+- `plugins/artifact-organizer/.claude-plugin/plugin.json`: `"version"`
+- `plugins/artifact-organizer/SKILL.md`: frontmatter `version:`
+- `plugins/artifact-organizer/scripts/render.mjs`: `console.log("hyperscribe 0.3.0-alpha")`
 
 - [ ] **Step 2: Regenerate catalog.md**
 
@@ -1364,22 +1364,22 @@ In the component catalog section, add `Image`, `PrettyChart`, `FlowChart` rows. 
 Render the same envelope in all three themes, open each:
 
 ```bash
-ENV='{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"hyperscribe/Page","props":{"title":"v0.3 smoke test","subtitle":"All new components across all themes","toc":true},"children":[
-  {"component":"hyperscribe/Section","props":{"id":"img","title":"Image"},"children":[
-    {"component":"hyperscribe/Image","props":{"src":"https://placehold.co/600x300/png","alt":"placeholder","caption":"External image, passed through"}}
+ENV='{"a2ui_version":"0.9","catalog":"hyperscribe/v1","is_task_complete":true,"parts":[{"component":"artifact-organizer/Page","props":{"title":"v0.3 smoke test","subtitle":"All new components across all themes","toc":true},"children":[
+  {"component":"artifact-organizer/Section","props":{"id":"img","title":"Image"},"children":[
+    {"component":"artifact-organizer/Image","props":{"src":"https://placehold.co/600x300/png","alt":"placeholder","caption":"External image, passed through"}}
   ]},
-  {"component":"hyperscribe/Section","props":{"id":"pc","title":"PrettyChart"},"children":[
-    {"component":"hyperscribe/PrettyChart","props":{"kind":"bar","title":"Incident Report","data":{"labels":["Phishing","Malware","Ransom","DDoS","Insider","APT","Data"],"series":[{"name":"c","values":[91,72,58,45,36,29,22]}]}}}
+  {"component":"artifact-organizer/Section","props":{"id":"pc","title":"PrettyChart"},"children":[
+    {"component":"artifact-organizer/PrettyChart","props":{"kind":"bar","title":"Incident Report","data":{"labels":["Phishing","Malware","Ransom","DDoS","Insider","APT","Data"],"series":[{"name":"c","values":[91,72,58,45,36,29,22]}]}}}
   ]},
-  {"component":"hyperscribe/Section","props":{"id":"fc","title":"FlowChart"},"children":[
-    {"component":"hyperscribe/FlowChart","props":{"layout":"LR","nodes":[{"id":"a","label":"Input","shape":"pill"},{"id":"b","label":"Check","shape":"diamond"},{"id":"c","label":"Output","shape":"pill"}],"edges":[{"from":"a","to":"b"},{"from":"b","to":"c"}],"ranks":[["a"],["b"],["c"]]}}
+  {"component":"artifact-organizer/Section","props":{"id":"fc","title":"FlowChart"},"children":[
+    {"component":"artifact-organizer/FlowChart","props":{"layout":"LR","nodes":[{"id":"a","label":"Input","shape":"pill"},{"id":"b","label":"Check","shape":"diamond"},{"id":"c","label":"Output","shape":"pill"}],"edges":[{"from":"a","to":"b"},{"from":"b","to":"c"}],"ranks":[["a"],["b"],["c"]]}}
   ]},
-  {"component":"hyperscribe/Section","props":{"id":"seq","title":"Sequence (existing)"},"children":[
-    {"component":"hyperscribe/Sequence","props":{"participants":[{"id":"u","title":"User"},{"id":"s","title":"System"}],"messages":[{"from":"u","to":"s","text":"ping","kind":"sync"},{"from":"s","to":"u","text":"pong","kind":"return"}]}}
+  {"component":"artifact-organizer/Section","props":{"id":"seq","title":"Sequence (existing)"},"children":[
+    {"component":"artifact-organizer/Sequence","props":{"participants":[{"id":"u","title":"User"},{"id":"s","title":"System"}],"messages":[{"from":"u","to":"s","text":"ping","kind":"sync"},{"from":"s","to":"u","text":"pong","kind":"return"}]}}
   ]}
 ]}]}'
 for THEME in notion notion-dark linear; do
-  echo "$ENV" | node plugins/outprint/scripts/render.mjs --theme "$THEME" --out ~/.hyperscribe/out/v0.3-$THEME.html
+  echo "$ENV" | node plugins/artifact-organizer/scripts/render.mjs --theme "$THEME" --out ~/.hyperscribe/out/v0.3-$THEME.html
   open ~/.hyperscribe/out/v0.3-$THEME.html
 done
 ```

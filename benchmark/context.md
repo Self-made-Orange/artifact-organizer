@@ -1,20 +1,20 @@
-# Hyperscribe Context
+# Artifact Organizer Context
 
 ## 한 줄 요약
 
 이 레포는 "LLM이 semantic JSON envelope를 만들고, Node renderer가 self-contained HTML로 바꿔 주는" 구조다.
 
-핵심 소스는 `plugins/outprint`다.
+핵심 소스는 `plugins/artifact-organizer`다.
 
-루트 `skills/outprint*`는 여러 에이전트용 배포 형태로 복제된 미러라고 보면 된다.
+루트 `skills/artifact-organizer*`는 여러 에이전트용 배포 형태로 복제된 미러라고 보면 된다.
 
 ## 시스템 구조 한눈에 보기
 
 ```text
 user prompt
   -> plugin command / SKILL.md
-  -> LLM emits Hyperscribe envelope JSON
-  -> plugins/outprint/scripts/render.mjs
+  -> LLM emits Artifact Organizer envelope JSON
+  -> plugins/artifact-organizer/scripts/render.mjs
       -> lib/schema.mjs   (JSON schema validation)
       -> lib/tree.mjs     (component tree walk)
       -> components/*.mjs (SSR HTML string render)
@@ -28,24 +28,24 @@ user prompt
 
 ### 1. 실제 제품 소스
 
-- `plugins/outprint`
+- `plugins/artifact-organizer`
   - 실제 플러그인 패키지.
   - renderer, catalog, assets, command docs, share script가 다 여기 있다.
   - 이 레포를 이해할 때 가장 먼저 봐야 하는 곳.
 
 ### 2. 에이전트 스킬 배포본
 
-- `skills/outprint`
-- `skills/outprint-slides`
-- `skills/outprint-diff`
-- `skills/outprint-share`
+- `skills/artifact-organizer`
+- `skills/artifact-organizer-slides`
+- `skills/artifact-organizer-diff`
+- `skills/artifact-organizer-share`
 
 설명:
 
-- `skills/outprint`는 `plugins/outprint`의 거의 미러다.
+- `skills/artifact-organizer`는 `plugins/artifact-organizer`의 거의 미러다.
 - 차이는 주로 래핑 구조다.
-  - `plugins/outprint` 안에는 `.claude-plugin`, `commands/`, `skills/`가 있다.
-  - 루트 `skills/outprint` 쪽은 바로 `SKILL.md`를 둔 agent-skill 배포 형태다.
+  - `plugins/artifact-organizer` 안에는 `.claude-plugin`, `commands/`, `skills/`가 있다.
+  - 루트 `skills/artifact-organizer` 쪽은 바로 `SKILL.md`를 둔 agent-skill 배포 형태다.
 - 즉, "제품 소스"와 "설치용 복제본"이 같이 있는 레포다.
 
 ### 3. 테스트
@@ -76,40 +76,40 @@ user prompt
 
 ## 핵심 파일 지도
 
-- `plugins/outprint/scripts/render.mjs`
+- `plugins/artifact-organizer/scripts/render.mjs`
   - 메인 엔트리.
   - registry 구성, schema validation, theme load, component CSS 조합, 최종 HTML 생성까지 담당.
 
-- `plugins/outprint/spec/catalog.json`
+- `plugins/artifact-organizer/spec/catalog.json`
   - envelope 규약과 각 컴포넌트 prop schema의 기준점.
   - validator와 reference doc가 모두 여기 의존한다.
 
-- `plugins/outprint/scripts/lib/schema.mjs`
+- `plugins/artifact-organizer/scripts/lib/schema.mjs`
   - catalog 기반 validation.
   - 에러를 `path + message` 형식으로 모아 준다.
 
-- `plugins/outprint/scripts/lib/tree.mjs`
+- `plugins/artifact-organizer/scripts/lib/tree.mjs`
   - component tree walker.
   - registry에 등록된 컴포넌트 함수를 재귀 호출한다.
 
-- `plugins/outprint/scripts/components/*.mjs`
+- `plugins/artifact-organizer/scripts/components/*.mjs`
   - 각 컴포넌트의 SSR renderer.
   - 대부분 "props -> HTML string"인 얇은 함수다.
 
-- `plugins/outprint/assets/base.css`
+- `plugins/artifact-organizer/assets/base.css`
   - 공통 디자인 시스템.
 
-- `plugins/outprint/assets/components/*.css`
+- `plugins/artifact-organizer/assets/components/*.css`
   - 컴포넌트별 CSS.
   - render 시 실제로 사용된 컴포넌트 CSS만 합쳐 넣는다.
 
-- `plugins/outprint/scripts/lib/theme.mjs`
+- `plugins/artifact-organizer/scripts/lib/theme.mjs`
   - theme CSS 파일 로드와 light/dark toggle markup 생성.
 
-- `plugins/outprint/scripts/lib/preference.mjs`
-  - `~/.outprint/preference.md` 또는 `./.outprint/preference.md` 처리.
+- `plugins/artifact-organizer/scripts/lib/preference.mjs`
+  - `~/.artifact-organizer/preference.md` 또는 `./.artifact-organizer/preference.md` 처리.
 
-- `plugins/outprint/scripts/share.sh`
+- `plugins/artifact-organizer/scripts/share.sh`
   - 완성된 HTML을 Vercel에 올려 public URL을 만든다.
 
 ## 렌더링 파이프라인
@@ -125,9 +125,9 @@ user prompt
 - `parts`
 - root component
 
-일반 모드는 root가 `hyperscribe/Page`다.
+일반 모드는 root가 `artifact-organizer/Page`다.
 
-슬라이드 모드는 `hyperscribe/SlideDeck`를 쓴다.
+슬라이드 모드는 `artifact-organizer/SlideDeck`를 쓴다.
 
 ### 2. 검증
 
@@ -248,9 +248,9 @@ Slides:       SlideDeck, Slide
 
 ### 1. source of truth가 한 군데가 아니다
 
-실제 런타임 기준 source of truth는 `plugins/outprint`다.
+실제 런타임 기준 source of truth는 `plugins/artifact-organizer`다.
 
-하지만 배포를 위해 루트 `skills/outprint*`에도 거의 같은 파일이 있다.
+하지만 배포를 위해 루트 `skills/artifact-organizer*`에도 거의 같은 파일이 있다.
 
 그래서 변경 시 "어느 쪽을 기준으로 유지할지"를 항상 의식해야 한다.
 
@@ -302,18 +302,18 @@ Node 20 + `node --test`만으로 끝나는 구조다.
 새로 들어온 사람이면 이 순서가 가장 빠르다.
 
 1. `README.md`
-2. `plugins/outprint/scripts/render.mjs`
-3. `plugins/outprint/spec/catalog.json`
-4. `plugins/outprint/scripts/lib/schema.mjs`
-5. `plugins/outprint/scripts/lib/tree.mjs`
-6. `plugins/outprint/scripts/components/page.mjs`
+2. `plugins/artifact-organizer/scripts/render.mjs`
+3. `plugins/artifact-organizer/spec/catalog.json`
+4. `plugins/artifact-organizer/scripts/lib/schema.mjs`
+5. `plugins/artifact-organizer/scripts/lib/tree.mjs`
+6. `plugins/artifact-organizer/scripts/components/page.mjs`
 7. 관심 컴포넌트 2~3개
 8. `tests/schema.test.mjs`
 9. `tests/render.test.mjs`
 
 ## 짧은 결론
 
-Hyperscribe는 "프롬프트가 구조를 정하고, renderer가 일관된 HTML을 찍는" catalog-driven renderer다.
+Artifact Organizer는 "프롬프트가 구조를 정하고, renderer가 일관된 HTML을 찍는" catalog-driven renderer다.
 
 이 레포를 볼 때는 웹앱으로 보기보다:
 

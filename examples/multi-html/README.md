@@ -56,9 +56,9 @@ ngrok http 3000
 ## Add a new report
 
 1. Write a page-mode JSON (e.g. `04-may-update.json`) with `backHref: "index.html"`.
-2. Render it: `node plugins/outprint/scripts/render.mjs --in 04-may-update.json --out examples/multi-html/04-may-update.html`
+2. Render it: `node plugins/artifact-organizer/scripts/render.mjs --in 04-may-update.json --out examples/multi-html/04-may-update.html`
 3. Add it to the top of `history[]` in `index.json`:
    ```json
    { "title": "May Update", "href": "04-may-update.html", "date": "2026-05-31", ... }
    ```
-4. Re-render the hub: `node plugins/outprint/scripts/render.mjs --in examples/multi-html/index.json --out examples/multi-html/index.html`
+4. Re-render the hub: `node plugins/artifact-organizer/scripts/render.mjs --in examples/multi-html/index.json --out examples/multi-html/index.html`

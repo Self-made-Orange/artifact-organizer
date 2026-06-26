@@ -1,13 +1,13 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": { "title": "X" },
       "children": [
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": { "id": "a", "title": "Section A", "lead": "This section has a **lead** paragraph with a [link](https://example.com)." }
         }
       ]

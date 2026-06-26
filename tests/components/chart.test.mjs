@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Chart } from "../../plugins/outprint/scripts/components/chart.mjs";
+import { Chart } from "../../plugins/artifact-organizer/scripts/components/chart.mjs";
 
 const sampleData = { labels: ["Jan","Feb"], series: [{ name: "Rev", values: [10,20] }] };
 

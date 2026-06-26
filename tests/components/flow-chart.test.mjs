@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { FlowChart } from "../../plugins/outprint/scripts/components/flow-chart.mjs";
+import { FlowChart } from "../../plugins/artifact-organizer/scripts/components/flow-chart.mjs";
 
 const simple = {
   layout: "LR",
@@ -57,6 +57,6 @@ test("FlowChart: escapes labels", () => {
 });
 
 test("FlowChart CSS: uses theme variables for node borders and edges", () => {
-  const css = readFileSync(new URL("../../plugins/outprint/assets/components/flow-chart.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../../plugins/artifact-organizer/assets/components/flow-chart.css", import.meta.url), "utf8");
   assert.match(css, /var\(--op-color-fg-muted\)/);
 });

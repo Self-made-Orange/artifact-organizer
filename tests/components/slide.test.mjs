@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Slide } from "../../plugins/outprint/scripts/components/slide.mjs";
+import { Slide } from "../../plugins/artifact-organizer/scripts/components/slide.mjs";
 
 test("Slide: wraps with layout class", () => {
   const html = Slide({ layout: "title", title: "T" });

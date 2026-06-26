@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { Sequence } from "../../plugins/outprint/scripts/components/sequence.mjs";
+import { Sequence } from "../../plugins/artifact-organizer/scripts/components/sequence.mjs";
 
 test("Sequence: renders wrapper + svg root", () => {
   const html = Sequence({
@@ -92,7 +92,7 @@ test("Sequence: silently skips messages with unknown participant ids", () => {
 });
 
 test("Sequence CSS: uses theme variables for lifelines and arrows", () => {
-  const css = readFileSync(new URL("../../plugins/outprint/assets/components/sequence.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../../plugins/artifact-organizer/assets/components/sequence.css", import.meta.url), "utf8");
   assert.match(css, /var\(--op-color-fg-muted\)/);
   assert.match(css, /var\(--op-color-fg\)/);
 });

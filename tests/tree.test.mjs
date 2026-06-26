@@ -1,24 +1,24 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { renderTree } from "../plugins/outprint/scripts/lib/tree.mjs";
+import { renderTree } from "../plugins/artifact-organizer/scripts/lib/tree.mjs";
 
 const fakeRegistry = {
-  "outprint/Page": (props, renderChildren) => `<page title="${props.title}">${renderChildren()}</page>`,
-  "outprint/Prose": (props) => `<p>${props.markdown}</p>`,
-  "outprint/Section": (props, renderChildren) => `<section id="${props.id}">${renderChildren()}</section>`
+  "artifact-organizer/Page": (props, renderChildren) => `<page title="${props.title}">${renderChildren()}</page>`,
+  "artifact-organizer/Prose": (props) => `<p>${props.markdown}</p>`,
+  "artifact-organizer/Section": (props, renderChildren) => `<section id="${props.id}">${renderChildren()}</section>`
 };
 
 test("renderTree: renders single leaf", () => {
-  const node = { component: "outprint/Prose", props: { markdown: "hi" } };
+  const node = { component: "artifact-organizer/Prose", props: { markdown: "hi" } };
   assert.equal(renderTree(node, fakeRegistry), "<p>hi</p>");
 });
 
 test("renderTree: renders nested children", () => {
   const node = {
-    component: "outprint/Page",
+    component: "artifact-organizer/Page",
     props: { title: "T" },
     children: [
-      { component: "outprint/Prose", props: { markdown: "a" } }
+      { component: "artifact-organizer/Prose", props: { markdown: "a" } }
     ]
   };
   assert.equal(renderTree(node, fakeRegistry), '<page title="T"><p>a</p></page>');
@@ -26,11 +26,11 @@ test("renderTree: renders nested children", () => {
 
 test("renderTree: renders multiple children", () => {
   const node = {
-    component: "outprint/Section",
+    component: "artifact-organizer/Section",
     props: { id: "s" },
     children: [
-      { component: "outprint/Prose", props: { markdown: "a" } },
-      { component: "outprint/Prose", props: { markdown: "b" } }
+      { component: "artifact-organizer/Prose", props: { markdown: "a" } },
+      { component: "artifact-organizer/Prose", props: { markdown: "b" } }
     ]
   };
   assert.equal(renderTree(node, fakeRegistry), '<section id="s"><p>a</p><p>b</p></section>');
@@ -46,19 +46,19 @@ test("renderTree: throws on unregistered component", () => {
 
 test("renderTree: passes ctx through", () => {
   const registry = {
-    "outprint/Page": (props, renderChildren, ctx) => `<page theme="${ctx.theme}">${renderChildren()}</page>`,
-    "outprint/Prose": (props, _, ctx) => `<p theme="${ctx.theme}">${props.markdown}</p>`
+    "artifact-organizer/Page": (props, renderChildren, ctx) => `<page theme="${ctx.theme}">${renderChildren()}</page>`,
+    "artifact-organizer/Prose": (props, _, ctx) => `<p theme="${ctx.theme}">${props.markdown}</p>`
   };
   const node = {
-    component: "outprint/Page",
+    component: "artifact-organizer/Page",
     props: { title: "T" },
-    children: [{ component: "outprint/Prose", props: { markdown: "x" } }]
+    children: [{ component: "artifact-organizer/Prose", props: { markdown: "x" } }]
   };
   const out = renderTree(node, registry, { theme: "notion" });
   assert.equal(out, '<page theme="notion"><p theme="notion">x</p></page>');
 });
 
 test("renderTree: empty children renders empty string", () => {
-  const node = { component: "outprint/Page", props: { title: "T" }, children: [] };
+  const node = { component: "artifact-organizer/Page", props: { title: "T" }, children: [] };
   assert.equal(renderTree(node, fakeRegistry), '<page title="T"></page>');
 });

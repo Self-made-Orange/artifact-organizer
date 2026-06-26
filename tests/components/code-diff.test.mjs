@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CodeDiff } from "../../plugins/outprint/scripts/components/code-diff.mjs";
+import { CodeDiff } from "../../plugins/artifact-organizer/scripts/components/code-diff.mjs";
 
 test("CodeDiff: wraps with filename + lang", () => {
   const html = CodeDiff({ filename: "a.js", lang: "js", hunks: [{ before: "x", after: "y" }] });

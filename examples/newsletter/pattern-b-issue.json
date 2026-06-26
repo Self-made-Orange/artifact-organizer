@@ -7,7 +7,7 @@
     "agent": "Claude",
     "divisionsLabel": "섹션 바로가기",
     "statement": {
-      "eyebrow": "Self-made Orange",
+      "eyebrow": "Artifact Organizer",
       "text": "이번 주 AI, 펀딩, 프로덕트 소식을 한 곳에.",
       "cta": {
         "label": "섹션 보기",
@@ -16,7 +16,7 @@
     }
   },
   "featured": {
-    "component": "outprint/Callout",
+    "component": "artifact-organizer/Callout",
     "props": {
       "severity": "note",
       "title": "이번 주 핵심",
@@ -32,7 +32,7 @@
       "contentLayout": "list",
       "content": [
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "AI",
             "headline": "OpenAI releases o3, claims state-of-the-art reasoning on every major benchmark",
@@ -43,7 +43,7 @@
           }
         },
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "AI",
             "headline": "Anthropic ships Claude 4 with 500K context and native computer-use",
@@ -53,7 +53,7 @@
           }
         },
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "Research",
             "headline": "Google DeepMind's Gemini Ultra 2 tops leaderboard on 128K long-context benchmark",
@@ -73,7 +73,7 @@
       "contentLayout": "list",
       "content": [
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "Funding",
             "headline": "Perplexity AI raises $500M Series D at $9B valuation",
@@ -84,7 +84,7 @@
           }
         },
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "Funding",
             "headline": "Cursor raises $900M at $9.9B valuation from Andreessen Horowitz",
@@ -103,7 +103,7 @@
       "contentLayout": "list",
       "content": [
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "Product",
             "headline": "Figma launches Figma Sites — export designs directly to live web pages",
@@ -114,7 +114,7 @@
           }
         },
         {
-          "component": "outprint/ArticleCard",
+          "component": "artifact-organizer/ArticleCard",
           "props": {
             "tag": "Product",
             "headline": "Linear 3.0 ships with AI triage, custom views, and roadmap overhaul",

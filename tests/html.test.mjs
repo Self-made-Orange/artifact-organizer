@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { escape, attr, tag } from "../plugins/outprint/scripts/lib/html.mjs";
+import { escape, attr, tag } from "../plugins/artifact-organizer/scripts/lib/html.mjs";
 
 test("escape: replaces special chars", () => {
   assert.equal(escape("<script>"), "&lt;script&gt;");

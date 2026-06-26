@@ -1,0 +1,132 @@
+/* === DivisionCard — horizontal numbered list item === */
+.op-division-card {
+  display: grid;
+  grid-template-columns: 1fr clamp(180px, 24vw, 360px);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+  padding: clamp(32px, 5vh, 64px) clamp(16px, 3vw, 48px);
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-division-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-3, 12px);
+}
+.op-division-card-eyebrow {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-division-card-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(24px, 3vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0;
+  color: var(--op-color-fg);
+}
+.op-division-card-desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  margin: 0;
+  max-width: 48ch;
+}
+.op-division-card-projects {
+  list-style: none;
+  margin: var(--op-space-2, 8px) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  padding-top: var(--op-space-3, 12px);
+}
+.op-division-card-projects li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 120ms ease;
+}
+.op-division-card-projects li a::before {
+  content: '↗';
+  font-size: 11px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-division-card-projects li a:hover { color: var(--op-color-fg); }
+.op-division-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--op-space-2, 8px);
+  color: var(--op-color-fg);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  align-self: flex-start;
+  transition: gap 120ms ease;
+}
+.op-division-card-cta:hover { gap: 14px; }
+.op-division-card-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--op-radius, 0.5rem);
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  aspect-ratio: 3/4;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+}
+.op-division-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s ease;
+}
+.op-division-card:hover .op-division-card-media img {
+  transform: scale(1.04);
+}
+
+/* Linked card */
+a.op-division-card {
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+a.op-division-card:hover {
+  background: color-mix(in oklab, var(--op-color-fg) 3%, transparent);
+}
+a.op-division-card:hover .op-division-card-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.op-division-card-link-arrow {
+  margin-left: 8px;
+  font-size: 0.65em;
+  opacity: 0.5;
+  vertical-align: super;
+  transition: opacity 150ms ease;
+}
+a.op-division-card:hover .op-division-card-link-arrow {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .op-division-card {
+    grid-template-columns: 1fr;
+  }
+  .op-division-card-media {
+    aspect-ratio: 16/9;
+    order: -1;
+  }
+}

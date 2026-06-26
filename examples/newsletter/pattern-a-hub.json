@@ -7,7 +7,7 @@
     "agent": "Claude",
     "divisionsLabel": "지난 이슈",
     "statement": {
-      "eyebrow": "Self-made Orange",
+      "eyebrow": "Artifact Organizer",
       "text": "매주 가장 중요한 것만 골라드립니다.",
       "cta": {
         "label": "지난 이슈 보기",
@@ -16,14 +16,14 @@
     }
   },
   "featured": {
-    "component": "outprint/Section",
+    "component": "artifact-organizer/Section",
     "props": {
       "id": "week18",
       "title": "Week 18 — 이번 주 주요 뉴스"
     },
     "children": [
       {
-        "component": "outprint/Callout",
+        "component": "artifact-organizer/Callout",
         "props": {
           "severity": "note",
           "title": "에디터 픽",
@@ -31,7 +31,7 @@
         }
       },
       {
-        "component": "outprint/ArticleCard",
+        "component": "artifact-organizer/ArticleCard",
         "props": {
           "tag": "AI",
           "headline": "OpenAI releases o3, claims state-of-the-art reasoning on every major benchmark",
@@ -42,7 +42,7 @@
         }
       },
       {
-        "component": "outprint/ArticleCard",
+        "component": "artifact-organizer/ArticleCard",
         "props": {
           "tag": "AI",
           "headline": "Anthropic ships Claude 4 with 500K context and native computer-use",
@@ -52,7 +52,7 @@
         }
       },
       {
-        "component": "outprint/ArticleCard",
+        "component": "artifact-organizer/ArticleCard",
         "props": {
           "tag": "Funding",
           "headline": "Perplexity AI raises $500M Series D at $9B valuation",
@@ -63,7 +63,7 @@
         }
       },
       {
-        "component": "outprint/ArticleCard",
+        "component": "artifact-organizer/ArticleCard",
         "props": {
           "tag": "Product",
           "headline": "Figma launches Figma Sites — designs to live web pages without code",

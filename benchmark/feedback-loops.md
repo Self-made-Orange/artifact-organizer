@@ -2,7 +2,7 @@
 
 Three quick prompt-quality loops I used to harden the repo-explainer guidance.
 
-## Loop 1 — Hyperscribe repo context vs. visual-explainer benchmark
+## Loop 1 — Artifact Organizer repo context vs. visual-explainer benchmark
 
 - Input: `benchmark/context.md`
 - Comparison target: [`nicobailon/visual-explainer`](https://github.com/nicobailon/visual-explainer)

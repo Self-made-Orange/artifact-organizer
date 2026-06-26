@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Hyperscribe Codebase Map</title>
+  <title>Artifact Organizer Codebase Map</title>
   <style>/* ===== Studio theme — Airtable-inspired: clean enterprise canvas + Airtable Blue ===== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -338,7 +338,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
   outline-offset: 2px;
 }
 
-/* hyperscribe/Callout */
+/* artifact-organizer/Callout */
 .hs-callout {
   border-left: 4px solid var(--hs-color-accent);
   background: var(--hs-color-surface-alt);
@@ -358,7 +358,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
 .hs-callout-success { border-left-color: var(--hs-color-success); background: var(--hs-tone-success-bg); }
 .hs-callout-danger { border-left-color: var(--hs-tone-danger-fg); background: var(--hs-tone-danger-bg); }
 
-/* hyperscribe/Mermaid */
+/* artifact-organizer/Mermaid */
 .hs-mermaid-wrap {
   margin: var(--hs-space-5) 0;
   padding: var(--hs-space-5);
@@ -427,7 +427,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
   stroke-width: 1.25 !important;
 }
 
-/* hyperscribe/ArchitectureGrid */
+/* artifact-organizer/ArchitectureGrid */
 .hs-arch {
   margin: var(--hs-space-5) 0;
   display: grid;
@@ -493,7 +493,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
 .hs-arch-edge-control { color: var(--hs-color-warn); }
 .hs-arch-edge-dep { color: var(--hs-color-fg-muted); }
 
-/* hyperscribe/Comparison */
+/* artifact-organizer/Comparison */
 .hs-compare {
   display: grid;
   gap: var(--hs-space-4);
@@ -544,7 +544,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
 .hs-compare-verdict-loser { background: var(--hs-tone-danger-bg); color: var(--hs-tone-danger-fg); }
 .hs-compare-verdict-neutral { background: var(--hs-color-surface-alt); color: var(--hs-color-fg-muted); }
 
-/* hyperscribe/FileTree */
+/* artifact-organizer/FileTree */
 .hs-file-tree {
   margin: 1.5rem 0;
   font-family: var(--hs-font-mono);
@@ -620,7 +620,7 @@ html:not([data-mode="dark"]) .hs-mode-icon-sun  { display: none; }
 </style>
 </head>
 <body>
-<article class="hs-page"><header class="hs-page-header"><h1 class="hs-page-title">Hyperscribe Codebase Map</h1><p class="hs-page-subtitle">How a semantic envelope becomes one self-contained HTML page</p></header><main class="hs-page-main"><section class="hs-section" id="overview"><h2 class="hs-section-title">Overview</h2><div class="hs-section-lead"><p>The model writes structure. The renderer turns that structure into a browser-ready artifact.</p></div><div class="hs-section-body"><div class="hs-prose"><p>Hyperscribe is a <strong>catalog-driven renderer</strong>. The important split is simple:</p>
+<article class="hs-page"><header class="hs-page-header"><h1 class="hs-page-title">Artifact Organizer Codebase Map</h1><p class="hs-page-subtitle">How a semantic envelope becomes one self-contained HTML page</p></header><main class="hs-page-main"><section class="hs-section" id="overview"><h2 class="hs-section-title">Overview</h2><div class="hs-section-lead"><p>The model writes structure. The renderer turns that structure into a browser-ready artifact.</p></div><div class="hs-section-body"><div class="hs-prose"><p>Artifact Organizer is a <strong>catalog-driven renderer</strong>. The important split is simple:</p>
 <ul><li><code>plugins/hyperscribe/spec/catalog.json</code> defines the contract.</li><li><code>plugins/hyperscribe/scripts/render.mjs</code> validates and renders.</li><li><code>plugins/hyperscribe/scripts/components/*.mjs</code> turns semantic nodes into HTML.</li><li><code>plugins/hyperscribe/assets/*</code> and <code>plugins/hyperscribe/themes/*</code> supply the shared look and behavior.</li></ul></div><aside class="hs-callout hs-callout-info"><div class="hs-callout-title">Key idea</div><div class="hs-callout-body"><p>The envelope carries meaning, not presentation. That keeps the output predictable and makes the HTML easy to regenerate from the same source JSON.</p></div></aside></div></section><section class="hs-section" id="render-pipeline"><h2 class="hs-section-title">Render Pipeline</h2><div class="hs-section-lead"><p>A single pass moves from prompt to validated envelope to static HTML.</p></div><div class="hs-section-body"><div class="hs-mermaid-wrap" data-kind="flowchart"><pre class="mermaid">flowchart TD
 A[&quot;User prompt&quot;] --&gt; B[&quot;Command or skill prompt&quot;] --&gt; C[&quot;Semantic JSON envelope&quot;] --&gt; D[&quot;Schema validation&lt;br/&gt;spec/catalog.json&quot;] --&gt; E[&quot;Tree walk&lt;br/&gt;scripts/lib/tree.mjs&quot;] --&gt; F[&quot;Component SSR&lt;br/&gt;scripts/components/*.mjs&quot;] --&gt; G[&quot;Theme + asset bundle&lt;br/&gt;base.css + themes/*.css&quot;] --&gt; H[&quot;Self-contained HTML&lt;br/&gt;+ sibling JSON&quot;]</pre><script>if (!window.__hsMermaidLoaded) {
   window.__hsMermaidLoaded = true;
@@ -677,7 +677,7 @@ A[&quot;User prompt&quot;] --&gt; B[&quot;Command or skill prompt&quot;] --&gt; 
     apply(next);
   });}
 })();</script>
-<script>/* Hyperscribe interactive layer — pan/zoom for SVG diagrams.
+<script>/* Artifact Organizer interactive layer — pan/zoom for SVG diagrams.
  * Any element tagged `.hs-zoomable` gets: mouse-drag pan, Ctrl/Cmd+wheel zoom,
  * and a small control bar (＋ / − / ⟲ reset) docked to the top-right corner. */
 (function () {

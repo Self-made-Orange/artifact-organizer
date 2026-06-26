@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { ERDDiagram } from "../../plugins/outprint/scripts/components/erd-diagram.mjs";
+import { ERDDiagram } from "../../plugins/artifact-organizer/scripts/components/erd-diagram.mjs";
 
 const sample = {
   entities: [

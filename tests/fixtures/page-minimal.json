@@ -1,12 +1,12 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": { "title": "Hello" },
       "children": [
-        { "component": "outprint/Prose", "props": { "markdown": "minimal body" } }
+        { "component": "artifact-organizer/Prose", "props": { "markdown": "minimal body" } }
       ]
     }
   ]

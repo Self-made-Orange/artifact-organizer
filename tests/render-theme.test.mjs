@@ -1,12 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { render, resolveRenderer } from "../plugins/outprint/scripts/render.mjs";
+import { render, resolveRenderer } from "../plugins/artifact-organizer/scripts/render.mjs";
 
 const envelope = {
   a2ui_version: "0.9",
-  catalog: "outprint/v1",
+  catalog: "artifact-organizer/v1",
   is_task_complete: true,
-  parts: [{ component: "outprint/Page", props: { title: "t" }, children: [] }]
+  parts: [{ component: "artifact-organizer/Page", props: { title: "t" }, children: [] }]
 };
 
 test("render: default theme is notion", async () => {
@@ -15,7 +15,7 @@ test("render: default theme is notion", async () => {
   assert.match(html, /\[data-theme="notion"\]/);
 });
 
-for (const name of ["notion", "linear", "vercel", "stripe", "supabase"]) {
+for (const name of ["notion", "linear", "vercel", "stripe", "supabase", "apple", "tailwind"]) {
   test(`render: --theme ${name} applied`, async () => {
     const html = await render(envelope, { theme: name });
     assert.match(html, new RegExp(`data-theme="${name}"`));

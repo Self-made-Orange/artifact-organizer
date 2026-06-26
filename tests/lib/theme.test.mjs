@@ -1,14 +1,15 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { loadTheme, listThemes, modeTogglerHtml } from "../../plugins/outprint/scripts/lib/theme.mjs";
+import { loadTheme, listThemes, modeTogglerHtml } from "../../plugins/artifact-organizer/scripts/lib/theme.mjs";
 
-const BUNDLED = ["notion", "linear", "vercel", "stripe", "supabase"];
+const BUNDLED = ["notion", "linear", "vercel", "stripe", "supabase", "apple", "tailwind"];
 
-test("listThemes: finds exactly the 5 bundled themes", () => {
+test("listThemes: finds exactly the 7 bundled themes", () => {
   const names = listThemes();
   for (const n of BUNDLED) {
     assert.ok(names.includes(n), `missing theme ${n}`);
   }
+  assert.equal(names.length, BUNDLED.length, `expected ${BUNDLED.length} themes, got ${names.length}: ${names.join(",")}`);
 });
 
 test("listThemes: legacy themes (studio/midnight/void/gallery) are gone", () => {
@@ -54,7 +55,7 @@ test("modeTogglerHtml: emits a single toggle button + init script", () => {
   assert.match(html, /aria-label="Toggle light\/dark mode"/);
   assert.match(html, /op-mode-icon-sun/);
   assert.match(html, /op-mode-icon-moon/);
-  assert.match(html, /hyperscribe\.mode/);
+  assert.match(html, /artifact-organizer\.mode/);
 });
 
 test("modeTogglerHtml: respects prefers-color-scheme on first load", () => {

@@ -10,7 +10,7 @@ import {
   resolvePreferencePath,
   readPreference,
   writePreference
-} from "../../plugins/outprint/scripts/lib/preference.mjs";
+} from "../../plugins/artifact-organizer/scripts/lib/preference.mjs";
 
 test("defaults: notion + auto", () => {
   assert.deepEqual(defaults(), { theme: "notion", renderer: "auto" });
@@ -43,7 +43,7 @@ test("parsePreference: missing renderer falls back to default", () => {
 test("formatPreference: produces canonical YAML + body", () => {
   const out = formatPreference({ theme: "linear", renderer: "page" });
   assert.match(out, /^---\ntheme: linear\nrenderer: page\ncreated_at: /);
-  assert.match(out, /# Outprint preferences/);
+  assert.match(out, /# Artifact Organizer preferences/);
   assert.match(out, /Valid values:/);
   // No mode field anywhere — color mode is intentionally not a preference
   assert.doesNotMatch(out, /^mode:/m);
@@ -52,7 +52,7 @@ test("formatPreference: produces canonical YAML + body", () => {
 test("resolvePreferencePath: project-local wins over global", () => {
   const tmp = mkdtempSync(join(tmpdir(), "op-pref-"));
   try {
-    const local = join(tmp, ".outprint");
+    const local = join(tmp, ".artifact-organizer");
     mkdirSync(local, { recursive: true });
     const localFile = join(local, "preference.md");
     writeFileSync(localFile, "---\ntheme: linear\nrenderer: page\n---");
@@ -63,16 +63,16 @@ test("resolvePreferencePath: project-local wins over global", () => {
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 });
 
-test("resolvePreferencePath: legacy ./.hyperscribe/ is auto-migrated to ./.outprint/", () => {
+test("resolvePreferencePath: legacy ./.hyperscribe/ is auto-migrated to ./.artifact-organizer/", () => {
   const tmp = mkdtempSync(join(tmpdir(), "op-pref-"));
   try {
     const legacy = join(tmp, ".hyperscribe");
     mkdirSync(legacy, { recursive: true });
     const legacyFile = join(legacy, "preference.md");
     writeFileSync(legacyFile, "---\ntheme: stripe\nrenderer: canvas\n---");
-    // No .outprint/ exists — resolver should copy and return current path
+    // No current dir exists — resolver should copy and return current path
     const found = resolvePreferencePath({ cwd: tmp });
-    assert.equal(found, join(tmp, ".outprint", "preference.md"));
+    assert.equal(found, join(tmp, ".artifact-organizer", "preference.md"));
     // Migrated file content matches
     const migrated = readFileSync(found, "utf8");
     assert.match(migrated, /theme: stripe/);
@@ -80,7 +80,19 @@ test("resolvePreferencePath: legacy ./.hyperscribe/ is auto-migrated to ./.outpr
   } finally { rmSync(tmp, { recursive: true, force: true }); }
 });
 
-test("resolvePreferencePath: legacy ~/.hyperscribe/ is auto-migrated to ~/.outprint/", () => {
+test("resolvePreferencePath: legacy ./.outprint/ is auto-migrated to ./.artifact-organizer/", () => {
+  const tmp = mkdtempSync(join(tmpdir(), "op-pref-"));
+  try {
+    const legacy = join(tmp, ".outprint");
+    mkdirSync(legacy, { recursive: true });
+    writeFileSync(join(legacy, "preference.md"), "---\ntheme: apple\nrenderer: auto\n---");
+    const found = resolvePreferencePath({ cwd: tmp });
+    assert.equal(found, join(tmp, ".artifact-organizer", "preference.md"));
+    assert.match(readFileSync(found, "utf8"), /theme: apple/);
+  } finally { rmSync(tmp, { recursive: true, force: true }); }
+});
+
+test("resolvePreferencePath: legacy ~/.hyperscribe/ is auto-migrated to ~/.artifact-organizer/", () => {
   const tmp = mkdtempSync(join(tmpdir(), "op-pref-"));
   try {
     // No project-local of either kind — only home-legacy exists.

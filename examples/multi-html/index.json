@@ -7,7 +7,7 @@
     "subtitle": "Every report, connected.",
     "divisionsLabel": "All Reports",
     "statement": {
-      "eyebrow": "Self-made Orange",
+      "eyebrow": "Artifact Organizer",
       "text": "One agent. Every output, beautifully connected.",
       "cta": {
         "label": "Browse all reports",
@@ -16,7 +16,7 @@
     }
   },
   "featured": {
-    "component": "outprint/Prose",
+    "component": "artifact-organizer/Prose",
     "props": {
       "markdown": "## Welcome\n\nThis is the **agent output hub** — a living index of every report this agent has produced.\n\nClick any card below to open the full report. New outputs are added automatically at the top as the agent runs."
     }

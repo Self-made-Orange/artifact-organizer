@@ -1,10 +1,10 @@
 # claw / hyperscribe wrapper tooling
 
-Slack/agent-side helpers for invoking `agent-outprint-skills` from the claw bot.
+Slack/agent-side helpers for invoking `artifact-organizer` from the claw bot.
 
 ## Files
 
-- `outprint-render` — wrapper that calls `plugins/outprint/scripts/render.mjs`
+- `outprint-render` — wrapper that calls `plugins/artifact-organizer/scripts/render.mjs`
 - `canvas-wrap.py` — auto-converts general envelope (`parts[]`) to canvas template
 
 ## Wrapper behaviors (on top of vanilla `render.mjs`)
@@ -23,7 +23,7 @@ Slack/agent-side helpers for invoking `agent-outprint-skills` from the claw bot.
 
 | var | default | purpose |
 |---|---|---|
-| HYPERSCRIBE_REPO | ~/src/agent-outprint-skills | this checkout |
+| HYPERSCRIBE_REPO | ~/src/artifact-organizer | this checkout |
 | CLAW_HYPERSCRIBE_THEME | notion | default theme when caller drops --theme |
 | CLAW_HYPERSCRIBE_MODE | auto | default mode when caller drops --mode |
 
@@ -34,4 +34,4 @@ Slack/agent-side helpers for invoking `agent-outprint-skills` from the claw bot.
 
 ## Origin
 
-Forked from claw bot wrapper (2026-04-30). Wrapper lives at `~/.local/bin/outprint-render` in the bot's runtime; this directory tracks it as part of agent-outprint-skills so the canvas-wrap behavior travels with the source.
+Forked from claw bot wrapper (2026-04-30). Wrapper lives at `~/.local/bin/outprint-render` in the bot's runtime; this directory tracks it as part of artifact-organizer so the canvas-wrap behavior travels with the source.

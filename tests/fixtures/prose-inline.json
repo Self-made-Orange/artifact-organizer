@@ -1,12 +1,12 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": { "title": "Prose" },
       "children": [
-        { "component": "outprint/Prose", "props": { "markdown": "**Bold**, *italic*, and `code`.\n\n- item one\n- item **two**\n\n1. first\n2. second\n\nLinks: [site](https://example.com)." } }
+        { "component": "artifact-organizer/Prose", "props": { "markdown": "**Bold**, *italic*, and `code`.\n\n- item one\n- item **two**\n\n1. first\n2. second\n\nLinks: [site](https://example.com)." } }
       ]
     }
   ]

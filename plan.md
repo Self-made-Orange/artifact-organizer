@@ -1,4 +1,4 @@
-# Hyperscribe Gallery — Plan
+# Artifact Organizer Gallery — Plan
 
 ## 목표
 생성된 모든 hyperscribe HTML 페이지를 Pinterest 스타일 카드 갤러리로 보여주는 인덱스 페이지.
@@ -7,16 +7,16 @@
 
 ## 구조
 
-### `hyperscribe/GalleryIndex` 컴포넌트
+### `artifact-organizer/GalleryIndex` 컴포넌트
 - JSON에서 `pages` 배열을 받아 마소너리/그리드 카드 레이아웃 렌더링
 - 각 카드: 실제 스크린샷 이미지 배경 + 제목 + 테마 + 날짜 오버레이
 - 클릭 시 해당 HTML로 이동
 
 ```json
 {
-  "component": "hyperscribe/GalleryIndex",
+  "component": "artifact-organizer/GalleryIndex",
   "props": {
-    "title": "Hyperscribe Gallery",
+    "title": "Artifact Organizer Gallery",
     "pages": [
       {
         "title": "Silent House",
@@ -40,8 +40,8 @@
 - 이후 `render.mjs`에 `--preview` 플래그 추가 고려
 
 ### 2. GalleryIndex 컴포넌트
-- `plugins/outprint/scripts/components/gallery-index.mjs`
-- `plugins/outprint/assets/components/gallery-index.css`
+- `plugins/artifact-organizer/scripts/components/gallery-index.mjs`
+- `plugins/artifact-organizer/assets/components/gallery-index.css`
 - 마소너리 그리드 (CSS columns 또는 grid + dense)
 - 카드 hover: 제목/메타 오버레이 슬라이드업
 - 반응형 (3col desktop → 2col tablet → 1col mobile)

@@ -1,18 +1,18 @@
 {
   "a2ui_version": "0.9",
-  "catalog": "outprint/v1",
+  "catalog": "artifact-organizer/v1",
   "is_task_complete": true,
   "parts": [
     {
-      "component": "outprint/Page",
+      "component": "artifact-organizer/Page",
       "props": {
-        "title": "Hyperscribe Codebase Map",
+        "title": "Artifact Organizer Codebase Map",
         "subtitle": "How a semantic envelope becomes one self-contained HTML page",
         "toc": true
       },
       "children": [
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "overview",
             "title": "Overview",
@@ -20,13 +20,13 @@
           },
           "children": [
             {
-              "component": "outprint/Prose",
+              "component": "artifact-organizer/Prose",
               "props": {
-                "markdown": "Hyperscribe is a **catalog-driven renderer**. The important split is simple:\n\n- `plugins/outprint/spec/catalog.json` defines the contract.\n- `plugins/outprint/scripts/render.mjs` validates and renders.\n- `plugins/outprint/scripts/components/*.mjs` turns semantic nodes into HTML.\n- `plugins/outprint/assets/*` and `plugins/outprint/themes/*` supply the shared look and behavior."
+                "markdown": "Artifact Organizer is a **catalog-driven renderer**. The important split is simple:\n\n- `plugins/artifact-organizer/spec/catalog.json` defines the contract.\n- `plugins/artifact-organizer/scripts/render.mjs` validates and renders.\n- `plugins/artifact-organizer/scripts/components/*.mjs` turns semantic nodes into HTML.\n- `plugins/artifact-organizer/assets/*` and `plugins/artifact-organizer/themes/*` supply the shared look and behavior."
               }
             },
             {
-              "component": "outprint/Callout",
+              "component": "artifact-organizer/Callout",
               "props": {
                 "severity": "info",
                 "title": "Key idea",
@@ -36,7 +36,7 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "render-pipeline",
             "title": "Render Pipeline",
@@ -44,7 +44,7 @@
           },
           "children": [
             {
-              "component": "outprint/Mermaid",
+              "component": "artifact-organizer/Mermaid",
               "props": {
                 "kind": "flowchart",
                 "direction": "TD",
@@ -54,7 +54,7 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "core-modules",
             "title": "Core Modules",
@@ -62,7 +62,7 @@
           },
           "children": [
             {
-              "component": "outprint/ArchitectureGrid",
+              "component": "artifact-organizer/ArchitectureGrid",
               "props": {
                 "layout": "layers",
                 "groups": [
@@ -186,20 +186,20 @@
           ]
         },
         {
-          "component": "outprint/Section",
+          "component": "artifact-organizer/Section",
           "props": {
             "id": "repo-shape",
             "title": "Repository Shape",
-            "lead": "The product source lives under `plugins/outprint`. The skill and docs folders are mirrors and helpers around it."
+            "lead": "The product source lives under `plugins/artifact-organizer`. The skill and docs folders are mirrors and helpers around it."
           },
           "children": [
             {
-              "component": "outprint/Comparison",
+              "component": "artifact-organizer/Comparison",
               "props": {
                 "mode": "grid",
                 "items": [
                   {
-                    "title": "plugins/outprint",
+                    "title": "plugins/artifact-organizer",
                     "subtitle": "Canonical runtime",
                     "bullets": [
                       "Renderer, schema, tree walker, themes, assets, and commands live here.",
@@ -228,7 +228,7 @@
               }
             },
             {
-              "component": "outprint/FileTree",
+              "component": "artifact-organizer/FileTree",
               "props": {
                 "showIcons": true,
                 "caption": "A compact map of the paths that matter most.",

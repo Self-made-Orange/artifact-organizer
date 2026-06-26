@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Page } from "../../plugins/outprint/scripts/components/page.mjs";
+import { Page } from "../../plugins/artifact-organizer/scripts/components/page.mjs";
 
 test("Page: renders title as h1", () => {
   const html = Page({ title: "Hello" }, () => "");

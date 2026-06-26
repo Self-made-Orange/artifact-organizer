@@ -11,11 +11,11 @@ export const GALLERY_SOURCE_IMAGE = resolve(ROOT, GALLERY_ASSET_DIR, "source", "
 function page(title, children, subtitle) {
   return {
     a2ui_version: "0.9",
-    catalog: "outprint/v1",
+    catalog: "artifact-organizer/v1",
     is_task_complete: true,
     parts: [
       {
-        component: "outprint/Page",
+        component: "artifact-organizer/Page",
         props: subtitle ? { title, subtitle } : { title },
         children
       }
@@ -25,7 +25,7 @@ function page(title, children, subtitle) {
 
 function componentSlug(component) {
   return component
-    .replace(/^outprint\//, "")
+    .replace(/^[^/]+\//, "")
     .replace(/([a-z\d])([A-Z])/g, "$1-$2")
     .replace(/([A-Z])([A-Z][a-z])/g, "$1-$2")
     .toLowerCase();
@@ -36,7 +36,7 @@ function galleryEntry(component, previewTitle, buildDoc, options = {}) {
   return {
     component,
     slug,
-    label: component.replace(/^outprint\//, ""),
+    label: component.replace(/^[^/]+\//, ""),
     previewTitle,
     imagePath: `${GALLERY_ASSET_DIR}/${slug}.webp`,
     captureScale: options.captureScale ?? 1.2,
@@ -47,11 +47,11 @@ function galleryEntry(component, previewTitle, buildDoc, options = {}) {
 }
 
 export const GALLERY_COMPONENTS = [
-  galleryEntry("outprint/Page", "Page", () => page(
+  galleryEntry("artifact-organizer/Page", "Page", () => page(
     "Page",
     [
       {
-        component: "outprint/Section",
+        component: "artifact-organizer/Section",
         props: {
           id: "overview",
           title: "Single-file visual explainer",
@@ -59,7 +59,7 @@ export const GALLERY_COMPONENTS = [
         },
         children: [
           {
-            component: "outprint/Prose",
+            component: "artifact-organizer/Prose",
             props: {
               markdown: "Use the page container when you want a complete document with a stable reading rhythm."
             }
@@ -67,11 +67,11 @@ export const GALLERY_COMPONENTS = [
         ]
       }
     ],
-    "The outer frame that holds a full Hyperscribe document."
+    "The outer frame that holds a full Artifact Organizer document."
   ), { captureScale: 1, captureWidth: "980px", showHeader: true }),
-  galleryEntry("outprint/Section", "Section", () => page("Section", [
+  galleryEntry("artifact-organizer/Section", "Section", () => page("Section", [
     {
-      component: "outprint/Section",
+      component: "artifact-organizer/Section",
       props: {
         id: "section",
         title: "Titled block with lead copy",
@@ -79,7 +79,7 @@ export const GALLERY_COMPONENTS = [
       },
       children: [
         {
-          component: "outprint/Prose",
+          component: "artifact-organizer/Prose",
           props: {
             markdown: "Good for long pages that need clear chunks instead of one undifferentiated wall."
           }
@@ -87,22 +87,22 @@ export const GALLERY_COMPONENTS = [
       ]
     }
   ]), { captureScale: 1.2, captureWidth: "900px" }),
-  galleryEntry("outprint/Heading", "Heading", () => page("Heading", [
-    { component: "outprint/Heading", props: { level: 2, text: "H2 for big subsections" } },
-    { component: "outprint/Heading", props: { level: 3, text: "H3 for local grouping" } },
-    { component: "outprint/Heading", props: { level: 4, text: "H4 for small callouts" } }
+  galleryEntry("artifact-organizer/Heading", "Heading", () => page("Heading", [
+    { component: "artifact-organizer/Heading", props: { level: 2, text: "H2 for big subsections" } },
+    { component: "artifact-organizer/Heading", props: { level: 3, text: "H3 for local grouping" } },
+    { component: "artifact-organizer/Heading", props: { level: 4, text: "H4 for small callouts" } }
   ]), { captureScale: 1.45, captureWidth: "900px" }),
-  galleryEntry("outprint/Prose", "Prose", () => page("Prose", [
+  galleryEntry("artifact-organizer/Prose", "Prose", () => page("Prose", [
     {
-      component: "outprint/Prose",
+      component: "artifact-organizer/Prose",
       props: {
         markdown: "Markdown paragraphs, lists, and inline formatting live here.\n\n- crisp bullets\n- **strong emphasis**\n- `inline code`"
       }
     }
   ]), { captureScale: 1.35, captureWidth: "820px" }),
-  galleryEntry("outprint/Image", "Image", () => page("Image", [
+  galleryEntry("artifact-organizer/Image", "Image", () => page("Image", [
     {
-      component: "outprint/Image",
+      component: "artifact-organizer/Image",
       props: {
         src: GALLERY_SOURCE_IMAGE,
         alt: "A sample layered dashboard illustration",
@@ -112,9 +112,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.08, captureWidth: "960px" }),
-  galleryEntry("outprint/Callout", "Callout", () => page("Callout", [
+  galleryEntry("artifact-organizer/Callout", "Callout", () => page("Callout", [
     {
-      component: "outprint/Callout",
+      component: "artifact-organizer/Callout",
       props: {
         severity: "warn",
         title: "Keep the contract semantic",
@@ -122,9 +122,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.42, captureWidth: "860px" }),
-  galleryEntry("outprint/KPICard", "KPICard", () => page("KPICard", [
+  galleryEntry("artifact-organizer/KPICard", "KPICard", () => page("KPICard", [
     {
-      component: "outprint/KPICard",
+      component: "artifact-organizer/KPICard",
       props: {
         label: "Render time",
         value: "142 ms",
@@ -133,9 +133,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.85, captureWidth: "520px" }),
-  galleryEntry("outprint/CodeBlock", "CodeBlock", () => page("CodeBlock", [
+  galleryEntry("artifact-organizer/CodeBlock", "CodeBlock", () => page("CodeBlock", [
     {
-      component: "outprint/CodeBlock",
+      component: "artifact-organizer/CodeBlock",
       props: {
         lang: "js",
         filename: "render.js",
@@ -149,16 +149,16 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.4, captureWidth: "900px" }),
-  galleryEntry("outprint/CodeDiff", "CodeDiff", () => page("CodeDiff", [
+  galleryEntry("artifact-organizer/CodeDiff", "CodeDiff", () => page("CodeDiff", [
     {
-      component: "outprint/CodeDiff",
+      component: "artifact-organizer/CodeDiff",
       props: {
         filename: "page.mjs",
         lang: "diff",
         hunks: [
           {
             before: "const title = props.title;",
-            after: "const title = props.title || 'Hyperscribe';",
+            after: "const title = props.title || 'Artifact Organizer';",
             atLine: 12
           },
           {
@@ -170,9 +170,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.38, captureWidth: "980px" }),
-  galleryEntry("outprint/Mermaid", "Mermaid", () => page("Mermaid", [
+  galleryEntry("artifact-organizer/Mermaid", "Mermaid", () => page("Mermaid", [
     {
-      component: "outprint/Mermaid",
+      component: "artifact-organizer/Mermaid",
       props: {
         kind: "flowchart",
         direction: "LR",
@@ -185,9 +185,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.22, captureWidth: "1040px" }),
-  galleryEntry("outprint/Sequence", "Sequence", () => page("Sequence", [
+  galleryEntry("artifact-organizer/Sequence", "Sequence", () => page("Sequence", [
     {
-      component: "outprint/Sequence",
+      component: "artifact-organizer/Sequence",
       props: {
         participants: [
           { id: "user", title: "User" },
@@ -203,9 +203,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.12, captureWidth: "980px" }),
-  galleryEntry("outprint/ArchitectureGrid", "ArchitectureGrid", () => page("ArchitectureGrid", [
+  galleryEntry("artifact-organizer/ArchitectureGrid", "ArchitectureGrid", () => page("ArchitectureGrid", [
     {
-      component: "outprint/ArchitectureGrid",
+      component: "artifact-organizer/ArchitectureGrid",
       props: {
         layout: "grid",
         nodes: [
@@ -220,9 +220,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.16, captureWidth: "1060px" }),
-  galleryEntry("outprint/FlowChart", "FlowChart", () => page("FlowChart", [
+  galleryEntry("artifact-organizer/FlowChart", "FlowChart", () => page("FlowChart", [
     {
-      component: "outprint/FlowChart",
+      component: "artifact-organizer/FlowChart",
       props: {
         layout: "LR",
         nodes: [
@@ -240,9 +240,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.2, captureWidth: "1040px" }),
-  galleryEntry("outprint/Quadrant", "Quadrant", () => page("Quadrant", [
+  galleryEntry("artifact-organizer/Quadrant", "Quadrant", () => page("Quadrant", [
     {
-      component: "outprint/Quadrant",
+      component: "artifact-organizer/Quadrant",
       props: {
         xLabel: "Effort",
         yLabel: "Impact",
@@ -259,9 +259,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.12, captureWidth: "980px" }),
-  galleryEntry("outprint/Swimlane", "Swimlane", () => page("Swimlane", [
+  galleryEntry("artifact-organizer/Swimlane", "Swimlane", () => page("Swimlane", [
     {
-      component: "outprint/Swimlane",
+      component: "artifact-organizer/Swimlane",
       props: {
         lanes: [
           { id: "user", title: "User", subtitle: "Request" },
@@ -280,9 +280,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.15, captureWidth: "1080px" }),
-  galleryEntry("outprint/DataTable", "DataTable", () => page("DataTable", [
+  galleryEntry("artifact-organizer/DataTable", "DataTable", () => page("DataTable", [
     {
-      component: "outprint/DataTable",
+      component: "artifact-organizer/DataTable",
       props: {
         columns: [
           { key: "component", label: "Component" },
@@ -299,9 +299,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.26, captureWidth: "1020px" }),
-  galleryEntry("outprint/Chart", "Chart", () => page("Chart", [
+  galleryEntry("artifact-organizer/Chart", "Chart", () => page("Chart", [
     {
-      component: "outprint/Chart",
+      component: "artifact-organizer/Chart",
       props: {
         kind: "bar",
         xLabel: "Week",
@@ -317,9 +317,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.22, captureWidth: "1020px" }),
-  galleryEntry("outprint/Comparison", "Comparison", () => page("Comparison", [
+  galleryEntry("artifact-organizer/Comparison", "Comparison", () => page("Comparison", [
     {
-      component: "outprint/Comparison",
+      component: "artifact-organizer/Comparison",
       props: {
         mode: "vs",
         items: [
@@ -329,7 +329,7 @@ export const GALLERY_COMPONENTS = [
             bullets: ["High token cost", "Easy to drift visually", "Harder to validate"]
           },
           {
-            title: "Hyperscribe",
+            title: "Artifact Organizer",
             subtitle: "Schema-first",
             bullets: ["Semantic JSON only", "Cheaper output", "Deterministic renderer"],
             verdict: { label: "Recommended", tone: "winner" }
@@ -338,9 +338,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.25, captureWidth: "1020px" }),
-  galleryEntry("outprint/StepList", "StepList", () => page("StepList", [
+  galleryEntry("artifact-organizer/StepList", "StepList", () => page("StepList", [
     {
-      component: "outprint/StepList",
+      component: "artifact-organizer/StepList",
       props: {
         steps: [
           { title: "Write prompt", body: "Describe the artifact you want.", state: "done" },
@@ -350,9 +350,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.42, captureWidth: "840px" }),
-  galleryEntry("outprint/FileTree", "FileTree", () => page("FileTree", [
+  galleryEntry("artifact-organizer/FileTree", "FileTree", () => page("FileTree", [
     {
-      component: "outprint/FileTree",
+      component: "artifact-organizer/FileTree",
       props: {
         caption: "Typical renderer layout",
         nodes: [
@@ -376,12 +376,12 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.35, captureWidth: "920px" }),
-  galleryEntry("outprint/FileCard", "FileCard", () => page("FileCard", [
+  galleryEntry("artifact-organizer/FileCard", "FileCard", () => page("FileCard", [
     {
-      component: "outprint/FileCard",
+      component: "artifact-organizer/FileCard",
       props: {
         name: "render.mjs",
-        path: "plugins/outprint/scripts/render.mjs",
+        path: "plugins/artifact-organizer/scripts/render.mjs",
         responsibility: "Validates envelopes, loads the theme, and emits a self-contained HTML document.",
         loc: 248,
         state: "modified",
@@ -392,9 +392,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.55, captureWidth: "860px" }),
-  galleryEntry("outprint/AnnotatedCode", "AnnotatedCode", () => page("AnnotatedCode", [
+  galleryEntry("artifact-organizer/AnnotatedCode", "AnnotatedCode", () => page("AnnotatedCode", [
     {
-      component: "outprint/AnnotatedCode",
+      component: "artifact-organizer/AnnotatedCode",
       props: {
         lang: "js",
         filename: "capture.js",
@@ -410,9 +410,9 @@ export const GALLERY_COMPONENTS = [
       }
     }
   ]), { captureScale: 1.22, captureWidth: "1040px" }),
-  galleryEntry("outprint/ERDDiagram", "ERDDiagram", () => page("ERDDiagram", [
+  galleryEntry("artifact-organizer/ERDDiagram", "ERDDiagram", () => page("ERDDiagram", [
     {
-      component: "outprint/ERDDiagram",
+      component: "artifact-organizer/ERDDiagram",
       props: {
         entities: [
           {
@@ -443,10 +443,10 @@ export const GALLERY_COMPONENTS = [
 ];
 
 const README_HIDDEN_COMPONENTS = new Set([
-  "outprint/Page",
-  "outprint/Section",
-  "outprint/Heading",
-  "outprint/Prose"
+  "artifact-organizer/Page",
+  "artifact-organizer/Section",
+  "artifact-organizer/Heading",
+  "artifact-organizer/Prose"
 ]);
 
 export const README_GALLERY_COMPONENTS = GALLERY_COMPONENTS.filter(
@@ -496,8 +496,8 @@ export function injectReadmeGallerySection(readme, section) {
   );
   const withoutExisting = readme.replace(blockPattern, "").replace(/\n{3,}/g, "\n\n");
 
-  if (withoutExisting.includes("## Why Hyperscribe")) {
-    return withoutExisting.replace("## Why Hyperscribe", `${section}\n\n## Why Hyperscribe`);
+  if (withoutExisting.includes("## Why Artifact Organizer")) {
+    return withoutExisting.replace("## Why Artifact Organizer", `${section}\n\n## Why Artifact Organizer`);
   }
 
   return `${withoutExisting.trimEnd()}\n\n${section}\n`;

@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { Image } from "../../plugins/outprint/scripts/components/image.mjs";
+import { Image } from "../../plugins/artifact-organizer/scripts/components/image.mjs";
 
 test("Image: renders https:// URL as passthrough <img>", () => {
   const html = Image({ src: "https://example.com/x.png", alt: "ex" });

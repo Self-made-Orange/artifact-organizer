@@ -1,8 +1,8 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { Section } from "../plugins/outprint/scripts/components/section.mjs";
-import { Callout } from "../plugins/outprint/scripts/components/callout.mjs";
+import { Section } from "../plugins/artifact-organizer/scripts/components/section.mjs";
+import { Callout } from "../plugins/artifact-organizer/scripts/components/callout.mjs";
 
 test("Section lead: renders inline code markup", () => {
   const html = Section(
@@ -23,11 +23,11 @@ test("Callout body: renders inline code markup", () => {
 
 test("Base CSS: styles inline code beyond prose blocks", () => {
   const pluginCss = readFileSync(
-    new URL("../plugins/outprint/assets/base.css", import.meta.url),
+    new URL("../plugins/artifact-organizer/assets/base.css", import.meta.url),
     "utf8"
   );
   const rootCss = readFileSync(
-    new URL("../skills/outprint/assets/base.css", import.meta.url),
+    new URL("../skills/artifact-organizer/assets/base.css", import.meta.url),
     "utf8"
   );
 

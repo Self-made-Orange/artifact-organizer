@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { Mermaid } from "../../plugins/outprint/scripts/components/mermaid.mjs";
+import { Mermaid } from "../../plugins/artifact-organizer/scripts/components/mermaid.mjs";
 
 test("Mermaid: wraps source in pre.mermaid with zoom/pan container", () => {
   const html = Mermaid({ kind: "flowchart", source: "A --> B" });
@@ -37,7 +37,7 @@ test("Mermaid: kind attribute on outer wrap", () => {
 });
 
 test("Mermaid CSS: uses theme variables for edges and actor borders", () => {
-  const css = readFileSync(new URL("../../plugins/outprint/assets/components/mermaid.css", import.meta.url), "utf8");
+  const css = readFileSync(new URL("../../plugins/artifact-organizer/assets/components/mermaid.css", import.meta.url), "utf8");
   assert.match(css, /var\(--op-color-fg-muted\)/);
   assert.match(css, /var\(--op-color-fg\)/);
 });

@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { AnnotatedCode } from "../../plugins/outprint/scripts/components/annotated-code.mjs";
+import { AnnotatedCode } from "../../plugins/artifact-organizer/scripts/components/annotated-code.mjs";
 
 const sample = {
   lang: "js",

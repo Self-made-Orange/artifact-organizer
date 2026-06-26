@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { Prose } from "../../plugins/outprint/scripts/components/prose.mjs";
+import { Prose } from "../../plugins/artifact-organizer/scripts/components/prose.mjs";
 
 test("Prose: wraps markdown in op-prose container", () => {
   const html = Prose({ markdown: "hello" });
