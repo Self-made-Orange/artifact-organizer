@@ -440,8 +440,8 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   display: block;
   position: absolute;
   /* top:auto is required — the base rule sets inset:0 (top:0 AND bottom:0),
-     which would stretch this full-height and ignore `height`, pushing the fade
-     up over the content. Anchor it to the bottom band only. */
+     which would stretch this full-height and ignore the height, pushing the
+     fade up over the content. Anchor it to the bottom band only. */
   top: auto;
   left: 0; right: 0; bottom: 0;
   height: clamp(140px, 24vh, 260px);
