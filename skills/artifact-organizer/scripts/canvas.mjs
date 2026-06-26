@@ -410,11 +410,14 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
 /* ── Body / page reset for canvas full-bleed ── */
 body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
 
-/* ── Fixed transparent nav → frosted on scroll ── */
+/* ── Fixed nav with an always-on gradient boundary (mode-aware via bg) ── */
 .op-site-header {
   position: fixed;
   top: 0; left: 0; right: 0;
-  background: transparent;
+  background: linear-gradient(to bottom,
+    var(--op-color-bg) 0%,
+    color-mix(in oklab, var(--op-color-bg) 72%, transparent) 60%,
+    transparent 100%);
   border-bottom: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -431,8 +434,20 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
 .op-hero-stage {
   background: var(--op-color-bg) !important;
 }
-/* ── Remove image-vignette gradient — canvas uses solid bg, not images ── */
-.op-hero-slide::after { display: none; }
+/* ── Bottom gradient boundary behind the slide title (mode-aware via bg) ── */
+.op-hero-slide::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: clamp(140px, 24vh, 260px);
+  background: linear-gradient(to top,
+    var(--op-color-bg) 0%,
+    color-mix(in oklab, var(--op-color-bg) 68%, transparent) 48%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
 /* Slide-meta bottom-left label */
 .op-hero-slide-meta {
   position: absolute;
@@ -510,9 +525,13 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  /* "safe center" centers short content but top-aligns content taller than the
+     viewport — plain "center" pushes a long doc's top above the scroll area,
+     hiding the title. Top padding clears the fixed header; bottom clears the
+     title scrim. */
+  align-items: safe center;
   justify-content: center;
-  padding: clamp(72px, 10vh, 100px) clamp(20px, 4vw, 80px) clamp(80px, 12vh, 120px);
+  padding: clamp(96px, 13vh, 132px) clamp(20px, 4vw, 80px) clamp(120px, 18vh, 200px);
   overflow-y: auto;
 }
 .op-canvas-slide-inner {
