@@ -329,10 +329,11 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   });
 
   // ── Nav ──────────────────────────────────────────────────────────────
-  // Brand + one linked menu item per stacked document (grows as you stack).
+  // Brand + a compact menu — the 5 most recent documents (the footer carries
+  // the full, scrollable list).
   const navLinksHtml = slides.length > 1
     ? `<ul class="op-site-header-nav">
-        ${slides.map((s, i) =>
+        ${slides.slice(0, 5).map((s, i) =>
           `<li><a href="#${escapeHtml(docSlugs[i])}" data-canvas-nav="${i}"${i === 0 ? ' class="op-canvas-nav-active"' : ""}>${escapeHtml(s.navLabel)}</a></li>`
         ).join("")}
       </ul>`
@@ -356,7 +357,8 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
     `<div class="op-canvas-slide-inner">${s.contentHtml}</div></article>`
   ).join("\n");
 
-  const feedCards = slides.map((s, i) => {
+  // "Other documents" cards — at most the 10 most recent (the footer has all).
+  const feedCards = slides.slice(0, 10).map((s, i) => {
     const metaBits = [
       s.date,
       (s.sections && s.sections.length) ? `${s.sections.length}개 섹션` : "",
@@ -994,8 +996,21 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   flex-direction: column;
   gap: 20px;
 }
-.op-cf-menu { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+/* Full document list — horizontal row, scroll left/right to reach older docs. */
+.op-cf-menu {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 22px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
 .op-cf-menu a {
+  flex: none;
+  white-space: nowrap;
+  scroll-snap-align: start;
   font-size: 14px;
   color: var(--op-color-fg-muted);
   text-decoration: none;
