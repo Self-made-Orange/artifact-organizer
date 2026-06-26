@@ -67,7 +67,9 @@ node plugins/artifact-organizer/scripts/organize.mjs \
   --add /tmp/hello.json --title "Deploy status" --theme apple
 ```
 
-Run it again with the next artifact and it stacks on top.
+Run it again with the next artifact and it stacks on top. You can also hand it a
+raw `.html` file — `--add report.html` embeds it as-is, or rebuild it into native
+components first so it adopts the theme.
 
 ---
 
@@ -106,7 +108,7 @@ This installs two skills: **`artifact-organizer`** (generate + stack) and **`art
 
 ## Components
 
-35 components across structure, data, diagrams, code, narrative, slides, and canvas — `Page`, `Section`, `DataTable`, `Chart`, `KPICard`, `Mermaid`, `FlowChart`, `Sequence`, `CodeDiff`, `Callout`, `StepList`, and more. Props carry **semantic data only**; styling props are rejected by the schema.
+36 components across structure, data, diagrams, code, narrative, slides, and canvas — `Page`, `Section`, `DataTable`, `Chart`, `Mermaid`, `FlowChart`, `Callout`, `StepList`, and more, plus `Embed` for stacking a raw HTML artifact as-is. Props carry **semantic data only**; styling props are rejected by the schema.
 
 Full prop schemas: [`plugins/artifact-organizer/references/catalog.md`](plugins/artifact-organizer/references/catalog.md).
 

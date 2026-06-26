@@ -55,6 +55,8 @@ Themes:    1) notion    (Notion — warm cream + serif-feel headings + Notion Bl
            3) vercel    (Vercel — gallery white + Geist + shadow-as-border)
            4) stripe    (Stripe — weight-300 luxury + deep navy + blue-tinted shadow)
            5) supabase  (Supabase — dark-native + emerald green + border hierarchy)
+           6) apple     (Apple — SF-style cool greys + Apple Blue + true-black dark)
+           7) tailwind  (Tailwind — Inter + slate ramp + indigo-600 + layered shadows)
 
 Renderer:  auto    (default — page if envelope has parts[]/template:page, else canvas)
            canvas  (force canvas — persistent dashboard with featured + history)
@@ -85,7 +87,7 @@ Edit the values above to change your defaults. Delete this file to re-run
 the first-run setup on the next hyperscribe invocation.
 
 Valid values:
-  theme:    notion | linear | vercel | stripe | supabase
+  theme:    notion | linear | vercel | stripe | supabase | apple | tailwind
   renderer: auto | canvas | page
 EOF
 fi
@@ -313,6 +315,66 @@ No `--theme` or `--mode` flags needed — the canvas template always uses `shadc
 | Multiple outputs need to be browsed as slides | Single focused artifact |
 | The audience needs dark/light toggle + history feed | Theme preference matters |
 | The content is an analytics/status report | The content is a narrative, comparison, or code review |
+
+## Stacking mode — `organize.mjs` (accumulate artifacts over time)
+
+The **organizer** keeps one persistent, themed canvas and *stacks* artifacts
+onto it as they arrive. Each call takes ONE artifact: it becomes the featured
+slide, and the previously featured artifact demotes into the history feed
+(newest-first). The whole canvas re-renders to a single HTML file.
+
+Use this when the user wants a **running collection** — "add this to my
+dashboard", "keep stacking these", "every report into one place" — rather than a
+one-off render.
+
+```bash
+# Each invocation adds ONE artifact to the store and re-renders the canvas.
+node scripts/organize.mjs \
+  --store ~/.artifact-organizer/decks/<name>.json \
+  --add <artifact.json> \
+  --title "March Growth" --date 2026-03-31 \
+  --theme apple --agent Claude --topic Growth \
+  --out ~/.artifact-organizer/decks/<name>.html
+```
+
+`--add` accepts a semantic envelope (a page envelope `{ parts: [Page, …] }`, a
+canvas envelope `{ featured, … }`, a single component node, or an HTML file with
+a sibling `.json` sidecar) **and** a raw HTML file.
+
+### Stacking an HTML artifact the user hands you
+
+When the user gives you an HTML file (or any artifact) and says *"stack this"*,
+the goal is for it to land in the dashboard automatically. Two paths — **prefer
+the first, fall back to the second**, and let the user override either way:
+
+**1. Rebuild as native components (default).** Read the HTML and reconstruct it
+as a semantic envelope so the stacked artifact gets first-class native
+components and can adopt the canvas theme.
+
+- **Follow the source's existing style.** If the HTML already has a deliberate
+  look (a specific theme, palette, layout), pick the bundled theme closest to it
+  and preserve structure/emphasis — don't flatten it.
+- **Extend when the catalog lacks something.** If the source has a visual with
+  no catalog equivalent (an unusual chart, a widget), build the nearest native
+  component — you may web-fetch a reference implementation (e.g. Tailwind UI,
+  shadcn/ui) to match it faithfully. Decide this yourself; the user can also
+  tell you which way to go.
+- Then pass the rebuilt envelope JSON to `--add`.
+
+**2. Embed verbatim (fallback / "just stack it as-is").** When the artifact
+shouldn't be reinterpreted — or the user explicitly wants it kept exactly —
+hand the HTML file straight to `--add`. With no sidecar it is **auto-embedded**
+as-is in a sandboxed `<iframe srcdoc>` (the `Embed` component); the artifact
+keeps its own styling and scripts but won't adopt the canvas theme. Force this
+path with `--embed`:
+
+```bash
+node scripts/organize.mjs --store <deck>.json --add report.html --embed --title "Q3 report"
+```
+
+`--theme` sticks to the store (saved in `meta.theme`), so later adds keep the
+chosen style unless you override it. Native-rebuilt artifacts (path 1) restyle
+with the whole stack; embedded ones (path 2) keep their own look.
 
 ## Component inventory
 

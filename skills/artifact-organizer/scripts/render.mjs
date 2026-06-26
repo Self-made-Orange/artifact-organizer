@@ -43,6 +43,7 @@ import { WorkTypeRow } from "./components/work-type-row.mjs";
 import { SiteFooter } from "./components/site-footer.mjs";
 import { PressMentions } from "./components/press-mentions.mjs";
 import { ArticleCard } from "./components/article-card.mjs";
+import { Embed } from "./components/embed.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ROOT = resolve(__dirname, "..");
@@ -88,6 +89,7 @@ export const REGISTRY = {
   "artifact-organizer/SiteFooter": SiteFooter,
   "artifact-organizer/PressMentions": PressMentions,
   "artifact-organizer/ArticleCard": ArticleCard,
+  "artifact-organizer/Embed": Embed,
 };
 
 /**

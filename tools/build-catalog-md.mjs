@@ -10,8 +10,8 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..");
-const CATALOG_PATH = resolve(REPO_ROOT, "plugins", "outprint", "spec", "catalog.json");
-const OUT_PATH = resolve(REPO_ROOT, "plugins", "outprint", "references", "catalog.md");
+const CATALOG_PATH = resolve(REPO_ROOT, "plugins", "artifact-organizer", "spec", "catalog.json");
+const OUT_PATH = resolve(REPO_ROOT, "plugins", "artifact-organizer", "references", "catalog.md");
 
 const catalog = JSON.parse(readFileSync(CATALOG_PATH, "utf8"));
 

@@ -1,8 +1,26 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { emptyStore, extractArtifact, stack } from "../plugins/artifact-organizer/scripts/organize.mjs";
+import { emptyStore, extractArtifact, stack, embedNode } from "../plugins/artifact-organizer/scripts/organize.mjs";
 
 const node = (value) => ({ component: "artifact-organizer/KPICard", props: { label: "MAU", value } });
+
+test("embedNode: wraps raw html into an Embed content node", () => {
+  const n = embedNode("<h1>raw</h1>", "Q3");
+  assert.equal(n.component, "artifact-organizer/Embed");
+  assert.equal(n.props.html, "<h1>raw</h1>");
+  assert.equal(n.props.title, "Q3");
+});
+
+test("embedNode: omits title when not given", () => {
+  const n = embedNode("<h1>raw</h1>");
+  assert.equal(n.props.title, undefined);
+});
+
+test("stack: an embedded raw-HTML artifact stacks like any other node", () => {
+  const s = stack(emptyStore(), { content: embedNode("<p>x</p>", "Doc"), title: "Doc" });
+  assert.equal(s.featured.component, "artifact-organizer/Embed");
+  assert.equal(s.meta.title, "Doc");
+});
 
 test("emptyStore: canvas shell with empty history", () => {
   const s = emptyStore("My Deck");

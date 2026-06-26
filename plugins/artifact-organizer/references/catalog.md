@@ -1,4 +1,4 @@
-# Artifact Organizer Component Catalog — hyperscribe/v1
+# Artifact Organizer Component Catalog — artifact-organizer/v1
 
 **This file is auto-generated from `plugins/artifact-organizer/spec/catalog.json`. Do not edit by hand. Run `node tools/build-catalog-md.mjs` to regenerate.**
 
@@ -19,11 +19,11 @@ Required envelope fields: `a2ui_version`, `catalog`, `parts`.
 
 Root component must be `artifact-organizer/Page`.
 
-## Components (33 default + 2 slide-mode-only)
+## Components (35 default + 2 slide-mode-only)
 
 The default `/outprint` page mode uses the components below.
 
-`artifact-organizer/SlideDeck` and `artifact-organizer/Slide` are **slide-mode-only** components owned by `/artifact-organizer:slides`.
+`artifact-organizer/SlideDeck` and `artifact-organizer/Slide` are **slide-mode-only** components owned by `/outprint:slides`.
 
 ## Structure
 
@@ -39,6 +39,8 @@ Root container. Exactly one Page per envelope.
 | `subtitle` | `string` | optional |  |
 | `toc` | `boolean` | optional | default: `false` |
 | `chromeless` | `boolean` | optional | default: `false` |
+| `backHref` | `string` | optional |  |
+| `backLabel` | `string` | optional |  |
 
 ### `artifact-organizer/Section`
 
@@ -452,6 +454,21 @@ Press/media credit row — eyebrow label + list of publication names with option
 | `eyebrow` | `string` | optional |  |
 | `mentions` | `array<{ name: string, note: string? }>` | **required** |  |
 
+### `artifact-organizer/ArticleCard`
+
+Newsletter article item — headline, summary, source, date, tag, and optional link. Stack inside a Section to build a newsletter digest.
+
+- **Children:** forbidden
+
+| Prop | Type | Required | Notes |
+|---|---|---|---|
+| `headline` | `string` | **required** |  |
+| `summary` | `string` | **required** |  |
+| `source` | `string` | optional |  |
+| `date` | `string` | optional |  |
+| `tag` | `string` | optional |  |
+| `href` | `string` | optional |  |
+
 ### `artifact-organizer/SiteFooter`
 
 Multi-column site footer with link groups + meta + credit lines. Place as last child of a chromeless Page.
@@ -464,9 +481,21 @@ Multi-column site footer with link groups + meta + credit lines. Place as last c
 | `meta` | `string` | optional |  |
 | `credit` | `string` | optional |  |
 
+### `artifact-organizer/Embed`
+
+Embed a raw self-contained HTML artifact verbatim via a sandboxed iframe srcdoc. The organizer escape hatch for stacking an HTML file as-is (keeps its own styling/scripts) instead of rebuilding it as native components. Unlike every other component, html carries markup by design.
+
+- **Children:** forbidden
+
+| Prop | Type | Required | Notes |
+|---|---|---|---|
+| `html` | `string` | **required** |  |
+| `title` | `string` | optional |  |
+| `height` | `number` | optional |  |
+
 ## Slide Mode Only
 
-These components are intentionally separated from the default page-mode inventory. Use them through `/artifact-organizer:slides`, not through the default `/outprint` flow.
+These components are intentionally separated from the default page-mode inventory. Use them through `/outprint:slides`, not through the default `/outprint` flow.
 
 ### `artifact-organizer/SlideDeck`
 

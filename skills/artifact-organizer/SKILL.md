@@ -337,20 +337,44 @@ node scripts/organize.mjs \
   --out ~/.artifact-organizer/decks/<name>.html
 ```
 
-`--add` takes a **semantic envelope, never raw HTML**:
+`--add` accepts a semantic envelope (a page envelope `{ parts: [Page, …] }`, a
+canvas envelope `{ featured, … }`, a single component node, or an HTML file with
+a sibling `.json` sidecar) **and** a raw HTML file.
 
-- a page envelope (`{ parts: [Page, …] }`) — the Page node is embedded,
-- a canvas envelope (`{ featured, … }`) — its featured node is taken,
-- a single component node (`{ component, props }`),
-- an HTML file *with a sibling `.json` sidecar* — the sidecar is read.
+### Stacking an HTML artifact the user hands you
 
-If only HTML exists (e.g. a Claude chat artifact with no sidecar), reconstruct
-the envelope first (the same "HTML → envelope" model step the styler uses), then
-pass that JSON to `--add`. The renderer never parses HTML.
+When the user gives you an HTML file (or any artifact) and says *"stack this"*,
+the goal is for it to land in the dashboard automatically. Two paths — **prefer
+the first, fall back to the second**, and let the user override either way:
+
+**1. Rebuild as native components (default).** Read the HTML and reconstruct it
+as a semantic envelope so the stacked artifact gets first-class native
+components and can adopt the canvas theme.
+
+- **Follow the source's existing style.** If the HTML already has a deliberate
+  look (a specific theme, palette, layout), pick the bundled theme closest to it
+  and preserve structure/emphasis — don't flatten it.
+- **Extend when the catalog lacks something.** If the source has a visual with
+  no catalog equivalent (an unusual chart, a widget), build the nearest native
+  component — you may web-fetch a reference implementation (e.g. Tailwind UI,
+  shadcn/ui) to match it faithfully. Decide this yourself; the user can also
+  tell you which way to go.
+- Then pass the rebuilt envelope JSON to `--add`.
+
+**2. Embed verbatim (fallback / "just stack it as-is").** When the artifact
+shouldn't be reinterpreted — or the user explicitly wants it kept exactly —
+hand the HTML file straight to `--add`. With no sidecar it is **auto-embedded**
+as-is in a sandboxed `<iframe srcdoc>` (the `Embed` component); the artifact
+keeps its own styling and scripts but won't adopt the canvas theme. Force this
+path with `--embed`:
+
+```bash
+node scripts/organize.mjs --store <deck>.json --add report.html --embed --title "Q3 report"
+```
 
 `--theme` sticks to the store (saved in `meta.theme`), so later adds keep the
-chosen style unless you override it. The whole stack is restyleable at any time
-by re-running with a new `--theme`.
+chosen style unless you override it. Native-rebuilt artifacts (path 1) restyle
+with the whole stack; embedded ones (path 2) keep their own look.
 
 ## Component inventory
 

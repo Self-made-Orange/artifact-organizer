@@ -93,30 +93,49 @@ export function stack(store, { content, title, date, description, agent, topic, 
   return next;
 }
 
-/** Read an artifact path. If it's HTML, read its `.json` sidecar instead. */
-function readArtifact(addPath) {
+/** A content node that embeds a raw HTML artifact verbatim (iframe srcdoc). */
+export function embedNode(html, title) {
+  const props = { html };
+  if (title) props.title = title;
+  return { component: "artifact-organizer/Embed", props };
+}
+
+/** Pull a human title out of raw HTML's <title> (metadata only, not parsing for render). */
+function htmlTitle(html) {
+  const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+  return m ? m[1].trim() : undefined;
+}
+
+/**
+ * Read an artifact path. Returns a tagged result:
+ *   { envelope }            — a semantic JSON envelope (JSON file, or HTML with sidecar)
+ *   { rawHtml, htmlTitle }  — a raw HTML file with no sidecar (embed as-is)
+ *
+ * With `force.embed`, an HTML file is always embedded as-is even if a sidecar
+ * exists (the "stack it verbatim" path).
+ */
+function readArtifact(addPath, force = {}) {
   const isHtml = /\.html?$/i.test(addPath);
-  let jsonPath = addPath;
   if (isHtml) {
-    jsonPath = addPath.replace(/\.html?$/i, "") + ".json";
-    if (!existsSync(jsonPath)) {
-      throw new Error(
-        `No semantic envelope found for "${basename(addPath)}". ` +
-        `Expected a sidecar "${basename(jsonPath)}". The renderer never parses ` +
-        `HTML — supply the JSON envelope (the skill/model extracts it).`
-      );
+    const sidecar = addPath.replace(/\.html?$/i, "") + ".json";
+    if (!force.embed && existsSync(sidecar)) {
+      return { envelope: JSON.parse(readFileSync(sidecar, "utf8")) };
     }
+    const rawHtml = readFileSync(addPath, "utf8");
+    return { rawHtml, htmlTitle: htmlTitle(rawHtml) };
   }
-  return JSON.parse(readFileSync(jsonPath, "utf8"));
+  return { envelope: JSON.parse(readFileSync(addPath, "utf8")) };
 }
 
 function parseArgs(argv) {
   const a = { store: null, add: null, title: null, date: null, description: null,
-              theme: null, agent: null, topic: null, out: null, initTitle: null, quiet: false };
+              theme: null, agent: null, topic: null, out: null, initTitle: null,
+              embed: false, quiet: false };
   for (let i = 0; i < argv.length; i++) {
     switch (argv[i]) {
       case "--store": a.store = argv[++i]; break;
       case "--add": a.add = argv[++i]; break;
+      case "--embed": a.embed = true; break;
       case "--title": a.title = argv[++i]; break;
       case "--date": a.date = argv[++i]; break;
       case "--description": a.description = argv[++i]; break;
@@ -131,7 +150,8 @@ function parseArgs(argv) {
 
 Options:
   --store <path>        Persistent canvas JSON (created if missing) [required]
-  --add <path>          Artifact to stack: JSON envelope, or HTML with a .json sidecar [required]
+  --add <path>          Artifact to stack: JSON envelope, or HTML (sidecar .json if present, else embedded as-is) [required]
+  --embed               Force-embed an HTML file verbatim (iframe), ignoring any sidecar
   --title <s>           Title for the stacked artifact (else taken from the envelope)
   --date <s>            Date label for the artifact (default: today)
   --description <s>     Subtitle shown under the featured slide title
@@ -163,18 +183,27 @@ function main() {
 
   let added;
   try {
-    added = readArtifact(args.add);
+    added = readArtifact(args.add, { embed: args.embed });
   } catch (e) { console.error(e.message); process.exit(3); }
 
-  let extracted;
-  try {
-    extracted = extractArtifact(added);
-  } catch (e) { console.error(e.message); process.exit(2); }
+  // Raw HTML with no sidecar (or forced via --embed) → stack it verbatim.
+  // A semantic envelope → pull out its content node.
+  let content, derivedTitle;
+  if (added.rawHtml !== undefined) {
+    content = embedNode(added.rawHtml, args.title || added.htmlTitle);
+    derivedTitle = added.htmlTitle;
+  } else {
+    try {
+      const extracted = extractArtifact(added.envelope);
+      content = extracted.content;
+      derivedTitle = extracted.title;
+    } catch (e) { console.error(e.message); process.exit(2); }
+  }
 
   const today = new Date().toISOString().slice(0, 10);
   store = stack(store, {
-    content: extracted.content,
-    title: args.title || extracted.title,
+    content,
+    title: args.title || derivedTitle,
     date: args.date || today,
     description: args.description,
     agent: args.agent,
