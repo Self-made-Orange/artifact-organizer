@@ -42,11 +42,10 @@ export function emptyStore(title = "Artifact Organizer") {
 export function extractArtifact(doc) {
   doc = normalizeEnvelope(doc);
   if (doc && Array.isArray(doc.parts) && doc.parts[0]) {
+    // Keep the Page's own header so its title renders in-flow at the top of the
+    // document (above the first section). The lede is hidden via canvas CSS.
     const page = doc.parts[0];
-    // The canvas slide already shows the artifact's title, so embed the Page
-    // chromeless — otherwise its <header><h1> duplicates the slide title.
-    const content = { ...page, props: { ...(page.props || {}), chromeless: true } };
-    return { content, title: page.props?.title };
+    return { content: page, title: page.props?.title };
   }
   if (doc && doc.featured) {
     return { content: doc.featured, title: doc.meta?.title };
