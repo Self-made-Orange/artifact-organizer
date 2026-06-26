@@ -4,6 +4,8 @@
 [![Node >= 20](https://img.shields.io/badge/node-%3E%3D20-brightgreen.svg)](https://nodejs.org/)
 [![Claude Code plugin](https://img.shields.io/badge/claude--code-plugin-6E56CF.svg)](https://docs.claude.com/en/docs/claude-code)
 
+**English** · [한국어](README.ko.md) · [日本語](README.ja.md)
+
 **A home for the artifacts your agent makes.** Attach it to an agent (Claude, Codex, Cursor, …) and it turns the agent's output into a self-contained, themed HTML file — then stacks those files into one persistent, restyleable dashboard.
 
 ---
@@ -155,3 +157,9 @@ The renderer auto-detects which from the envelope. See the skill docs in [`skill
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+---
+
+## Origin
+
+artifact-organizer began as a fork of [**hyperscribe**](https://github.com/Atipico1/hyperscribe) by [@Atipico1](https://github.com/Atipico1) and has since diverged into its own project (renamed, restructured, and extended with the stacking organizer, themes, and publishing). Thanks to the original authors for the foundation.
