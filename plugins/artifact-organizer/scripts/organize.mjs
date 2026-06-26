@@ -66,7 +66,7 @@ export function extractArtifact(doc) {
  * Stack one artifact onto a store (pure — returns a new store object).
  * The previous featured demotes to the front of history.
  */
-export function stack(store, { content, title, date, description, agent, topic, theme, mode }) {
+export function stack(store, { content, title, date, description, agent, topic, theme, mode, author, email }) {
   const next = {
     template: "canvas",
     meta: { ...(store.meta || {}) },
@@ -90,6 +90,11 @@ export function stack(store, { content, title, date, description, agent, topic, 
   if (topic) next.meta.topic = topic;
   if (theme) next.meta.theme = theme;
   if (mode) next.meta.mode = mode;
+  if (author || email) {
+    next.meta.author = { ...(store.meta && store.meta.author) };
+    if (author) next.meta.author.name = author;
+    if (email) next.meta.author.email = email;
+  }
   return next;
 }
 
@@ -139,7 +144,7 @@ function readArtifact(addPath, force = {}) {
 
 function parseArgs(argv) {
   const a = { store: null, add: null, title: null, date: null, description: null,
-              theme: null, mode: null, agent: null, topic: null, out: null, initTitle: null,
+              theme: null, mode: null, agent: null, topic: null, author: null, email: null, out: null, initTitle: null,
               embed: false, quiet: false };
   for (let i = 0; i < argv.length; i++) {
     switch (argv[i]) {
@@ -153,6 +158,8 @@ function parseArgs(argv) {
       case "--mode": a.mode = argv[++i]; break;
       case "--agent": a.agent = argv[++i]; break;
       case "--topic": a.topic = argv[++i]; break;
+      case "--author": a.author = argv[++i]; break;
+      case "--email": a.email = argv[++i]; break;
       case "--out": a.out = argv[++i]; break;
       case "--init-title": a.initTitle = argv[++i]; break;
       case "--quiet": a.quiet = true; break;
@@ -170,6 +177,8 @@ Options:
   --mode <light|dark>   Initial color mode of the canvas (default dark; use light for light artifacts)
   --agent <s>           Agent name shown on every slide
   --topic <s>           Topic badge shown on every slide
+  --author <name>       Footer nickname (persists on the store)
+  --email <email>       Footer email (persists on the store)
   --out <path>          Rendered HTML (default: <store>.html)
   --init-title <s>      Title for a freshly created store
   --quiet               Suppress the output path log`);
@@ -222,6 +231,8 @@ function main() {
     topic: args.topic,
     theme: args.theme,
     mode: args.mode,
+    author: args.author,
+    email: args.email,
   });
 
   let html;

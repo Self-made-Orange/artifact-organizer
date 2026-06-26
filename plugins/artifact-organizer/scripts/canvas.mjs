@@ -317,12 +317,23 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
 
   const total = slides.length;
 
+  // Per-document URL-hash slug (unique) — used by the nav menu + hero feed so
+  // every stacked document has its own linkable page.
+  const seenSlugs = {};
+  const docSlugs = slides.map(s => {
+    const base = slugify(s.title);
+    let sl = base, n = 2;
+    while (seenSlugs[sl]) sl = base + "-" + (n++);
+    seenSlugs[sl] = true;
+    return sl;
+  });
+
   // ── Nav ──────────────────────────────────────────────────────────────
-  // Brand always "Artifact Organizer"; links = slide titles
+  // Brand + one linked menu item per stacked document (grows as you stack).
   const navLinksHtml = slides.length > 1
     ? `<ul class="op-site-header-nav">
         ${slides.map((s, i) =>
-          `<li><a href="#" data-canvas-nav="${i}"${i === 0 ? ' class="op-canvas-nav-active"' : ""}>${escapeHtml(s.navLabel)}</a></li>`
+          `<li><a href="#${escapeHtml(docSlugs[i])}" data-canvas-nav="${i}"${i === 0 ? ' class="op-canvas-nav-active"' : ""}>${escapeHtml(s.navLabel)}</a></li>`
         ).join("")}
       </ul>`
     : "";
@@ -340,16 +351,6 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   ].filter(Boolean).join(" · ");
 
   // ── Hero-feed: the selected document fills the hero; the rest are cards ──
-  // Per-document URL-hash slug (unique) so each selection has its own link.
-  const seenSlugs = {};
-  const docSlugs = slides.map(s => {
-    const base = slugify(s.title);
-    let sl = base, n = 2;
-    while (seenSlugs[sl]) sl = base + "-" + (n++);
-    seenSlugs[sl] = true;
-    return sl;
-  });
-
   const heroPanels = slides.map((s, i) =>
     `<article class="op-feed-panel${i === 0 ? " op-feed-panel-active" : ""}" data-doc="${i}" data-slug="${escapeHtml(docSlugs[i])}">` +
     `<div class="op-canvas-slide-inner">${s.contentHtml}</div></article>`
@@ -983,12 +984,43 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   min-width: 0;
 }
 
+/* ── Footer (user info) ── */
+.op-canvas-footer {
+  border-top: 1px solid var(--op-color-border);
+  padding: clamp(28px, 4vh, 44px) clamp(20px, 4vw, 80px);
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--op-color-fg-muted);
+}
+.op-cf-id { display: flex; align-items: center; gap: 10px; }
+.op-cf-name { font-weight: 600; color: var(--op-color-fg); }
+.op-cf-email { color: var(--op-color-fg-muted); text-decoration: none; }
+.op-cf-email:hover { color: var(--op-color-accent); text-decoration: underline; }
+.op-cf-sep { opacity: 0.45; }
+.op-cf-brand { font-family: var(--op-font-mono); font-size: 11.5px; letter-spacing: 0.04em; opacity: 0.8; }
+
 /* ── Mode toggler hide ── */
 .op-mode-toggler { display: none !important; }
 `;
 
   const css = [theme, baseCss, siteHeaderCss, heroCss, canvasCss, editorialCss, divisionCss, componentCss, extraCss]
     .filter(Boolean).join("\n");
+
+  // ── Footer — built from the user's info (meta.author: { name, email }) ──
+  const author = meta.author || {};
+  const idBits = [
+    author.name  ? `<span class="op-cf-name">${escapeHtml(author.name)}</span>` : "",
+    author.email ? `<a class="op-cf-email" href="mailto:${escapeHtml(author.email)}">${escapeHtml(author.email)}</a>` : "",
+  ].filter(Boolean).join(`<span class="op-cf-sep">·</span>`);
+  const footerHtml = `<footer class="op-canvas-footer">` +
+    (idBits ? `<div class="op-cf-id">${idBits}</div>` : `<span></span>`) +
+    `<div class="op-cf-brand">Made with <strong>Artifact Organizer</strong></div></footer>`;
 
   // ── Interactive JS ───────────────────────────────────────────────────
   const interactiveJs = readFileSync(resolve(PLUGIN_ROOT, "assets/interactive.js"), "utf8");
@@ -1010,6 +1042,8 @@ ${stageHtml}
 ${editorialHtml}
 
 ${divisionsHtml}
+
+${footerHtml}
 
 <script>${interactiveJs}</script>
 <script>${CANVAS_JS}</script>
