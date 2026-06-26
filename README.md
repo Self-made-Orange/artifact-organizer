@@ -125,6 +125,18 @@ Full prop schemas: [`plugins/artifact-organizer/references/catalog.md`](plugins/
 
 ---
 
+## Where it lives
+
+Output is a single self-contained `.html`, so you can host it three ways:
+
+- **Local** — just open the file (default).
+- **Free, public** — publish on **GitHub Pages** for a `you.github.io/…` link, no domain needed.
+- **Your own domain** — deploy (Vercel via `/artifact-organizer:share`) and point your domain at it for a private/branded URL.
+
+On first run the agent asks which you want (and your house style + footer identity) and remembers it.
+
+---
+
 ## How it works
 
 ```

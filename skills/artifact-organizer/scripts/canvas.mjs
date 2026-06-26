@@ -984,12 +984,31 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   min-width: 0;
 }
 
-/* ── Footer (user info) ── */
+/* ── Footer: per-document menu + user info ── */
 .op-canvas-footer {
   border-top: 1px solid var(--op-color-border);
-  padding: clamp(28px, 4vh, 44px) clamp(20px, 4vw, 80px);
+  padding: clamp(28px, 4vh, 44px) clamp(20px, 4vw, 80px) clamp(40px, 6vh, 64px);
   max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.op-cf-menu { display: flex; flex-wrap: wrap; gap: 6px 22px; }
+.op-cf-menu a {
+  font-size: 14px;
+  color: var(--op-color-fg-muted);
+  text-decoration: none;
+  padding: 3px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.op-cf-menu a:hover { color: var(--op-color-fg); }
+.op-cf-menu a.op-canvas-nav-active {
+  color: var(--op-color-accent);
+  border-bottom-color: var(--op-color-accent);
+}
+.op-cf-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -997,6 +1016,8 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   flex-wrap: wrap;
   font-size: 13px;
   color: var(--op-color-fg-muted);
+  padding-top: 16px;
+  border-top: 1px solid var(--op-color-border);
 }
 .op-cf-id { display: flex; align-items: center; gap: 10px; }
 .op-cf-name { font-weight: 600; color: var(--op-color-fg); }
@@ -1012,15 +1033,26 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   const css = [theme, baseCss, siteHeaderCss, heroCss, canvasCss, editorialCss, divisionCss, componentCss, extraCss]
     .filter(Boolean).join("\n");
 
-  // ── Footer — built from the user's info (meta.author: { name, email }) ──
+  // ── Footer — user info (meta.author) + one linked menu item per document ──
   const author = meta.author || {};
   const idBits = [
     author.name  ? `<span class="op-cf-name">${escapeHtml(author.name)}</span>` : "",
     author.email ? `<a class="op-cf-email" href="mailto:${escapeHtml(author.email)}">${escapeHtml(author.email)}</a>` : "",
   ].filter(Boolean).join(`<span class="op-cf-sep">·</span>`);
+  // One linked page per stacked document — grows as you stack.
+  const footerMenu = slides.length > 1
+    ? `<nav class="op-cf-menu" aria-label="Documents">` +
+      slides.map((s, i) =>
+        `<a href="#${escapeHtml(docSlugs[i])}" data-canvas-nav="${i}"${i === 0 ? ' class="op-canvas-nav-active"' : ""}>${escapeHtml(s.navLabel)}</a>`
+      ).join("") +
+      `</nav>`
+    : "";
   const footerHtml = `<footer class="op-canvas-footer">` +
-    (idBits ? `<div class="op-cf-id">${idBits}</div>` : `<span></span>`) +
-    `<div class="op-cf-brand">Made with <strong>Artifact Organizer</strong></div></footer>`;
+    footerMenu +
+    `<div class="op-cf-meta">` +
+      (idBits ? `<div class="op-cf-id">${idBits}</div>` : "") +
+      `<div class="op-cf-brand">Made with <strong>Artifact Organizer</strong></div>` +
+    `</div></footer>`;
 
   // ── Interactive JS ───────────────────────────────────────────────────
   const interactiveJs = readFileSync(resolve(PLUGIN_ROOT, "assets/interactive.js"), "utf8");
