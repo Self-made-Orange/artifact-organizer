@@ -83,6 +83,13 @@ function pageSubtitle(node) {
   return (node && node.props && typeof node.props.subtitle === "string") ? node.props.subtitle : "";
 }
 
+// URL-hash slug for a document (keeps ASCII alphanumerics + Hangul).
+function slugify(s) {
+  return String(s || "").trim().toLowerCase()
+    .replace(/[^a-z0-9가-힣]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "doc";
+}
+
 // Carousel + scroll + nav + theme-toggle JS, all self-contained
 const CANVAS_JS = `
 (function () {
@@ -124,13 +131,27 @@ const CANVAS_JS = `
   var titleBySlide = {};
   railGroups.forEach(function (g) { titleBySlide[g.getAttribute('data-slide')] = g.getAttribute('data-title') || ''; });
 
-  function selectDoc(i, scroll) {
+  // Each document has a URL-hash slug, so a selection is a shareable link.
+  var slugByDoc = {}, docBySlug = {};
+  panels.forEach(function (p) {
+    var d = p.getAttribute('data-doc'), sl = p.getAttribute('data-slug');
+    if (sl) { slugByDoc[d] = sl; docBySlug[sl] = d; }
+  });
+  function hashSlug() { return decodeURIComponent((location.hash || '').replace(/^#/, '')); }
+  var current = -1;
+
+  function selectDoc(i, scroll, setHash) {
     var si = String(i);
+    if (si === String(current)) { if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    current = i;
     panels.forEach(function (p)   { p.classList.toggle('op-feed-panel-active', p.getAttribute('data-doc') === si); });
     cards.forEach(function (c)    { c.classList.toggle('op-feed-card-hidden', c.getAttribute('data-doc') === si); });
     navLinks.forEach(function (a) { a.classList.toggle('op-canvas-nav-active', a.getAttribute('data-canvas-nav') === si); });
     railGroups.forEach(function (g) { g.classList.toggle('op-csi-group-active', g.getAttribute('data-slide') === si); });
     if (tagLabel && titleBySlide[si] != null) tagLabel.textContent = titleBySlide[si];
+    if (setHash !== false && slugByDoc[si] && hashSlug() !== slugByDoc[si]) {
+      location.hash = slugByDoc[si];
+    }
     if (scroll !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   cards.forEach(function (c) {
@@ -138,6 +159,11 @@ const CANVAS_JS = `
   });
   navLinks.forEach(function (a) {
     a.addEventListener('click', function (e) { e.preventDefault(); selectDoc(a.getAttribute('data-canvas-nav')); });
+  });
+  // Back/forward or a pasted #slug link → switch the hero document.
+  window.addEventListener('hashchange', function () {
+    var d = docBySlug[hashSlug()];
+    if (d != null) selectDoc(d, true, false);
   });
 
   // ── Section rail: click to scroll + highlight the section in view ──
@@ -174,7 +200,9 @@ const CANVAS_JS = `
     });
   }
 
-  selectDoc(0, false); // newest document in the hero by default
+  // Open the document named in the URL hash (shared link), else the newest.
+  var initialDoc = docBySlug[hashSlug()];
+  selectDoc(initialDoc != null ? initialDoc : 0, false, false);
 }());
 `.trim();
 
@@ -312,8 +340,18 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   ].filter(Boolean).join(" · ");
 
   // ── Hero-feed: the selected document fills the hero; the rest are cards ──
+  // Per-document URL-hash slug (unique) so each selection has its own link.
+  const seenSlugs = {};
+  const docSlugs = slides.map(s => {
+    const base = slugify(s.title);
+    let sl = base, n = 2;
+    while (seenSlugs[sl]) sl = base + "-" + (n++);
+    seenSlugs[sl] = true;
+    return sl;
+  });
+
   const heroPanels = slides.map((s, i) =>
-    `<article class="op-feed-panel${i === 0 ? " op-feed-panel-active" : ""}" data-doc="${i}">` +
+    `<article class="op-feed-panel${i === 0 ? " op-feed-panel-active" : ""}" data-doc="${i}" data-slug="${escapeHtml(docSlugs[i])}">` +
     `<div class="op-canvas-slide-inner">${s.contentHtml}</div></article>`
   ).join("\n");
 
@@ -322,7 +360,7 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
       s.date,
       (s.sections && s.sections.length) ? `${s.sections.length}개 섹션` : "",
     ].filter(Boolean).join("  ·  ");
-    return `<button type="button" class="op-feed-card${i === 0 ? " op-feed-card-hidden" : ""}" data-doc="${i}">` +
+    return `<button type="button" class="op-feed-card${i === 0 ? " op-feed-card-hidden" : ""}" data-doc="${i}" data-slug="${escapeHtml(docSlugs[i])}">` +
       `<span class="op-fc-title">${escapeHtml(s.title)}</span>` +
       (s.lede ? `<span class="op-fc-desc">${escapeHtml(s.lede)}</span>` : "") +
       (metaBits ? `<span class="op-fc-meta">${escapeHtml(metaBits)}</span>` : "") +
