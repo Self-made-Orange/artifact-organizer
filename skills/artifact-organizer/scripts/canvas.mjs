@@ -719,7 +719,7 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  padding: 18px 11px;
+  padding: 18px 13px;
   background: var(--op-color-fg);
   color: var(--op-color-bg);
   border-radius: 0;
@@ -727,7 +727,7 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
 .op-cst-label {
   writing-mode: vertical-rl;
   font-family: var(--op-font-display, var(--op-font-sans));
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.25;
