@@ -62,6 +62,22 @@ function componentFileBase(componentName) {
     .toLowerCase();
 }
 
+// Walk a component node tree and collect Section nodes (id + title) for the
+// right-rail section index.
+function collectSections(node, out = []) {
+  if (!node || typeof node !== "object") return out;
+  const list = Array.isArray(node) ? node : [node];
+  for (const n of list) {
+    if (n && typeof n === "object") {
+      if (n.component === "artifact-organizer/Section" && n.props && n.props.id && n.props.title) {
+        out.push({ id: n.props.id, title: n.props.title });
+      }
+      if (Array.isArray(n.children)) collectSections(n.children, out);
+    }
+  }
+  return out;
+}
+
 // Carousel + scroll + nav + theme-toggle JS, all self-contained
 const CANVAS_JS = `
 (function () {
@@ -178,6 +194,36 @@ const CANVAS_JS = `
       if (dy > 0 && current === total - 1) { scrollToNextSection(); return; }
       show(dy > 0 ? current + 1 : current - 1, dy > 0 ? 'next' : 'prev');
     }, { passive: true });
+  }
+
+  // ── Right-rail section index: click-to-scroll + active highlight ──
+  var csiItems = Array.from(document.querySelectorAll('.op-csi-item'));
+  if (csiItems.length) {
+    var scroller = document.querySelector('.op-hero-slide-active .op-canvas-slide-body')
+                || document.querySelector('.op-canvas-slide-body');
+    var byId = {};
+    csiItems.forEach(function (a) {
+      byId[a.getAttribute('data-csi')] = a;
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var el = document.getElementById(a.getAttribute('data-csi'));
+        if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+    if ('IntersectionObserver' in window && scroller) {
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          csiItems.forEach(function (x) { x.classList.remove('op-csi-active'); });
+          var a = byId[en.target.id];
+          if (a) a.classList.add('op-csi-active');
+        });
+      }, { root: scroller, rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+      csiItems.forEach(function (a) {
+        var el = document.getElementById(a.getAttribute('data-csi'));
+        if (el) obs.observe(el);
+      });
+    }
   }
 
   show(0);
@@ -311,16 +357,8 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   ].filter(Boolean).join(" · ");
 
   const slidesHtml = slides.map((s, i) => {
-    const subtitleParts = [agentLabel, s.subtitle].filter(Boolean).join(" · ");
-    const metaInner =
-      `${subtitleParts ? `<span class="op-hero-slide-subtitle">${subtitleParts}</span>` : ""}` +
-      `${s.title ? `<span class="op-hero-slide-title">${escapeHtml(s.title)}</span>` : ""}` +
-      `${s.description ? `<span class="op-hero-slide-desc">${escapeHtml(s.description)}</span>` : ""}`;
-    const hasMeta = subtitleParts || s.title;
-    // Bottom-left gallery caption. The title at the TOP of the document comes
-    // from the artifact's own header (op-page-title), shown in-flow above the
-    // first section — not a floating overlay.
-    const metaHtml = hasMeta ? `<div class="op-hero-slide-meta">${metaInner}</div>` : "";
+    // No bottom caption — the document carries its own title (op-page-title) in
+    // flow, and the right-rail index handles section navigation.
     return `
 <div class="op-hero-slide${i === 0 ? " op-hero-slide-active" : ""}" data-canvas-slide="${i}">
   <div class="op-canvas-slide-body">
@@ -328,14 +366,26 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
       ${s.contentHtml}
     </div>
   </div>
-  ${metaHtml}
 </div>`;
   }).join("\n");
+
+  // Right-rail section index, built from the featured document's Sections.
+  const sections = collectSections(feat);
+  const sectionIndexHtml = sections.length >= 2
+    ? `<nav class="op-canvas-section-index" aria-label="Sections">` +
+      sections.map((sec, i) =>
+        `<a class="op-csi-item" href="#${escapeHtml(sec.id)}" data-csi="${escapeHtml(sec.id)}">` +
+        `<span class="op-csi-num">${String(i + 1).padStart(2, "0")}</span>` +
+        `<span class="op-csi-label">${escapeHtml(sec.title)}</span></a>`
+      ).join("") +
+      `</nav>`
+    : "";
 
   const stageHtml = `
 <section class="op-hero-carousel">
   <div class="op-hero-stage">
     ${slidesHtml}
+    ${sectionIndexHtml}
     <div class="op-hero-overlay">
       <span></span>
       <span class="op-hero-counter">1 / ${total}</span>
@@ -436,24 +486,8 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
 .op-hero-stage {
   background: var(--op-color-bg) !important;
 }
-/* ── Bottom gradient boundary behind the slide title (mode-aware via bg) ── */
-.op-hero-slide::after {
-  content: '';
-  display: block;
-  position: absolute;
-  /* top:auto is required — the base rule sets inset:0 (top:0 AND bottom:0),
-     which would stretch this full-height and ignore the height, pushing the
-     fade up over the content. Anchor it to the bottom band only. */
-  top: auto;
-  left: 0; right: 0; bottom: 0;
-  height: clamp(140px, 24vh, 260px);
-  background: linear-gradient(to top,
-    var(--op-color-bg) 0%,
-    color-mix(in oklab, var(--op-color-bg) 68%, transparent) 48%,
-    transparent 100%);
-  pointer-events: none;
-  z-index: 1;
-}
+/* Bottom gradient + caption removed — the doc owns its title, index owns nav. */
+.op-hero-slide::after { display: none; }
 /* Keep the artifact's own title at the top of the document (above the first
    section), but drop the lede/subtitle — title only. */
 .op-canvas-slide-inner .op-page-subtitle { display: none; }
@@ -543,23 +577,130 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   padding: clamp(92px, 12vh, 124px) clamp(20px, 4vw, 80px) clamp(120px, 18vh, 200px);
   overflow-y: auto;
 }
+/* ── Blog-article reading column (flat, single column, clean hierarchy) ── */
 .op-canvas-slide-inner {
   width: 100%;
-  max-width: 1100px;
-  background: var(--op-color-card);
-  border: 1px solid var(--op-color-border);
-  border-radius: var(--op-radius-lg);
-  padding: clamp(24px, 3vw, 48px);
-  box-shadow: var(--op-shadow-deep);
+  max-width: 760px;          /* ~comfortable measure for reading */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
 }
-/* Flatten inner wrappers */
 .op-canvas-slide-inner .op-page { max-width: none; padding: 0; margin: 0; }
 .op-canvas-slide-inner .op-page-main { padding: 0; max-width: none; }
-.op-canvas-slide-inner .op-section { padding: 0; border: none; max-width: none; }
+
+/* Article title (h1) */
+.op-canvas-slide-inner .op-page-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+  margin: 0 0 clamp(28px, 4vh, 44px);
+}
+
+/* Sections: generous rhythm, hairline divider between them */
+.op-canvas-slide-inner .op-section {
+  padding: 0;
+  border: none;
+  max-width: none;
+  margin-top: clamp(40px, 6vh, 72px);
+  padding-top: clamp(40px, 6vh, 72px);
+  border-top: 1px solid var(--op-color-border);
+  scroll-margin-top: clamp(96px, 13vh, 132px);
+}
+.op-canvas-slide-inner .op-page-main > .op-section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* Section heading = blog H2 (NOT the old tiny mono eyebrow) */
 .op-canvas-slide-inner .op-section-title {
-  font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-  font-family: var(--op-font-mono); color: var(--op-color-muted-fg);
-  padding: 0; border: none; margin-bottom: 20px;
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-transform: none;
+  color: var(--op-color-fg);
+  padding: 0;
+  border: none;
+  margin: 0 0 6px;
+}
+.op-canvas-slide-inner .op-section-lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--op-color-fg-muted);
+  margin: 0 0 18px;
+}
+.op-canvas-slide-inner .op-section-body { margin-top: 14px; }
+
+/* Subheadings + body rhythm */
+.op-canvas-slide-inner .op-heading-h3 {
+  font-size: clamp(17px, 1.8vw, 20px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 28px 0 8px;
+}
+.op-canvas-slide-inner .op-prose {
+  font-size: 1rem;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+.op-canvas-slide-inner .op-prose + .op-prose { margin-top: 0; }
+
+/* ── Right-rail section index (vertical, centered) ── */
+.op-canvas-section-index {
+  position: fixed;
+  right: clamp(10px, 2vw, 28px);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 40;
+  text-align: right;
+  max-width: 30vw;
+}
+.op-csi-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 3px 0;
+  text-decoration: none;
+  color: var(--op-color-fg-muted);
+  opacity: 0.6;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+.op-csi-item:hover { opacity: 1; color: var(--op-color-fg); }
+.op-csi-num {
+  font-family: var(--op-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.op-csi-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: max-width 200ms ease, opacity 160ms ease;
+}
+.op-canvas-section-index:hover .op-csi-label,
+.op-csi-item.op-csi-active .op-csi-label {
+  max-width: 24vw;
+  opacity: 1;
+}
+.op-csi-item.op-csi-active {
+  opacity: 1;
+  color: var(--op-color-accent);
+}
+@media (max-width: 900px) {
+  .op-canvas-section-index { display: none; }
 }
 
 /* ── Sections below the hero ── */
