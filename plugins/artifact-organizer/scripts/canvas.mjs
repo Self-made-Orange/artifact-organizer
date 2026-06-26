@@ -400,7 +400,6 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   const sectionTagHtml = meta.title
     ? `<aside class="op-canvas-section-tag" role="button" tabindex="0" title="맨 위로">` +
       `<span class="op-cst-label">${escapeHtml(meta.title)}</span>` +
-      `<span class="op-cst-arrow">↑</span>` +
       `</aside>`
     : "";
 
@@ -592,13 +591,11 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   position: absolute;
   inset: 0;
   display: flex;
-  /* "safe center" centers short content but top-aligns content taller than the
-     viewport — plain "center" pushes a long doc's top above the scroll area,
-     hiding the title. Top padding clears the fixed header; bottom clears the
-     title scrim. */
-  align-items: safe center;
+  /* Top-align: centering clips both ends of content taller than the viewport,
+     so the first/last sections become unreachable at full scroll. */
+  align-items: flex-start;
   justify-content: center;
-  padding: clamp(92px, 12vh, 124px) clamp(20px, 4vw, 80px) clamp(120px, 18vh, 200px);
+  padding: clamp(92px, 12vh, 124px) clamp(20px, 4vw, 80px) clamp(160px, 24vh, 280px);
   overflow-y: auto;
 }
 /* ── Blog-article reading column (flat, single column, clean hierarchy) ── */
@@ -748,10 +745,18 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   font-weight: 600;
   letter-spacing: 0.01em;
   line-height: 1.25;
-  max-height: 44vh;
+  max-height: 40vh;
   overflow: hidden;
 }
-.op-cst-arrow { font-size: 12px; opacity: 0.75; }
+
+/* Shorter viewports (e.g. laptops): shrink the tag + tighten the rail so the
+   top tag and the vertically-centered rail don't collide on the right edge. */
+@media (max-height: 940px) {
+  .op-canvas-section-tag { padding: 12px 14px; }
+  .op-cst-label { font-size: 13px; max-height: 30vh; }
+  .op-canvas-section-index { gap: 2px; }
+  .op-csi-num { font-size: 9px; }
+}
 
 @media (max-width: 900px) {
   .op-canvas-section-index,
