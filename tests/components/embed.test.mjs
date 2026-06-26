@@ -17,15 +17,23 @@ test("Embed: escapes the embedded html into the srcdoc attribute", () => {
   assert.doesNotMatch(html, /srcdoc="<p/);
 });
 
-test("Embed: renders an optional caption from title", () => {
+test("Embed: shows no caption label — title is only the iframe a11y attribute", () => {
   const html = Embed({ html: "<i>x</i>", title: "Q3 report" });
-  assert.match(html, /<figcaption class="op-embed-caption">Q3 report<\/figcaption>/);
-  assert.match(html, /title="Q3 report"/);
+  assert.doesNotMatch(html, /op-embed-caption/);        // no visible meta label
+  assert.doesNotMatch(html, /<figcaption/);
+  assert.match(html, /title="Q3 report"/);              // a11y only
 });
 
-test("Embed: applies a numeric height as an inline style", () => {
+test("Embed: auto-fits height to content when no height is given", () => {
+  const html = Embed({ html: "<i>x</i>" });
+  assert.match(html, /onload="[^"]*scrollHeight/);
+  assert.doesNotMatch(html, /style="height:/);
+});
+
+test("Embed: a fixed numeric height opts out of auto-fit", () => {
   const html = Embed({ html: "<i>x</i>", height: 800 });
   assert.match(html, /style="height:800px"/);
+  assert.doesNotMatch(html, /onload=/);
 });
 
 test("Embed: throws when html is missing", () => {
