@@ -12,6 +12,14 @@
       },
       "children": [
         {
+          "component": "artifact-organizer/Callout",
+          "props": {
+            "severity": "warn",
+            "title": "Sample / dummy data",
+            "body": "All numbers, names, dates, and content in this example are **illustrative placeholders** — not real metrics or data."
+          }
+        },
+        {
           "component": "artifact-organizer/Section",
           "props": {
             "id": "headline",

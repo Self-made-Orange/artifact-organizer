@@ -14,6 +14,14 @@
         {
           "component": "artifact-organizer/Callout",
           "props": {
+            "severity": "warn",
+            "title": "Sample / dummy data",
+            "body": "All numbers, names, dates, and content in this example are **illustrative placeholders** — not real metrics or data."
+          }
+        },
+        {
+          "component": "artifact-organizer/Callout",
+          "props": {
             "severity": "success",
             "title": "Big win this week",
             "body": "Enterprise tier went live on schedule. First 12 customers migrated; zero support escalations in 72 hours."

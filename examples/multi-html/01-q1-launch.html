@@ -529,6 +529,70 @@ html:not([data-mode="dark"]) .op-mode-icon-sun  { display: none; }
   .op-mode-toggler, .op-zoom-btn { transition: none; }
 }
 
+/* artifact-organizer/Callout */
+.op-callout {
+  border-left: 3px solid var(--op-color-border, var(--op-color-fg-muted));
+  background: var(--op-color-card, var(--op-color-surface));
+  border-radius: 0 var(--op-radius, 0.5rem) var(--op-radius, 0.5rem) 0;
+  padding: var(--op-space-4) var(--op-space-5);
+  margin: var(--op-space-4) 0;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-right: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-callout-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: var(--op-space-2);
+}
+.op-callout-body {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.op-callout-body > p:first-child { margin-top: 0; }
+.op-callout-body > p:last-child  { margin-bottom: 0; }
+
+/* Tone variants */
+.op-callout-info {
+  border-left-color: var(--op-tone-info-fg);
+  background: var(--op-tone-info-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-info .op-callout-title { color: var(--op-tone-info-fg); }
+
+.op-callout-note {
+  border-left-color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+
+.op-callout-warn {
+  border-left-color: var(--op-tone-warn-fg);
+  background: var(--op-tone-warn-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-warn .op-callout-title { color: var(--op-tone-warn-fg); }
+
+.op-callout-success {
+  border-left-color: var(--op-tone-success-fg);
+  background: var(--op-tone-success-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-success .op-callout-title { color: var(--op-tone-success-fg); }
+
+.op-callout-danger {
+  border-left-color: var(--op-tone-danger-fg);
+  background: var(--op-tone-danger-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-danger .op-callout-title { color: var(--op-tone-danger-fg); }
+
 /* artifact-organizer/KPICard */
 .op-kpi {
   background: var(--op-color-muted, var(--op-color-surface-alt));
@@ -672,81 +736,17 @@ html:not([data-mode="dark"]) .op-mode-icon-sun  { display: none; }
 }
 .op-step-body > p:first-child { margin-top: 0; }
 .op-step-body > p:last-child  { margin-bottom: 0; }
-
-/* artifact-organizer/Callout */
-.op-callout {
-  border-left: 3px solid var(--op-color-border, var(--op-color-fg-muted));
-  background: var(--op-color-card, var(--op-color-surface));
-  border-radius: 0 var(--op-radius, 0.5rem) var(--op-radius, 0.5rem) 0;
-  padding: var(--op-space-4) var(--op-space-5);
-  margin: var(--op-space-4) 0;
-  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
-  border-right: 1px solid var(--op-color-border, var(--op-color-surface-alt));
-  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
-}
-.op-callout-title {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: var(--op-space-2);
-}
-.op-callout-body {
-  font-size: 14px;
-  line-height: 1.5;
-}
-.op-callout-body > p:first-child { margin-top: 0; }
-.op-callout-body > p:last-child  { margin-bottom: 0; }
-
-/* Tone variants */
-.op-callout-info {
-  border-left-color: var(--op-tone-info-fg);
-  background: var(--op-tone-info-bg);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-}
-.op-callout-info .op-callout-title { color: var(--op-tone-info-fg); }
-
-.op-callout-note {
-  border-left-color: var(--op-color-muted-fg, var(--op-color-fg-muted));
-}
-
-.op-callout-warn {
-  border-left-color: var(--op-tone-warn-fg);
-  background: var(--op-tone-warn-bg);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-}
-.op-callout-warn .op-callout-title { color: var(--op-tone-warn-fg); }
-
-.op-callout-success {
-  border-left-color: var(--op-tone-success-fg);
-  background: var(--op-tone-success-bg);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-}
-.op-callout-success .op-callout-title { color: var(--op-tone-success-fg); }
-
-.op-callout-danger {
-  border-left-color: var(--op-tone-danger-fg);
-  background: var(--op-tone-danger-bg);
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-}
-.op-callout-danger .op-callout-title { color: var(--op-tone-danger-fg); }
 </style>
 </head>
 <body>
-<nav class="op-page-backbar"><a class="op-page-back" href="index.html">← All Reports</a></nav><article class="op-page"><header class="op-page-header"><h1 class="op-page-title">Q1 2026 Product Launch Report</h1><p class="op-page-subtitle">Post-launch analysis — Falcon Platform</p></header><main class="op-page-main"><section class="op-section" id="launch-metrics"><h2 class="op-section-title">Launch Metrics</h2><div class="op-section-body"><article class="op-kpi"><div class="op-kpi-label">Day-1 Sign-ups</div><div class="op-kpi-value">14,820</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+340%</div><div class="op-kpi-hint">vs. previous launch</div></article><article class="op-kpi"><div class="op-kpi-label">Activation Rate</div><div class="op-kpi-value">68%</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+12 pp</div><div class="op-kpi-hint">completed onboarding within 24 h</div></article><article class="op-kpi"><div class="op-kpi-label">Median Time-to-Value</div><div class="op-kpi-value">4 min</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>-3 min</div><div class="op-kpi-hint">from signup to first output</div></article><article class="op-kpi"><div class="op-kpi-label">Crash-free Sessions</div><div class="op-kpi-value">99.7%</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+0.4 pp</div></article></div></section><section class="op-section" id="traffic"><h2 class="op-section-title">Traffic by Channel</h2><div class="op-section-body"><figure class="op-chart-wrap"><canvas class="op-chart" data-kind="bar" id="hsChart_syp37de5"></canvas><figcaption class="op-chart-cap">Channel × Sign-ups</figcaption><script>if (!window.__hsChartLoaded) {
+<nav class="op-page-backbar"><a class="op-page-back" href="index.html">← All Reports</a></nav><article class="op-page"><header class="op-page-header"><h1 class="op-page-title">Q1 2026 Product Launch Report</h1><p class="op-page-subtitle">Post-launch analysis — Falcon Platform</p></header><main class="op-page-main"><aside class="op-callout op-callout-warn"><div class="op-callout-title">Sample / dummy data</div><div class="op-callout-body"><p>All numbers, names, dates, and content in this example are <strong>illustrative placeholders</strong> — not real metrics or data.</p></div></aside><section class="op-section" id="launch-metrics"><h2 class="op-section-title">Launch Metrics</h2><div class="op-section-body"><article class="op-kpi"><div class="op-kpi-label">Day-1 Sign-ups</div><div class="op-kpi-value">14,820</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+340%</div><div class="op-kpi-hint">vs. previous launch</div></article><article class="op-kpi"><div class="op-kpi-label">Activation Rate</div><div class="op-kpi-value">68%</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+12 pp</div><div class="op-kpi-hint">completed onboarding within 24 h</div></article><article class="op-kpi"><div class="op-kpi-label">Median Time-to-Value</div><div class="op-kpi-value">4 min</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>-3 min</div><div class="op-kpi-hint">from signup to first output</div></article><article class="op-kpi"><div class="op-kpi-label">Crash-free Sessions</div><div class="op-kpi-value">99.7%</div><div class="op-kpi-delta op-kpi-delta-up"><span class="op-kpi-delta-icon">↑</span>+0.4 pp</div></article></div></section><section class="op-section" id="traffic"><h2 class="op-section-title">Traffic by Channel</h2><div class="op-section-body"><figure class="op-chart-wrap"><canvas class="op-chart" data-kind="bar" id="hsChart_ewmu1to6"></canvas><figcaption class="op-chart-cap">Channel × Sign-ups</figcaption><script>if (!window.__hsChartLoaded) {
   window.__hsChartLoaded = true;
   var s = document.createElement('script');
   s.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
   s.onload = function() { window.__hsChartReady && window.__hsChartReady(); };
   document.head.appendChild(s);
 }</script><script>(function(){
-  var id   = 'hsChart_syp37de5';
+  var id   = 'hsChart_ewmu1to6';
   var unit = "";
   var rawCfg = JSON.parse('{"type":"bar","data":{"labels":["Product Hunt","HN","Twitter/X","LinkedIn","Direct","Other"],"datasets":[{"name":"Day-1 sign-ups","label":"Day-1 sign-ups","data":[6200,3100,2400,1500,980,640],"fill":false,"_colorVar":"--op-chart-1","borderWidth":0,"borderRadius":6,"borderSkipped":false}]},"options":{"responsive":true,"maintainAspectRatio":true,"interaction":{"mode":"index","intersect":false},"plugins":{"legend":{"display":false,"position":"bottom","labels":{"boxWidth":12,"boxHeight":12,"borderRadius":3,"useBorderRadius":true,"padding":16,"font":{"size":12}}},"tooltip":{"enabled":true,"backgroundColor":"hsl(240 10% 3.9%)","titleColor":"hsl(0 0% 98%)","bodyColor":"hsl(240 5% 64.9%)","borderColor":"hsl(240 3.7% 15.9%)","borderWidth":1,"padding":{"x":12,"y":10},"cornerRadius":6,"titleFont":{"size":12,"weight":"600"},"bodyFont":{"size":12}}},"scales":{"x":{"border":{"display":false},"grid":{"display":false},"ticks":{"color":"hsl(240 5% 64.9%)","font":{"size":12},"maxRotation":0},"title":{"display":true,"text":"Channel","color":"hsl(240 5% 64.9%)"}},"y":{"border":{"display":false,"dash":[4,4]},"grid":{"color":"hsl(240 3.7% 15.9%)","drawTicks":false},"ticks":{"color":"hsl(240 5% 64.9%)","font":{"size":12},"padding":8},"title":{"display":true,"text":"Sign-ups","color":"hsl(240 5% 64.9%)"}}}}}');
 
@@ -824,7 +824,7 @@ html:not([data-mode="dark"]) .op-mode-icon-sun  { display: none; }
   <svg class="op-mode-icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
 </button>
 <script>(function(){
-  var KEY='hyperscribe.mode';
+  var KEY='artifact-organizer.mode';
   var saved=null;try{saved=localStorage.getItem(KEY);}catch(e){}
   var ssr = document.documentElement.getAttribute('data-mode');
   var mode = saved || ssr;
@@ -843,7 +843,7 @@ html:not([data-mode="dark"]) .op-mode-icon-sun  { display: none; }
     apply(next);
   });}
 })();</script>
-<script>/* Artifact Organizer interactive layer — pan/zoom for SVG diagrams.
+<script>/* Outprint interactive layer — pan/zoom for SVG diagrams.
  * Any element tagged `.hs-zoomable` gets: mouse-drag pan, Ctrl/Cmd+wheel zoom,
  * and a small control bar (＋ / − / ⟲ reset) docked to the top-right corner. */
 (function () {

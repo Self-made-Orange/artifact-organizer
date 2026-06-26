@@ -5,9 +5,24 @@
   "parts": [
     {
       "component": "artifact-organizer/Page",
-      "props": { "title": "Hello" },
+      "props": {
+        "title": "Hello"
+      },
       "children": [
-        { "component": "artifact-organizer/Prose", "props": { "markdown": "This is a minimal page." } }
+        {
+          "component": "artifact-organizer/Callout",
+          "props": {
+            "severity": "warn",
+            "title": "Sample / dummy data",
+            "body": "All numbers, names, dates, and content in this example are **illustrative placeholders** — not real metrics or data."
+          }
+        },
+        {
+          "component": "artifact-organizer/Prose",
+          "props": {
+            "markdown": "This is a minimal page."
+          }
+        }
       ]
     }
   ]

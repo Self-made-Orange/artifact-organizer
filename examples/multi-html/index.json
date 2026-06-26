@@ -4,10 +4,10 @@
     "title": "Agent Output Hub",
     "navLabel": "Agent Output Hub",
     "agent": "Claude",
-    "subtitle": "Every report, connected.",
+    "subtitle": "Sample / dummy data — illustrative, not real · Every report, connected.",
     "divisionsLabel": "All Reports",
     "statement": {
-      "eyebrow": "Artifact Organizer",
+      "eyebrow": "⚠ SAMPLE / DUMMY DATA",
       "text": "One agent. Every output, beautifully connected.",
       "cta": {
         "label": "Browse all reports",

@@ -3,11 +3,11 @@
   "meta": {
     "title": "Weekly AI Digest",
     "navLabel": "Latest",
-    "subtitle": "매주 토요일 — AI · 스타트업 · 프로덕트",
+    "subtitle": "Sample / dummy data — illustrative, not real · 매주 토요일 — AI · 스타트업 · 프로덕트",
     "agent": "Claude",
     "divisionsLabel": "지난 이슈",
     "statement": {
-      "eyebrow": "Artifact Organizer",
+      "eyebrow": "⚠ SAMPLE / DUMMY DATA",
       "text": "매주 가장 중요한 것만 골라드립니다.",
       "cta": {
         "label": "지난 이슈 보기",
