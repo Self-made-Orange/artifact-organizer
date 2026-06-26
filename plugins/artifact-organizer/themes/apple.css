@@ -70,9 +70,9 @@
 }
 
 [data-theme="apple"][data-mode="dark"] {
-  /* Apple dark mode — true-black canvas with elevated near-black surfaces */
+  /* Apple dark mode — soft near-black canvas with elevated surfaces */
   --op-color-fg: #f5f5f7;
-  --op-color-bg: #000000;
+  --op-color-bg: #0c0c0c;
   --op-color-surface: #1c1c1e;
   --op-color-surface-alt: #2c2c2e;
   --op-color-surface-dark: #000000;

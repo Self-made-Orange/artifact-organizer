@@ -715,13 +715,14 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.4vw, 28px);
   border: 1px solid var(--op-color-border);
   border-radius: var(--op-radius-std, 12px);
-  /* very subtle fill so cards read as cards against the page bg, mode-aware */
-  background: color-mix(in oklab, var(--op-color-fg) 4%, var(--op-color-bg));
+  /* Theme surface-alt: subtle grey in light, clearly lifted in dark — reads as
+     a card in both modes (the flat fg-tint vanished on near-black). */
+  background: var(--op-color-surface-alt, color-mix(in oklab, var(--op-color-fg) 5%, var(--op-color-bg)));
   transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
 }
 .op-feed-card:hover {
   border-color: var(--op-color-fg-muted);
-  background: color-mix(in oklab, var(--op-color-fg) 7%, var(--op-color-bg));
+  background: color-mix(in oklab, var(--op-color-fg) 6%, var(--op-color-surface-alt, var(--op-color-bg)));
   transform: translateY(-2px);
 }
 .op-feed-card-hidden { display: none; }
