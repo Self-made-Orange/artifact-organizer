@@ -392,6 +392,22 @@ node scripts/organize.mjs \
 canvas envelope `{ featured, … }`, a single component node, or an HTML file with
 a sibling `.json` sidecar) **and** a raw HTML file.
 
+**The original HTML is kept.** Even though the deck re-renders a native rebuild,
+the source artifact is archived next to the store in `<name>-sources/` so you
+never lose the original. It's kept automatically whenever the add carried HTML
+(`--embed`, stdin, or an HTML file with a sidecar). When you rebuild HTML into a
+JSON envelope yourself and `--add` the JSON, pass the original with
+`--source <file|->` so it's archived too; the store records the relative path on
+each document (`meta.source`, and on each `history[]` entry). Use `--no-source`
+to skip archiving.
+
+```bash
+# rebuild → stack the envelope, and keep the original HTML alongside it
+node scripts/organize.mjs --store ~/.artifact-organizer/decks/<name>.json \
+  --add rebuilt.json --source original.html --title "March Growth" --theme apple
+# → ~/.artifact-organizer/decks/<name>-sources/march-growth.html
+```
+
 ### Stacking an HTML artifact the user hands you
 
 **This is the heart of the organizer.** When the user hands you an HTML file (a

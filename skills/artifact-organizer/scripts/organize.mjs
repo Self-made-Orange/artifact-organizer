@@ -66,7 +66,7 @@ export function extractArtifact(doc) {
  * Stack one artifact onto a store (pure — returns a new store object).
  * The previous featured demotes to the front of history.
  */
-export function stack(store, { content, title, date, description, agent, topic, theme, mode, author, email }) {
+export function stack(store, { content, title, date, description, agent, topic, theme, mode, author, email, source }) {
   const next = {
     template: "canvas",
     meta: { ...(store.meta || {}) },
@@ -78,6 +78,7 @@ export function stack(store, { content, title, date, description, agent, topic, 
       title: store.meta?.title,
       date: store.meta?.date,
       description: store.meta?.description,
+      source: store.meta?.source,        // keep the demoted doc's archived original
       content: store.featured,
     });
   }
@@ -86,6 +87,7 @@ export function stack(store, { content, title, date, description, agent, topic, 
   next.meta.title = title || "Untitled";
   next.meta.date = date ?? undefined;
   next.meta.description = description ?? undefined;
+  next.meta.source = source ?? undefined;  // relative path to this doc's archived original HTML
   if (agent) next.meta.agent = agent;
   if (topic) next.meta.topic = topic;
   if (theme) next.meta.theme = theme;
@@ -109,6 +111,13 @@ export function embedNode(html, title) {
 function htmlTitle(html) {
   const m = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
   return m ? m[1].trim() : undefined;
+}
+
+/** Filesystem-safe slug (keeps ascii + Hangul), for naming archived originals. */
+function slugify(s) {
+  return String(s || "document").toLowerCase()
+    .replace(/[^a-z0-9가-힣]+/g, "-")
+    .replace(/^-+|-+$/g, "") || "document";
 }
 
 /**
@@ -142,7 +151,8 @@ function readArtifact(addPath, force = {}) {
       return { rawHtml, htmlTitle: htmlTitle(rawHtml) };
     }
     if (existsSync(sidecar)) {
-      return { envelope: JSON.parse(readFileSync(sidecar, "utf8")) };
+      // Use the semantic sidecar to render, but keep the original .html to archive.
+      return { envelope: JSON.parse(readFileSync(sidecar, "utf8")), originalHtml: readFileSync(addPath, "utf8") };
     }
     throw new Error(
       `"${basename(addPath)}" is raw HTML with no semantic envelope. The organizer ` +
@@ -157,11 +167,13 @@ function readArtifact(addPath, force = {}) {
 function parseArgs(argv) {
   const a = { store: null, add: null, title: null, date: null, description: null,
               theme: null, mode: null, agent: null, topic: null, author: null, email: null, out: null, initTitle: null,
-              embed: false, quiet: false };
+              source: null, noSource: false, embed: false, quiet: false };
   for (let i = 0; i < argv.length; i++) {
     switch (argv[i]) {
       case "--store": a.store = argv[++i]; break;
       case "--add": a.add = argv[++i]; break;
+      case "--source": a.source = argv[++i]; break;
+      case "--no-source": a.noSource = true; break;
       case "--embed": a.embed = true; break;
       case "--title": a.title = argv[++i]; break;
       case "--date": a.date = argv[++i]; break;
@@ -182,6 +194,8 @@ Options:
   --store <path>        Persistent canvas JSON (created if missing) [required]
   --add <path|->        Artifact to stack: a JSON envelope, an HTML file, or "-" to read from stdin [required]
   --embed               Embed the artifact verbatim (iframe); with "-" embeds stdin HTML without a file
+  --source <path|->     Original HTML to archive in <store>-sources/ (auto-kept for HTML/--embed adds)
+  --no-source           Don't archive the original HTML
   --title <s>           Title for the stacked artifact (else taken from the envelope)
   --date <s>            Date label for the artifact (default: today)
   --description <s>     Subtitle shown under the featured slide title
@@ -233,6 +247,32 @@ function main() {
     } catch (e) { console.error(e.message); process.exit(2); }
   }
 
+  // Archive the original artifact HTML next to the store, so the source is kept
+  // even though the deck re-renders a native rebuild. Available whenever the add
+  // carried HTML (embed / stdin / sidecar) or an explicit --source was given.
+  let sourceRel;
+  let originalHtml;
+  if (args.source) {
+    try { originalHtml = args.source === "-" ? readFileSync(0, "utf8") : readFileSync(resolve(args.source), "utf8"); }
+    catch (e) { console.error(`--source: ${e.message}`); process.exit(3); }
+  } else if (added.rawHtml !== undefined) {
+    originalHtml = added.rawHtml;
+  } else if (added.originalHtml !== undefined) {
+    originalHtml = added.originalHtml;
+  }
+  if (originalHtml !== undefined && !args.noSource) {
+    const storeBase = basename(storeAbs).replace(/\.json$/i, "");
+    const sourcesDir = resolve(dirname(storeAbs), `${storeBase}-sources`);
+    const slug = slugify(args.title || derivedTitle);
+    try {
+      mkdirSync(sourcesDir, { recursive: true });
+      let file = `${slug}.html`;
+      for (let n = 2; existsSync(resolve(sourcesDir, file)); n++) file = `${slug}-${n}.html`;
+      writeFileSync(resolve(sourcesDir, file), originalHtml, "utf8");
+      sourceRel = `${storeBase}-sources/${file}`;
+    } catch (e) { console.error(`IO error (source archive): ${e.message}`); process.exit(3); }
+  }
+
   const today = new Date().toISOString().slice(0, 10);
   store = stack(store, {
     content,
@@ -245,6 +285,7 @@ function main() {
     mode: args.mode,
     author: args.author,
     email: args.email,
+    source: sourceRel,
   });
 
   let html;
@@ -266,6 +307,7 @@ function main() {
   if (!args.quiet) {
     const n = 1 + (store.history?.length || 0);
     console.log(`${outAbs}  (${n} artifact${n === 1 ? "" : "s"} stacked)`);
+    if (sourceRel) console.log(`  source kept → ${resolve(dirname(storeAbs), sourceRel)}`);
   }
 }
 

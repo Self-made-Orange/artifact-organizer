@@ -80,6 +80,12 @@ menu item in the top nav **and** the footer. Each document gets its own `#slug`
 URL, so any document is directly shareable. The chosen theme, author, and hosting
 choice persist on the store — pass them once.
 
+**Originals are kept.** The deck re-renders a native rebuild, but the source HTML
+is archived next to the store in `<name>-sources/` (auto for HTML/`--embed`/stdin
+adds; pass `--source <file>` when you `--add` a rebuilt JSON envelope). The store
+records the path on `meta.source` and each `history[]` entry, so no original is
+lost.
+
 ## Publishing (massage → GitHub Pages)
 
 > Full detail: [SKILL.md → Publishing to GitHub Pages](skills/artifact-organizer/SKILL.md#publishing-to-github-pages)
