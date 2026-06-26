@@ -97,13 +97,23 @@ This installs two skills: **`artifact-organizer`** (generate + stack) and **`art
 
 ## Themes
 
-7 bundled themes, light + dark inlined into every output (toggle at view time):
+**7 built-in style themes** — every output inlines both light + dark (toggled at view time):
 
-`notion` · `linear` · `vercel` · `stripe` · `supabase` · `apple` · `tailwind`
+| Theme | Style |
+|---|---|
+| `notion` | Warm cream, Notion Blue, reading-first (default) |
+| `linear` | Dark-native, indigo accent, tight Inter |
+| `vercel` | Gallery white, Geist, shadow-as-border |
+| `stripe` | Weight-300 luxury headlines, deep navy |
+| `supabase` | Dark-native, emerald accent, border hierarchy |
+| `apple` | SF-style cool greys, Apple Blue, soft elevation |
+| `tailwind` | Inter, slate ramp, indigo-600, layered shadows |
 
 ```bash
 --theme apple    # swap for any of the seven
 ```
+
+Pick one as your **house style** and every artifact — and every document you stack — renders in it. Swap anytime; the content never changes.
 
 ---
 
