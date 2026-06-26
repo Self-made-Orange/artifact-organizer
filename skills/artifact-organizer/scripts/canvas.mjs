@@ -78,74 +78,18 @@ function collectSections(node, out = []) {
   return out;
 }
 
+// A document's lede/description = the Page node's subtitle prop, if present.
+function pageSubtitle(node) {
+  return (node && node.props && typeof node.props.subtitle === "string") ? node.props.subtitle : "";
+}
+
 // Carousel + scroll + nav + theme-toggle JS, all self-contained
 const CANVAS_JS = `
 (function () {
-  var slides   = Array.from(document.querySelectorAll('[data-canvas-slide]'));
-  var navLinks = Array.from(document.querySelectorAll('[data-canvas-nav]'));
-  var stage    = document.querySelector('.op-hero-stage');
-  var counter  = document.querySelector('.op-hero-counter');
-  var total    = slides.length;
-  var current  = 0;
-  var animating = false;
-  // Flow mode: documents are stacked vertically and the window scrolls through
-  // them, so the carousel crossfade/wheel-switch is disabled.
-  var flow = !!document.querySelector('.op-hero-single');
+  var html = document.documentElement;
 
-  function show(n, dir) {
-    var next = ((n % total) + total) % total;
-    if (next === current && dir) return;
-
-    // Set direction on stage for CSS keyframe targeting
-    if (stage && dir) {
-      stage.setAttribute('data-dir', dir);
-    }
-
-    slides.forEach(function (s, i) {
-      s.classList.toggle('op-hero-slide-active', i === next);
-    });
-    navLinks.forEach(function (a) {
-      a.classList.toggle('op-canvas-nav-active',
-        parseInt(a.getAttribute('data-canvas-nav'), 10) === next);
-    });
-    if (counter) counter.textContent = (next + 1) + ' / ' + total;
-    current = next;
-
-    // Lock during transition, then clear direction
-    if (dir) {
-      animating = true;
-      setTimeout(function () {
-        animating = false;
-        if (stage) stage.removeAttribute('data-dir');
-      }, 550);
-    }
-  }
-
-  navLinks.forEach(function (a) {
-    a.addEventListener('click', function (e) {
-      e.preventDefault();
-      var target = parseInt(a.getAttribute('data-canvas-nav'), 10);
-      if (flow) {
-        var el = document.getElementById('op-slide-' + target);
-        if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        show(target, target > current ? 'next' : 'prev');
-      }
-    });
-  });
-
-  // Frosted-glass nav on scroll
-  var hdr = document.querySelector('.op-site-header');
-  if (hdr) {
-    window.addEventListener('scroll', function () {
-      hdr.classList.toggle('op-scrolled', window.scrollY > 40);
-    }, { passive: true });
-  }
-
-  // Light/dark toggle — flips data-mode (the real theme system), keeping the
-  // chosen data-theme constant. Persists under 'artifact-organizer.mode'.
+  // ── Light/dark toggle (flips data-mode, keeps the theme) ──
   var toggleBtn = document.getElementById('op-theme-toggle');
-  var html      = document.documentElement;
   var ICON_SUN  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
   var ICON_MOON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
   function applyMode(mode) {
@@ -156,145 +100,81 @@ const CANVAS_JS = `
       toggleBtn.innerHTML = mode === 'dark' ? ICON_SUN : ICON_MOON;
     }
   }
-  var savedMode = localStorage.getItem('artifact-organizer.mode') || html.getAttribute('data-mode') || 'dark';
-  applyMode(savedMode);
+  applyMode(localStorage.getItem('artifact-organizer.mode') || html.getAttribute('data-mode') || 'dark');
   if (toggleBtn) {
     toggleBtn.addEventListener('click', function () {
       applyMode(html.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
     });
   }
 
-  // Wheel inside hero → change slides; at boundary → pass to page scroll.
-  // Disabled in flow mode (documents scroll the window naturally).
-  var hero = document.querySelector('.op-hero-carousel');
-  if (hero && total > 1 && !flow) {
-    function scrollToNextSection() {
-      var next = hero.nextElementSibling;
-      if (next) next.scrollIntoView({ behavior: 'smooth' });
-      else window.scrollBy({ top: window.innerHeight, behavior: 'smooth' });
-    }
-
-    hero.addEventListener('wheel', function (e) {
-      var goingDown = e.deltaY > 0;
-      var goingUp   = e.deltaY < 0;
-
-      // Last slide + down → release to next section
-      if (goingDown && current === total - 1) {
-        if (animating) { e.preventDefault(); return; }
-        scrollToNextSection();
-        return;
-      }
-      // First slide + up → let page scroll naturally
-      if (goingUp && current === 0) return;
-
-      e.preventDefault();
-      if (animating) return;
-      show(goingDown ? current + 1 : current - 1, goingDown ? 'next' : 'prev');
-    }, { passive: false });
-
-    // Touch support
-    var touchStartY = 0;
-    hero.addEventListener('touchstart', function (e) {
-      touchStartY = e.touches[0].clientY;
-    }, { passive: true });
-    hero.addEventListener('touchend', function (e) {
-      var dy = touchStartY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) < 40) return;
-      if (dy > 0 && current === total - 1) { scrollToNextSection(); return; }
-      show(dy > 0 ? current + 1 : current - 1, dy > 0 ? 'next' : 'prev');
+  // ── Frosted header on scroll ──
+  var hdr = document.querySelector('.op-site-header');
+  if (hdr) {
+    window.addEventListener('scroll', function () {
+      hdr.classList.toggle('op-scrolled', window.scrollY > 40);
     }, { passive: true });
   }
 
-  // ── Right-rail section index: click-to-scroll + active highlight ──
-  var csiItems   = Array.from(document.querySelectorAll('.op-csi-item'));
+  // ── Document selection: the chosen doc fills the hero, the rest are cards ──
+  var panels     = Array.from(document.querySelectorAll('.op-feed-panel'));
+  var cards      = Array.from(document.querySelectorAll('.op-feed-card'));
+  var navLinks   = Array.from(document.querySelectorAll('[data-canvas-nav]'));
   var railGroups = Array.from(document.querySelectorAll('.op-csi-group'));
   var tagLabel   = document.querySelector('.op-canvas-section-tag .op-cst-label');
-  if (csiItems.length) {
-    var single = !!document.querySelector('.op-hero-single');
-    var root = single ? null
-      : (document.querySelector('.op-hero-slide-active .op-canvas-slide-body')
-         || document.querySelector('.op-canvas-slide-body'));
-    var byId = {};
-    csiItems.forEach(function (a) {
-      var id = a.getAttribute('data-csi');
-      byId[id] = a;
-      a.addEventListener('click', function (e) {
-        e.preventDefault();
-        var el = document.getElementById(id);
-        if (!el) return;
-        expandDoc(el.closest('.op-hero-slide')); // make sure its document is open
-        if (el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    });
-    // Swap the rail group + tag title to whichever document is in view.
-    var titleBySlide = {};
-    railGroups.forEach(function (g) { titleBySlide[g.getAttribute('data-slide')] = g.getAttribute('data-title') || ''; });
-    var curSlide = null;
-    function setDoc(si) {
-      if (si == null || si === curSlide) return;
-      curSlide = si;
-      railGroups.forEach(function (g) {
-        g.classList.toggle('op-csi-group-active', g.getAttribute('data-slide') === si);
-      });
-      if (tagLabel && titleBySlide[si] != null) tagLabel.textContent = titleBySlide[si];
-    }
-    var secEls = Array.from(document.querySelectorAll('.op-hero-slide .op-section[id]'));
-    if ('IntersectionObserver' in window && (single || root)) {
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          if (!en.isIntersecting) return;
-          var sl = en.target.closest('.op-hero-slide');
-          if (sl) setDoc(sl.getAttribute('data-canvas-slide'));
-          csiItems.forEach(function (x) { x.classList.remove('op-csi-active'); });
-          var a = byId[en.target.id];
-          if (a) a.classList.add('op-csi-active');
-        });
-      }, { root: root, rootMargin: '-15% 0px -75% 0px', threshold: 0 });
-      secEls.forEach(function (el) { obs.observe(el); });
-    }
-  }
+  var titleBySlide = {};
+  railGroups.forEach(function (g) { titleBySlide[g.getAttribute('data-slide')] = g.getAttribute('data-title') || ''; });
 
-  // Doc-title tag → scroll the active document back to the top.
-  var tagEl = document.querySelector('.op-canvas-section-tag');
-  if (tagEl) {
-    function scrollDocTop() {
-      var sc = document.querySelector('.op-hero-slide-active .op-canvas-slide-body')
-            || document.querySelector('.op-canvas-slide-body');
-      if (sc && sc.scrollTo) sc.scrollTo({ top: 0, behavior: 'smooth' });
-      if (window.scrollTo) window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    tagEl.addEventListener('click', scrollDocTop);
-    tagEl.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollDocTop(); }
-    });
+  function selectDoc(i, scroll) {
+    var si = String(i);
+    panels.forEach(function (p)   { p.classList.toggle('op-feed-panel-active', p.getAttribute('data-doc') === si); });
+    cards.forEach(function (c)    { c.classList.toggle('op-feed-card-hidden', c.getAttribute('data-doc') === si); });
+    navLinks.forEach(function (a) { a.classList.toggle('op-canvas-nav-active', a.getAttribute('data-canvas-nav') === si); });
+    railGroups.forEach(function (g) { g.classList.toggle('op-csi-group-active', g.getAttribute('data-slide') === si); });
+    if (tagLabel && titleBySlide[si] != null) tagLabel.textContent = titleBySlide[si];
+    if (scroll !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
-  // ── Document accordion: older docs collapse to a title+description card;
-  //    click the header to expand/collapse the whole document. ──
-  function expandDoc(slide) {
-    if (!slide || !slide.classList.contains('op-doc-collapsed')) return;
-    slide.classList.add('op-open');
-    var h = slide.querySelector('.op-page-header');
-    if (h) h.setAttribute('aria-expanded', 'true');
-  }
-  // Only older documents collapse — the newest (slide 0) stays fully expanded.
-  Array.from(document.querySelectorAll('.op-hero-slide.op-doc-collapsed')).forEach(function (slide) {
-    var header = slide.querySelector('.op-page-header');
-    if (!header) return;
-    header.setAttribute('role', 'button');
-    header.setAttribute('tabindex', '0');
-    header.setAttribute('aria-expanded', 'false');
-    function toggle() {
-      var open = slide.classList.toggle('op-open');
-      header.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-    header.addEventListener('click', toggle);
-    header.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-    });
+  cards.forEach(function (c) {
+    c.addEventListener('click', function () { selectDoc(c.getAttribute('data-doc')); });
+  });
+  navLinks.forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); selectDoc(a.getAttribute('data-canvas-nav')); });
   });
 
-  show(0);
+  // ── Section rail: click to scroll + highlight the section in view ──
+  var csiItems = Array.from(document.querySelectorAll('.op-csi-item'));
+  var byId = {};
+  csiItems.forEach(function (a) {
+    var id = a.getAttribute('data-csi');
+    byId[id] = a;
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var el = document.getElementById(id);
+      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  if ('IntersectionObserver' in window && csiItems.length) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        csiItems.forEach(function (x) { x.classList.remove('op-csi-active'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('op-csi-active');
+      });
+    }, { root: null, rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+    Array.from(document.querySelectorAll('.op-feed-panel .op-section[id]')).forEach(function (el) { obs.observe(el); });
+  }
+
+  // ── Doc-title tag → scroll back to top ──
+  var tagEl = document.querySelector('.op-canvas-section-tag');
+  if (tagEl) {
+    function scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    tagEl.addEventListener('click', scrollTop);
+    tagEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollTop(); }
+    });
+  }
+
+  selectDoc(0, false); // newest document in the hero by default
 }());
 `.trim();
 
@@ -382,6 +262,7 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
       subtitle:    meta.subtitle    || typeLabel(feat.component),
       description: meta.description                        || "",
       date:        meta.date                               || "",
+      lede:        pageSubtitle(feat),
       sections:    collectSections(feat),
       contentHtml: renderTree(feat, REGISTRY, ctx),
     });
@@ -400,6 +281,7 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
       description: item.description                              || "",
       date:        item.date                                     || "",
       eyebrow:     item.eyebrow     || autoEyebrow,
+      lede:        pageSubtitle(item.content),
       sections:    collectSections(item.content),
       contentHtml: item.content ? renderContent(item.content, REGISTRY, ctx, item.contentLayout) : "",
     });
@@ -429,20 +311,29 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
     meta.topic ? escapeHtml(meta.topic.toUpperCase()) : "",
   ].filter(Boolean).join(" · ");
 
-  const slidesHtml = slides.map((s, i) => {
-    // The newest document (slide 0) reads fully expanded; older documents
-    // collapse into an accordion of section cards.
-    const cls = "op-hero-slide"
-      + (i === 0 ? " op-hero-slide-active" : " op-doc-collapsed");
-    return `
-<div class="${cls}" id="op-slide-${i}" data-canvas-slide="${i}">
-  <div class="op-canvas-slide-body">
-    <div class="op-canvas-slide-inner">
-      ${s.contentHtml}
-    </div>
-  </div>
-</div>`;
+  // ── Hero-feed: the selected document fills the hero; the rest are cards ──
+  const heroPanels = slides.map((s, i) =>
+    `<article class="op-feed-panel${i === 0 ? " op-feed-panel-active" : ""}" data-doc="${i}">` +
+    `<div class="op-canvas-slide-inner">${s.contentHtml}</div></article>`
+  ).join("\n");
+
+  const feedCards = slides.map((s, i) => {
+    const metaBits = [
+      s.date,
+      (s.sections && s.sections.length) ? `${s.sections.length}개 섹션` : "",
+    ].filter(Boolean).join("  ·  ");
+    return `<button type="button" class="op-feed-card${i === 0 ? " op-feed-card-hidden" : ""}" data-doc="${i}">` +
+      `<span class="op-fc-title">${escapeHtml(s.title)}</span>` +
+      (s.lede ? `<span class="op-fc-desc">${escapeHtml(s.lede)}</span>` : "") +
+      (metaBits ? `<span class="op-fc-meta">${escapeHtml(metaBits)}</span>` : "") +
+      `</button>`;
   }).join("\n");
+
+  const cardsHtml = slides.length > 1
+    ? `<aside class="op-feed-cards" aria-label="Documents">` +
+      `<div class="op-feed-cards-eyebrow">${escapeHtml(meta.divisionsLabel || "Other documents")}</div>` +
+      `<div class="op-feed-cards-grid">${feedCards}</div></aside>`
+    : "";
 
   // Number rail (click-to-jump index), grouped per document — only the group
   // for the document currently in view is shown (the JS swaps them on scroll).
@@ -470,16 +361,13 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
     : "";
 
   const stageHtml = `
-<section class="op-hero-carousel op-hero-single">
-  <div class="op-hero-stage">
-    ${slidesHtml}
-    ${sectionIndexHtml}
-    ${sectionTagHtml}
-    <div class="op-hero-overlay">
-      <span></span>
-      <span class="op-hero-counter">1 / ${total}</span>
-    </div>
+<section class="op-hero-feed">
+  <div class="op-feed-hero">
+    ${heroPanels}
   </div>
+  ${cardsHtml}
+  ${sectionIndexHtml}
+  ${sectionTagHtml}
 </section>`;
 
   // ── Editorial Statement ──────────────────────────────────────────────
@@ -754,6 +642,59 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   margin: 0 0 18px;
 }
 .op-canvas-slide-inner .op-section-body { margin-top: 14px; }
+
+/* ── Hero-feed: selected document fills the hero; others are cards below ── */
+.op-hero-feed { position: relative; background: var(--op-color-bg); }
+.op-feed-hero { padding: clamp(96px, 13vh, 124px) clamp(20px, 4vw, 80px) clamp(40px, 6vh, 64px); }
+.op-feed-panel { display: none; }
+.op-feed-panel.op-feed-panel-active { display: block; }
+.op-feed-panel .op-canvas-slide-inner { max-width: 760px; margin: 0 auto; }
+
+.op-feed-cards {
+  border-top: 1px solid var(--op-color-border);
+  padding: clamp(36px, 5vh, 60px) clamp(20px, 4vw, 80px) clamp(80px, 12vh, 140px);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.op-feed-cards-eyebrow {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--op-color-fg-muted);
+  margin-bottom: 16px;
+}
+.op-feed-cards-grid { display: grid; gap: 14px; }
+.op-feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.4vw, 28px);
+  border: 1px solid var(--op-color-border);
+  border-radius: var(--op-radius-std, 12px);
+  background: var(--op-color-card, var(--op-color-surface));
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.op-feed-card:hover { border-color: var(--op-color-fg-muted); transform: translateY(-2px); }
+.op-feed-card-hidden { display: none; }
+.op-fc-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.op-fc-desc { font-size: 0.95rem; line-height: 1.5; color: var(--op-color-fg-muted); }
+.op-fc-meta {
+  font-family: var(--op-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--op-color-fg-muted);
+}
 
 /* ── Older documents (op-doc-collapsed): one collapsed card per document ──
    Collapsed shows only the document title + description; click to expand the
