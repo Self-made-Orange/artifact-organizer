@@ -57,7 +57,8 @@ card in the hero feed (and a linked menu item) with its own `#slug` URL.
 - Generate / stack: `plugins/artifact-organizer/scripts/render.mjs`,
   `…/organize.mjs`
 - Restyle in another theme: the `artifact-styler` skill
-- Publish: the `artifact-organizer-share` skill (Vercel) or GitHub Pages
+- Publish: `scripts/publish.mjs` (GitHub Pages, one-shot) or the
+  `artifact-organizer-share` skill (Vercel)
 
 When you hand a raw HTML artifact to the organizer, **rebuild it as native
 components in the house style** (strip the source's own CSS) — don't drop it in
@@ -92,22 +93,23 @@ lost.
 
 The output is a single self-contained `.html`, so it opens on any machine that
 has the file — but to view it from *another* computer you either send the file
-or host it. When the user picks GitHub Pages, massage the output into a repo and
-publish (confirm before creating a public repo or enabling Pages):
+or host it. When the user picks GitHub Pages, use the **`publish.mjs`** helper —
+it does the whole massage + publish in one idempotent step:
 
 ```bash
-# 1. entry deck must be index.html (Pages serves it at the root)
-cp deck.html site/index.html
-# 2. repo + push
-cd site && git init -b main && git add -A && git commit -m "Publish"
-gh repo create <name> --public --source . --push
-# 3. enable Pages
-gh api -X POST "repos/<owner>/<name>/pages" -f "source[branch]=main" -f "source[path]=/"
-# 4. URL → https://<owner>.github.io/<name>/   (re-publish = commit + push again)
+# 1. preview (DRY RUN — default, no side effects): shows the plan + exact commands
+node …/scripts/publish.mjs --store ~/.artifact-organizer/decks/<name>.json --include-sources
+# 2. after the user confirms, publish for real:
+node …/scripts/publish.mjs --store ~/.artifact-organizer/decks/<name>.json --include-sources --confirm
 ```
 
-Fonts/embedded artifacts may pull from CDNs, so a live page needs internet for
-those; layout and text are inlined.
+What it does: renders the deck into `<name>-site/index.html` (+ `/sources` with
+`--include-sources`), first run creates a public repo and enables Pages, later
+runs just commit & push (auto-detected). It records the live URL on the store
+(`meta.publish`) and prints it. **It is dry-run by default** — only `--confirm`
+publishes, so confirm with the user first; it stops clearly if `gh` is missing
+or unauthenticated (it can't log in for them). Fonts/embedded artifacts may pull
+from CDNs, so a live page needs internet for those; layout and text are inlined.
 
 ## Don't
 

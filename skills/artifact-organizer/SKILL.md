@@ -125,7 +125,18 @@ Right after the style question, tell the user their options in plain language an
 
 ### Publishing to GitHub Pages
 
-When the user picks GitHub Pages, "massage" the output into a deployable repo, then publish. Confirm before creating a public repo or enabling Pages.
+**Easiest: the `publish.mjs` helper** does the whole massage + publish in one idempotent, dry-run-safe step:
+
+```bash
+# DRY RUN by default — prints the plan + the exact git/gh commands, changes nothing:
+node scripts/publish.mjs --store ~/.artifact-organizer/decks/<name>.json --include-sources
+# After the user confirms, publish for real:
+node scripts/publish.mjs --store ~/.artifact-organizer/decks/<name>.json --include-sources --confirm
+```
+
+It builds `<name>-site/index.html` (+ `/sources` with `--include-sources`); the **first** `--confirm` run creates a public repo and enables Pages, **later** runs just commit & push (auto-detected from the site folder's git state). It records the live URL on the store (`meta.publish`) and prints it. It stops clearly if `gh` is missing or unauthenticated — it can't log in for the user. `--repo <name>` overrides the repo name. **Confirm before the first `--confirm`** (publishing is public).
+
+The same flow done by hand (what `publish.mjs` automates) — "massage" the output into a deployable repo, then publish:
 
 1. **Lay out the files.** GitHub Pages serves `index.html` at the site root, so make the entry deck `index.html`. Keep any linked sub-pages and assets next to it with **relative** paths (the renderer already inlines CSS/JS, so a single `index.html` usually suffices). A typical layout:
    ```
