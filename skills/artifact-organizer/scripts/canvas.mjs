@@ -88,6 +88,9 @@ const CANVAS_JS = `
   var total    = slides.length;
   var current  = 0;
   var animating = false;
+  // Flow mode: documents are stacked vertically and the window scrolls through
+  // them, so the carousel crossfade/wheel-switch is disabled.
+  var flow = !!document.querySelector('.op-hero-single');
 
   function show(n, dir) {
     var next = ((n % total) + total) % total;
@@ -122,7 +125,12 @@ const CANVAS_JS = `
     a.addEventListener('click', function (e) {
       e.preventDefault();
       var target = parseInt(a.getAttribute('data-canvas-nav'), 10);
-      show(target, target > current ? 'next' : 'prev');
+      if (flow) {
+        var el = document.getElementById('op-slide-' + target);
+        if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        show(target, target > current ? 'next' : 'prev');
+      }
     });
   });
 
@@ -156,9 +164,10 @@ const CANVAS_JS = `
     });
   }
 
-  // Wheel inside hero → change slides; at boundary → pass to page scroll
+  // Wheel inside hero → change slides; at boundary → pass to page scroll.
+  // Disabled in flow mode (documents scroll the window naturally).
   var hero = document.querySelector('.op-hero-carousel');
-  if (hero && total > 1) {
+  if (hero && total > 1 && !flow) {
     function scrollToNextSection() {
       var next = hero.nextElementSibling;
       if (next) next.scrollIntoView({ behavior: 'smooth' });
@@ -339,6 +348,9 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   }
 
   history.forEach(item => {
+    // Items that link out (multi-HTML) belong in the cards feed, not the
+    // document flow — only in-deck full documents become flowing slides.
+    if (item && item.href) return;
     const autoSubtitle = contentTypeLabel(item.content);
     const autoEyebrow  = [item.date, autoSubtitle].filter(Boolean).join("  ·  ");
     slides.push({
@@ -380,7 +392,7 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
     // No bottom caption — the document carries its own title (op-page-title) in
     // flow, and the right-rail index handles section navigation.
     return `
-<div class="op-hero-slide${i === 0 ? " op-hero-slide-active" : ""}" data-canvas-slide="${i}">
+<div class="op-hero-slide${i === 0 ? " op-hero-slide-active" : ""}" id="op-slide-${i}" data-canvas-slide="${i}">
   <div class="op-canvas-slide-body">
     <div class="op-canvas-slide-inner">
       ${s.contentHtml}
@@ -408,7 +420,7 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
     : "";
 
   const stageHtml = `
-<section class="op-hero-carousel${total <= 1 ? " op-hero-single" : ""}">
+<section class="op-hero-carousel op-hero-single">
   <div class="op-hero-stage">
     ${slidesHtml}
     ${sectionIndexHtml}
@@ -431,11 +443,13 @@ export function renderCanvas(doc, REGISTRY, options = {}) {
   }
 
   // ── Divisions Section ─────────────────────────────────────────────────
-  // Each history item → DivisionCard (eyebrow = date · type, title, no image)
+  // Linked (multi-HTML) history items → DivisionCard feed. In-deck full
+  // documents are shown inline as flowing slides, so they're not duplicated here.
   let divisionsHtml = "";
-  if (history.length > 0) {
+  const linkedHistory = history.filter(item => item && item.href);
+  if (linkedHistory.length > 0) {
     const divLabel = escapeHtml(meta.divisionsLabel || "Previous Outputs");
-    const cards = history.map(item => {
+    const cards = linkedHistory.map(item => {
       const autoEyebrow = [item.date, contentTypeLabel(item.content)].filter(Boolean).join("  ·  ");
       return DivisionCard({
         eyebrow:     item.eyebrow     || autoEyebrow,
@@ -621,6 +635,11 @@ body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
   visibility: visible !important;
   pointer-events: auto !important;
   transition: none !important;
+  scroll-margin-top: clamp(56px, 8vh, 84px);
+}
+/* Stacked-document feed: hairline divider between successive documents. */
+.op-hero-single .op-hero-slide + .op-hero-slide {
+  border-top: 1px solid var(--op-color-border);
 }
 .op-hero-single .op-canvas-slide-body {
   position: relative !important;
