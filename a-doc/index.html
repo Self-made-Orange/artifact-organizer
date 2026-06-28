@@ -1,0 +1,2270 @@
+<!doctype html>
+<html lang="en" data-theme="notion" data-mode="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Australia Move — Plan B</title>
+  <style>/* ===== Notion theme — strictly per Notion DESIGN.md ===== */
+/*
+ *   Source: getdesign.md/notion/design-md (extracted from getdesign npm v0.6.9)
+ *   Radii:  GitHub-style 4 / 6 / 6 / 6 / 12 (user preference, overrides DESIGN.md)
+ *   Fonts:  Inter as NotionInter substitute. NO serif — Notion's marketing site
+ *           uses NotionInter throughout; the editor's Lyon serif is a separate context.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+[data-theme="notion"] {
+  /* === Surfaces — Notion's warm neutral palette (yellow-brown undertones) === */
+  --op-color-fg: rgba(0, 0, 0, 0.95);                /* Notion's signature near-black */
+  --op-color-bg: #ffffff;
+  --op-color-surface: #ffffff;
+  --op-color-surface-alt: #f6f5f4;                   /* Warm white — DESIGN.md exact */
+  --op-color-surface-dark: #31302e;                  /* Warm dark — DESIGN.md exact */
+
+  --op-color-fg-muted: #615d59;                      /* Warm Gray 500 */
+  --op-color-fg-placeholder: #a39e98;                /* Warm Gray 300 */
+
+  /* === Chrome — Notion Blue is the only saturated color in core UI === */
+  --op-color-accent: #0075de;                        /* Notion Blue — DESIGN.md exact */
+  --op-color-accent-active: #005bab;
+  --op-color-navy: #213183;                          /* Deep Navy — secondary brand */
+  --op-color-purple: #391c57;
+  --op-color-pink: #ff64c8;
+  --op-color-teal: #2a9d99;
+  --op-color-brown: #523410;
+  --op-color-focus: #097fe8;                         /* Focus Blue */
+  --op-color-badge-bg: #f2f9ff;                      /* Badge Blue Bg */
+  --op-color-badge-text: #097fe8;                    /* Badge Blue Text */
+  --op-color-success: #1aae39;                       /* Notion Green */
+  --op-color-warn: #dd5b00;                          /* Notion Orange */
+
+  /* === Depth — Notion's whisper philosophy, but with tighter blurs ===
+     DESIGN.md verbatim uses 18px+52px blurs which read mushy on big cards.
+     Kept the 1px whisper ring (DESIGN.md exact) + small contained drops. */
+  --op-border-whisper: 1px solid rgba(0, 0, 0, 0.1);
+  --op-shadow-card: rgba(0, 0, 0, 0.06) 0 0 0 1px,
+                    rgba(0, 0, 0, 0.04) 0 1px 2px,
+                    rgba(0, 0, 0, 0.04) 0 4px 8px -2px;
+  --op-shadow-deep: rgba(0, 0, 0, 0.08) 0 0 0 1px,
+                    rgba(0, 0, 0, 0.06) 0 1px 3px,
+                    rgba(0, 0, 0, 0.08) 0 4px 8px -2px,
+                    rgba(0, 0, 0, 0.10) 0 12px 24px -8px;
+
+  /* === Radii — GitHub-clean (user override on top of DESIGN.md) === */
+  --op-radius-micro:   4px;
+  --op-radius-subtle:  6px;
+  --op-radius-std:     6px;
+  --op-radius-comfort: 6px;
+  --op-radius-large:   12px;
+
+  /* === Fonts — NotionInter (Inter substitute), DESIGN.md fallback chain === */
+  --op-font-sans: "Inter", -apple-system, system-ui, "Segoe UI", "Apple Color Emoji",
+                  Helvetica, "Helvetica Neue", Arial, "Segoe UI Emoji",
+                  "Segoe UI Symbol", sans-serif;
+  --op-font-display: "Inter", -apple-system, system-ui, sans-serif;
+  --op-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular,
+                  Menlo, Consolas, monospace;
+
+  /* === Notion's pastel callout palette === */
+  --op-tone-info-bg:    #f2f9ff;                     /* Tinted Blue */
+  --op-tone-info-fg:    #097fe8;
+  --op-tone-warn-bg:    #fef0e2;                     /* Light Orange */
+  --op-tone-warn-fg:    #dd5b00;
+  --op-tone-success-bg: #e3f3e2;                     /* Light Green */
+  --op-tone-success-fg: #1aae39;
+  --op-tone-danger-bg:  #fbe4e4;                     /* Light Red */
+  --op-tone-danger-fg:  #d44c47;
+
+  --op-note-bg:     #fef9c3;                         /* Iconic warm yellow note */
+  --op-note-border: #cb912f;
+  --op-note-text:   #6b4c10;
+}
+
+[data-theme="notion"][data-mode="dark"] {
+  /* Notion's brand is light-first; dark adapts the warm-neutral philosophy */
+  --op-color-fg: rgba(255, 255, 255, 0.95);
+  --op-color-bg: #1f1e1c;                            /* Warm dark canvas */
+  --op-color-surface: #1f1e1c;
+  --op-color-surface-alt: #2c2b29;                   /* Warm elevated */
+  --op-color-surface-dark: #161513;
+
+  --op-color-fg-muted: #a39e98;                      /* Warm Gray 300 */
+  --op-color-fg-placeholder: #615d59;                /* Warm Gray 500 */
+
+  --op-color-accent: #62aef0;                        /* Link Light Blue — DESIGN.md */
+  --op-color-accent-active: #88c4f5;
+  --op-color-focus: #62aef0;
+  --op-color-badge-bg: rgba(98, 174, 240, 0.16);
+  --op-color-badge-text: #88c4f5;
+
+  --op-border-whisper: 1px solid rgba(255, 255, 255, 0.094);
+  --op-shadow-card: rgba(255, 255, 255, 0.06) 0 0 0 1px inset,
+                    rgba(0, 0, 0, 0.30) 0 1px 2px,
+                    rgba(0, 0, 0, 0.40) 0 4px 8px -2px;
+  --op-shadow-deep: rgba(255, 255, 255, 0.08) 0 0 0 1px inset,
+                    rgba(0, 0, 0, 0.40) 0 1px 3px,
+                    rgba(0, 0, 0, 0.50) 0 4px 8px -2px,
+                    rgba(0, 0, 0, 0.60) 0 12px 24px -8px;
+
+  --op-tone-info-bg:    rgba(98, 174, 240, 0.14);
+  --op-tone-info-fg:    #88c4f5;
+  --op-tone-warn-bg:    #3a2c1c;
+  --op-tone-warn-fg:    #f5a662;
+  --op-tone-success-bg: #1d3a25;
+  --op-tone-success-fg: #6dcc99;
+  --op-tone-danger-bg:  #3a2222;
+  --op-tone-danger-fg:  #ef8b87;
+
+  --op-note-bg:     #3a2f1c;
+  --op-note-border: #cb912f;
+  --op-note-text:   #ffe16c;
+}
+
+/* === Notion typography character — strictly per DESIGN.md hierarchy ===
+ *   - lnum/locl OpenType applied to display + headings ONLY (DESIGN.md scope).
+ *   - Letter-spacing curve verbatim from DESIGN.md table.
+ */
+[data-theme="notion"] .op-page-title,
+[data-theme="notion"] .op-section-title,
+[data-theme="notion"] .op-heading-h2,
+[data-theme="notion"] .op-heading-h3,
+[data-theme="notion"] .op-heading-h4 {
+  font-feature-settings: "lnum", "locl";
+}
+[data-theme="notion"] .op-page-title {
+  /* 48px ← DESIGN.md "Section Heading": 700 / 1.00 / -1.5px */
+  font-family: var(--op-font-display);
+  font-weight: 700;
+  line-height: 1.04;
+  letter-spacing: -0.0313em;                         /* -1.5px at 48px */
+}
+[data-theme="notion"] .op-section-title {
+  /* 40px ← DESIGN.md "Sub-heading Large": 700 / 1.50 / NORMAL */
+  font-family: var(--op-font-display);
+  font-weight: 700;
+  line-height: 1.20;                                 /* 1.50 too loose at this rendering */
+  letter-spacing: 0;
+}
+[data-theme="notion"] .op-heading-h2 {
+  /* 32px ← interpolated between Sub-heading Large (40) and Sub-heading (26) */
+  font-family: var(--op-font-display);
+  font-weight: 700;
+  line-height: 1.18;
+  letter-spacing: -0.012em;
+}
+[data-theme="notion"] .op-heading-h3 {
+  /* 22px ← DESIGN.md "Card Title": 700 / 1.27 / -0.25px */
+  font-family: var(--op-font-display);
+  font-weight: 700;
+  line-height: 1.27;
+  letter-spacing: -0.011em;                          /* -0.25px at 22px */
+}
+[data-theme="notion"] .op-heading-h4 {
+  /* 18px ← between Body Large (20/600) and Body (16/400) */
+  font-family: var(--op-font-display);
+  font-weight: 700;
+  line-height: 1.33;
+  letter-spacing: -0.006em;
+}
+[data-theme="notion"] .op-page-subtitle,
+[data-theme="notion"] .op-section-lead {
+  /* Body Large: 20px / 600 / 1.40 / -0.125px */
+  font-weight: 600;
+  line-height: 1.40;
+  letter-spacing: -0.006em;                          /* -0.125px at 20px */
+  color: var(--op-color-fg-muted);
+}
+[data-theme="notion"] .op-prose {
+  /* Body: 16px / 400 / 1.50 / normal */
+  font-weight: 400;
+  line-height: 1.50;
+  letter-spacing: 0;
+}
+[data-theme="notion"] .op-prose a {
+  color: var(--op-color-accent);
+  text-decoration: none;
+}
+[data-theme="notion"] .op-prose a:hover {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+[data-theme="notion"][data-mode="dark"] .op-prose a {
+  color: #62aef0;
+}
+
+/* === Notion's signature warm-alternation — DESIGN.md "warm alternation" rhythm === */
+[data-theme="notion"] .op-section {
+  padding: var(--op-space-6) var(--op-space-5);
+  margin-inline: calc(-1 * var(--op-space-5));
+  border-radius: var(--op-radius-large);
+}
+[data-theme="notion"] .op-section:nth-of-type(even) {
+  background: var(--op-color-surface-alt);           /* Warm white #f6f5f4 */
+}
+[data-theme="notion"][data-mode="dark"] .op-section:nth-of-type(even) {
+  background: var(--op-color-surface-alt);           /* Warm dark elevation */
+}
+
+:root {
+  /* === Spacing === */
+  --op-space-1: 4px;
+  --op-space-2: 8px;
+  --op-space-3: 12px;
+  --op-space-4: 16px;
+  --op-space-5: 24px;
+  --op-space-6: 32px;
+  --op-space-8: 64px;
+  --op-space-10: 120px;
+
+  /* === Radius === */
+  --op-radius-micro: 4px;
+  --op-radius-subtle: 5px;
+  --op-radius-std: 8px;
+  --op-radius-comfort: 12px;
+  --op-radius-large: 16px;
+  --op-radius-pill: 9999px;
+
+  --op-container-max: 1200px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--op-font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--op-color-fg);
+  background: var(--op-color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Page === */
+/* Back-navigation bar (multi-HTML linking) */
+.op-page-backbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: color-mix(in oklab, var(--op-color-surface) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--op-color-border);
+  padding: 10px var(--op-space-5);
+}
+.op-page-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--op-color-fg-muted);
+  text-decoration: none;
+  transition: color 120ms ease;
+  max-width: var(--op-container-max);
+  margin: 0 auto;
+}
+.op-page-back:hover { color: var(--op-color-fg); }
+
+.op-page {
+  max-width: var(--op-container-max);
+  margin: 0 auto;
+  padding: var(--op-space-8) var(--op-space-5);
+}
+.op-page-header { margin-bottom: var(--op-space-6); }
+.op-page-title {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -1.2px;
+  margin: 0 0 var(--op-space-3);
+  font-feature-settings: "lnum", "locl";
+}
+.op-page-subtitle {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: -0.08px;
+  color: var(--op-color-fg-muted);
+  margin: 0;
+}
+
+/* === Section === */
+.op-section { margin-top: var(--op-space-8); }
+.op-section-title {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.8px;
+  margin: 0 0 var(--op-space-4);
+  font-feature-settings: "lnum", "locl";
+}
+.op-section-lead {
+  color: var(--op-color-fg-muted);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin: 0 0 var(--op-space-5);
+}
+.op-section-lead p { margin: 0; }
+.op-section-body > * + * { margin-top: var(--op-space-4); }
+
+/* === Headings === */
+.op-heading { margin: var(--op-space-5) 0 var(--op-space-3); font-weight: 700; }
+.op-heading-h2 {
+  font-size: 26px;
+  line-height: 1.20;
+  letter-spacing: -0.4px;
+  font-feature-settings: "lnum", "locl";
+}
+.op-heading-h3 {
+  font-size: 19px;
+  line-height: 1.30;
+  letter-spacing: -0.35px;
+}
+.op-heading-h4 {
+  font-size: 16px;
+  line-height: 1.36;
+  letter-spacing: -0.14px;
+}
+
+/* === Prose === */
+.op-prose { line-height: 1.5; }
+.op-prose p { margin: 0 0 var(--op-space-3); }
+.op-prose p:last-child { margin-bottom: 0; }
+.op-prose strong { font-weight: 600; }
+.op-prose em { font-style: italic; }
+.op-prose code {
+  font-family: var(--op-font-mono);
+  font-size: 0.9em;
+  background: var(--op-color-surface-alt);
+  padding: 2px 5px;
+  border-radius: var(--op-radius-micro);
+}
+.op-section-lead code,
+.op-callout-body code {
+  font-family: var(--op-font-mono);
+  font-size: 0.88em;
+  background: color-mix(in srgb, var(--op-color-surface-alt) 80%, var(--op-color-bg));
+  border: var(--op-border-whisper);
+  padding: 2px 6px;
+  border-radius: var(--op-radius-micro);
+  overflow-wrap: anywhere;
+}
+.op-prose a {
+  color: var(--op-color-accent);
+  text-decoration: none;
+}
+.op-prose a:hover { text-decoration: underline; }
+.op-prose ul, .op-prose ol {
+  margin: 0 0 var(--op-space-3);
+  padding-left: var(--op-space-5);
+}
+.op-prose li { margin-bottom: var(--op-space-1); }
+
+/* === Light/Dark mode toggler (always present, fixed to top-right) === */
+.op-mode-toggler {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--op-color-surface);
+  color: var(--op-color-fg);
+  border: var(--op-border-whisper);
+  border-radius: var(--op-radius-pill);
+  padding: 0;
+  cursor: pointer;
+  box-shadow: var(--op-shadow-card);
+  transition: transform 120ms ease, background 120ms ease;
+}
+.op-mode-toggler:hover { transform: translateY(-1px); }
+.op-mode-toggler:active { transform: translateY(0); }
+.op-mode-toggler:focus-visible {
+  outline: 2px solid var(--op-color-focus);
+  outline-offset: 2px;
+}
+/* Show moon in light mode (click → dark), sun in dark mode (click → light) */
+html[data-mode="dark"] .op-mode-icon-moon { display: none; }
+html[data-mode="dark"] .op-mode-icon-sun  { display: block; }
+html:not([data-mode="dark"]) .op-mode-icon-moon { display: block; }
+html:not([data-mode="dark"]) .op-mode-icon-sun  { display: none; }
+
+/* === Pan/zoom layer for SVG diagrams === */
+.op-zoomable {
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.op-zoomable .op-zoom-stage {
+  transform-origin: 0 0;
+  cursor: grab;
+  width: fit-content;
+  min-width: 100%;
+}
+.op-zoomable .op-zoom-stage:active { cursor: grabbing; }
+.op-zoomable .op-zoom-stage > svg { display: block; max-width: none; }
+
+.op-zoom-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+  pointer-events: auto;
+}
+.op-zoom-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--op-color-surface);
+  color: var(--op-color-fg);
+  border: var(--op-border-whisper);
+  border-radius: var(--op-radius-micro);
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--op-font-sans);
+  font-weight: 600;
+  line-height: 1;
+  box-shadow: var(--op-shadow-card);
+  transition: background 120ms ease, transform 80ms ease;
+}
+.op-zoom-btn:hover { background: var(--op-color-surface-alt); }
+.op-zoom-btn:active { transform: scale(0.94); }
+.op-zoom-btn:focus-visible {
+  outline: 2px solid var(--op-color-focus);
+  outline-offset: 2px;
+}
+
+/* === KPICards auto-grid when adjacent in a section === */
+.op-section-body:has(> .op-kpi + .op-kpi) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--op-space-3);
+}
+.op-section-body:has(> .op-kpi + .op-kpi) > * + * { margin-top: 0; }
+
+/* === Tables — horizontal scroll on narrow viewports === */
+.op-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: var(--op-space-4) 0;
+  border-radius: var(--op-radius-comfort);
+}
+.op-table-wrap > .op-table { margin: 0; min-width: 100%; }
+
+/* === Responsive — tablet (≤960px) === */
+@media (max-width: 960px) {
+  .op-page { padding: var(--op-space-6) var(--op-space-4); }
+  .op-page-title { font-size: 34px; letter-spacing: -0.9px; }
+  .op-section-title { font-size: 26px; letter-spacing: -0.55px; }
+  .op-heading-h2 { font-size: 22px; letter-spacing: -0.32px; }
+  .op-heading-h3 { font-size: 18px; letter-spacing: -0.28px; }
+  .op-heading-h4 { font-size: 15px; }
+  .op-section { margin-top: var(--op-space-6); }
+  .op-kpi-value { font-size: 26px; }
+}
+
+/* === Responsive — mobile (≤640px) === */
+@media (max-width: 640px) {
+  html, body { font-size: 14px; }
+  .op-page {
+    padding: var(--op-space-5) var(--op-space-3);
+  }
+  .op-page-header { margin-bottom: var(--op-space-5); }
+  .op-page-title {
+    font-size: 24px;
+    line-height: 1.10;
+    letter-spacing: -0.55px;
+  }
+  .op-page-subtitle {
+    font-size: 14px;
+    line-height: 1.45;
+    letter-spacing: 0;
+  }
+  .op-section { margin-top: var(--op-space-5); }
+  .op-section-title {
+    font-size: 20px;
+    line-height: 1.18;
+    letter-spacing: -0.34px;
+    margin-bottom: var(--op-space-3);
+  }
+  .op-section-lead {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: var(--op-space-4);
+  }
+  .op-heading-h2 { font-size: 17px; line-height: 1.24; letter-spacing: -0.22px; }
+  .op-heading-h3 { font-size: 15px; line-height: 1.32; letter-spacing: -0.13px; }
+  .op-heading-h4 { font-size: 14px; line-height: 1.38; letter-spacing: -0.08px; }
+  .op-kpi-value { font-size: 19px; letter-spacing: -0.32px; }
+  .op-kpi-label { font-size: 11px; letter-spacing: 0.4px; }
+  .op-kpi { min-width: 0; padding: var(--op-space-3); }
+  .op-table th, .op-table td { padding: var(--op-space-2); }
+  .op-table { font-size: 13px; }
+  .op-mode-toggler {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+  }
+  .op-zoom-btn { width: 32px; height: 32px; font-size: 15px; }
+  .op-zoom-controls { top: 6px; right: 6px; gap: 6px; }
+}
+
+/* === Honor reduced-motion preferences === */
+@media (prefers-reduced-motion: reduce) {
+  .op-mode-toggler, .op-zoom-btn { transition: none; }
+}
+
+/* === SiteHeader — shadcn-style sticky brand+nav row === */
+.op-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(16px, 2.5vw, 32px);
+  height: 56px;
+  background: color-mix(in oklab, var(--op-color-bg) 95%, transparent);
+  backdrop-filter: blur(8px) saturate(160%);
+  -webkit-backdrop-filter: blur(8px) saturate(160%);
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  font-size: 14px;
+}
+.op-site-header-brand {
+  font-family: var(--op-font-sans);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  color: var(--op-color-fg);
+  text-decoration: none;
+}
+.op-site-header-nav {
+  list-style: none;
+  display: flex;
+  gap: clamp(4px, 1.5vw, 8px);
+  margin: 0;
+  padding: 0;
+}
+.op-site-header-nav a {
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  text-decoration: none;
+  font-weight: 400;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: var(--op-radius-sm, calc(0.5rem - 2px));
+  transition: background 120ms ease, color 120ms ease;
+}
+.op-site-header-nav a:hover {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  color: var(--op-color-fg);
+}
+.op-site-header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--op-color-primary-fg, var(--op-color-bg));
+  text-decoration: none;
+  font-weight: 500;
+  padding: 7px 14px;
+  background: var(--op-color-primary, var(--op-color-fg));
+  border: 1px solid var(--op-color-primary, var(--op-color-fg));
+  border-radius: var(--op-radius-sm, calc(0.5rem - 2px));
+  font-size: 13px;
+  transition: opacity 120ms ease;
+}
+.op-site-header-cta:hover { opacity: 0.88; }
+.op-site-header-cta-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+  animation: op-site-header-pulse 2s ease infinite;
+}
+@keyframes op-site-header-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50%       { opacity: 0.3; transform: scale(0.8); }
+}
+@media (max-width: 720px) {
+  .op-site-header-nav { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .op-site-header-cta-dot { animation: none; }
+}
+
+/* === HeroCarousel — full-bleed rotating imagery === */
+.op-hero-carousel {
+  position: relative;
+  width: 100%;
+  background: var(--op-color-bg);
+}
+.op-hero-stage {
+  position: relative;
+  width: 100%;
+  height: 100lvh;
+  min-height: 600px;
+  overflow: hidden;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+}
+.op-hero-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0.8s;
+  pointer-events: none;
+}
+.op-hero-slide-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition:
+    opacity 0.8s ease,
+    visibility 0s linear 0s;
+}
+.op-hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transform: scale(1.03);
+  transition: transform 8s linear;
+}
+.op-hero-slide-active img {
+  transform: scale(1);
+  transition: transform 8s linear;
+}
+.op-hero-slide::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0.24) 0%, transparent 20%, transparent 60%, rgba(0,0,0,0.48) 100%);
+  pointer-events: none;
+}
+
+.op-hero-slide-meta {
+  position: absolute;
+  left: clamp(16px, 3vw, 48px);
+  bottom: clamp(72px, 9vh, 120px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #ffffff;
+  z-index: 2;
+  max-width: 80%;
+}
+.op-hero-slide-subtitle {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.op-hero-slide-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(24px, 2.8vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.08;
+}
+
+.op-hero-overlay {
+  position: absolute;
+  bottom: clamp(16px, 2.5vh, 32px);
+  left: clamp(16px, 3vw, 48px);
+  right: clamp(16px, 3vw, 48px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 3;
+  color: #ffffff;
+  pointer-events: none;
+}
+.op-hero-overlay > * { pointer-events: auto; }
+
+.op-hero-counter {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.36);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 5px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.op-hero-play-reel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px 8px 12px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #09090b;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  transition: background 120ms ease, transform 120ms ease;
+}
+.op-hero-play-reel:hover {
+  transform: translate3d(0, -2px, 0);
+  background: #ffffff;
+}
+.op-hero-play-reel-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #09090b;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  padding-left: 1px;
+}
+
+.op-hero-lead {
+  padding: clamp(64px, 12vh, 160px) clamp(16px, 3vw, 48px);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.op-hero-lead p {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(24px, 3.2vw, 48px);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  line-height: 1.12;
+  color: var(--op-color-fg);
+  max-width: 22ch;
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .op-hero-slide-meta { bottom: 88px; }
+  .op-hero-overlay { flex-direction: column-reverse; align-items: flex-start; gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .op-hero-slide img,
+  .op-hero-slide-active img { transform: none; transition: none; }
+  .op-hero-slide { transition: opacity 0.3s linear; }
+}
+
+/* === CanvasStage — full-viewport content showcase === */
+.op-canvas-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100lvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--op-color-bg);
+  padding: clamp(80px, 12vh, 120px) clamp(16px, 4vw, 64px) clamp(64px, 8vh, 100px);
+}
+
+.op-canvas-stage-inner {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.op-canvas-stage-meta {
+  position: absolute;
+  left: clamp(16px, 2.5vw, 40px);
+  bottom: clamp(16px, 2.5vh, 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.op-canvas-stage-date {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--op-color-muted-fg, var(--op-color-fg-placeholder));
+}
+
+.op-canvas-stage-empty {
+  font-family: var(--op-font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--op-color-muted-fg, var(--op-color-fg-placeholder));
+  text-align: center;
+  padding: 80px 0;
+}
+
+/* Suppress inner op-page/section chrome inside the stage */
+.op-canvas-stage-inner .op-page { max-width: none; padding: 0; margin: 0; }
+.op-canvas-stage-inner .op-page-main { padding: 0; max-width: none; }
+.op-canvas-stage-inner .op-section { padding: 0; border-top: none; max-width: none; }
+.op-canvas-stage-inner .op-section-title {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--op-font-mono);
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  padding: 0;
+  border-top: none;
+  margin-bottom: 24px;
+}
+
+/* Canvas History Feed */
+.op-canvas-history {
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+
+.op-canvas-history-eyebrow {
+  display: block;
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  padding: clamp(40px, 5vh, 64px) clamp(16px, 3vw, 48px) clamp(16px, 2vh, 24px);
+}
+
+.op-canvas-history-item {
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) 3fr;
+  gap: clamp(24px, 4vw, 64px);
+  align-items: start;
+  padding: clamp(32px, 5vh, 60px) clamp(16px, 3vw, 48px);
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.op-canvas-history-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: sticky;
+  top: clamp(64px, 9vh, 88px);
+}
+
+.op-canvas-history-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.op-canvas-history-label {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+
+.op-canvas-history-date {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--op-color-muted-fg, var(--op-color-fg-placeholder));
+}
+
+.op-canvas-history-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(18px, 2vw, 28px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--op-color-fg);
+}
+
+.op-canvas-history-content {
+  background: var(--op-color-card, var(--op-color-surface));
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-radius: var(--op-radius, 0.5rem);
+  padding: clamp(20px, 2.5vw, 40px);
+  overflow-x: auto;
+  box-shadow: var(--op-shadow-card);
+}
+
+/* Flatten inner wrappers inside history content */
+.op-canvas-history-content .op-page { max-width: none; padding: 0; margin: 0; }
+.op-canvas-history-content .op-page-main { padding: 0; max-width: none; }
+.op-canvas-history-content .op-section { padding: 0; border-top: none; max-width: none; }
+.op-canvas-history-content .op-section-title {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--op-font-mono);
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  padding: 0;
+  border-top: none;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 760px) {
+  .op-canvas-history-item {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .op-canvas-history-header { position: static; }
+  .op-canvas-stage { padding-top: 88px; }
+}
+
+/* === EditorialStatement — large centered statement === */
+.op-editorial-statement {
+  padding: clamp(64px, 12vh, 160px) clamp(16px, 4vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  background: var(--op-color-bg);
+}
+.op-editorial-inner {
+  max-width: 960px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(24px, 3vh, 40px);
+}
+.op-editorial-eyebrow {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-editorial-text {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(28px, 4vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--op-color-fg);
+  margin: 0;
+  max-width: 22ch;
+}
+.op-editorial-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  transition: gap 120ms ease, color 120ms ease;
+}
+.op-editorial-cta:hover {
+  gap: 16px;
+  color: var(--op-color-fg);
+}
+.op-editorial-cta-arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* === DivisionCard — horizontal numbered list item === */
+.op-division-card {
+  display: grid;
+  grid-template-columns: 1fr clamp(180px, 24vw, 360px);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+  padding: clamp(32px, 5vh, 64px) clamp(16px, 3vw, 48px);
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-division-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-3, 12px);
+}
+.op-division-card-eyebrow {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-division-card-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(24px, 3vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 0;
+  color: var(--op-color-fg);
+}
+.op-division-card-desc {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  margin: 0;
+  max-width: 48ch;
+}
+.op-division-card-projects {
+  list-style: none;
+  margin: var(--op-space-2, 8px) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  padding-top: var(--op-space-3, 12px);
+}
+.op-division-card-projects li a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 120ms ease;
+}
+.op-division-card-projects li a::before {
+  content: '↗';
+  font-size: 11px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-division-card-projects li a:hover { color: var(--op-color-fg); }
+.op-division-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--op-space-2, 8px);
+  color: var(--op-color-fg);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  align-self: flex-start;
+  transition: gap 120ms ease;
+}
+.op-division-card-cta:hover { gap: 14px; }
+.op-division-card-media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--op-radius, 0.5rem);
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  aspect-ratio: 3/4;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+}
+.op-division-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 1.2s ease;
+}
+.op-division-card:hover .op-division-card-media img {
+  transform: scale(1.04);
+}
+
+/* Linked card */
+a.op-division-card {
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+a.op-division-card:hover {
+  background: color-mix(in oklab, var(--op-color-fg) 3%, transparent);
+}
+a.op-division-card:hover .op-division-card-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.op-division-card-link-arrow {
+  margin-left: 8px;
+  font-size: 0.65em;
+  opacity: 0.5;
+  vertical-align: super;
+  transition: opacity 150ms ease;
+}
+a.op-division-card:hover .op-division-card-link-arrow {
+  opacity: 1;
+}
+
+@media (max-width: 760px) {
+  .op-division-card {
+    grid-template-columns: 1fr;
+  }
+  .op-division-card-media {
+    aspect-ratio: 16/9;
+    order: -1;
+  }
+}
+
+
+/* artifact-organizer/StepList */
+.op-steps {
+  list-style: none;
+  padding: 0;
+  margin: var(--op-space-4) 0;
+}
+.op-step {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: var(--op-space-3);
+  padding: var(--op-space-3) 0;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  align-items: start;
+}
+.op-step:last-child { border-bottom: none; }
+.op-step-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--op-space-3);
+  min-height: 28px;
+}
+.op-step-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-radius: var(--op-radius-sm, calc(0.5rem - 2px));
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  flex: 0 0 28px;
+  font-family: var(--op-font-mono);
+}
+.op-step-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  flex: 0 0 28px;
+}
+.op-step-done .op-step-indicator,
+.op-step-done .op-step-index    { color: var(--op-tone-success-fg); border-color: var(--op-tone-success-fg); }
+.op-step-doing .op-step-indicator,
+.op-step-doing .op-step-index   { color: var(--op-color-primary, var(--op-color-fg)); border-color: var(--op-color-primary, var(--op-color-fg)); }
+.op-step-skipped { opacity: 0.5; }
+.op-step-title  { font-weight: 600; font-size: 14px; }
+.op-step-body {
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  font-size: 14px;
+  margin-top: var(--op-space-1);
+  line-height: 1.5;
+}
+.op-step-body > p:first-child { margin-top: 0; }
+.op-step-body > p:last-child  { margin-bottom: 0; }
+
+/* artifact-organizer/Callout */
+.op-callout {
+  border-left: 3px solid var(--op-color-border, var(--op-color-fg-muted));
+  background: var(--op-color-card, var(--op-color-surface));
+  border-radius: 0 var(--op-radius, 0.5rem) var(--op-radius, 0.5rem) 0;
+  padding: var(--op-space-4) var(--op-space-5);
+  margin: var(--op-space-4) 0;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-right: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-callout-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: var(--op-space-2);
+}
+.op-callout-body {
+  font-size: 14px;
+  line-height: 1.5;
+}
+.op-callout-body > p:first-child { margin-top: 0; }
+.op-callout-body > p:last-child  { margin-bottom: 0; }
+
+/* Tone variants */
+.op-callout-info {
+  border-left-color: var(--op-tone-info-fg);
+  background: var(--op-tone-info-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-info .op-callout-title { color: var(--op-tone-info-fg); }
+
+.op-callout-note {
+  border-left-color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+
+.op-callout-warn {
+  border-left-color: var(--op-tone-warn-fg);
+  background: var(--op-tone-warn-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-warn .op-callout-title { color: var(--op-tone-warn-fg); }
+
+.op-callout-success {
+  border-left-color: var(--op-tone-success-fg);
+  background: var(--op-tone-success-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-success .op-callout-title { color: var(--op-tone-success-fg); }
+
+.op-callout-danger {
+  border-left-color: var(--op-tone-danger-fg);
+  background: var(--op-tone-danger-bg);
+  border-top-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.op-callout-danger .op-callout-title { color: var(--op-tone-danger-fg); }
+
+/* artifact-organizer/KPICard */
+.op-kpi {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-radius: var(--op-radius, 0.5rem);
+  padding: var(--op-space-4);
+  box-shadow: var(--op-shadow-card);
+  min-width: 180px;
+}
+.op-kpi-label {
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  margin-bottom: var(--op-space-2);
+  text-transform: none;
+}
+.op-kpi-value {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-feature-settings: "lnum", "tnum";
+}
+.op-kpi-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: var(--op-space-2);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--op-radius-sm, calc(0.5rem - 2px));
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-kpi-delta-up {
+  background: var(--op-tone-success-bg);
+  color: var(--op-tone-success-fg);
+  border-color: transparent;
+}
+.op-kpi-delta-down {
+  background: var(--op-tone-danger-bg);
+  color: var(--op-tone-danger-fg);
+  border-color: transparent;
+}
+.op-kpi-delta-flat {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  border-color: transparent;
+}
+.op-kpi-hint {
+  margin-top: var(--op-space-2);
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  font-size: 12px;
+}
+
+/* artifact-organizer/DataTable */
+.op-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--op-space-4) 0;
+  font-size: 14px;
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-radius: var(--op-radius, 0.5rem);
+  overflow: hidden;
+}
+.op-table caption {
+  font-size: 13px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  text-align: left;
+  padding: var(--op-space-2) 0;
+  caption-side: bottom;
+}
+.op-table th,
+.op-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-table tr:last-child td {
+  border-bottom: none;
+}
+.op-table th {
+  font-weight: 500;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  font-size: 12px;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  letter-spacing: 0.01em;
+}
+.op-table tbody tr:hover {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+}
+.op-table tfoot td {
+  font-weight: 600;
+  border-top: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-bottom: none;
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+}
+.op-td-right   { text-align: right; }
+.op-td-center  { text-align: center; }
+.op-td-left    { text-align: left; }
+.op-table-compact th,
+.op-table-compact td {
+  padding: var(--op-space-1) var(--op-space-2);
+  font-size: 12px;
+}
+
+/* artifact-organizer/Comparison */
+.op-compare {
+  display: grid;
+  gap: var(--op-space-4);
+  margin: var(--op-space-5) 0;
+}
+.op-compare-vs   { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.op-compare-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+
+.op-compare-item {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  border: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  border-radius: var(--op-radius, 0.5rem);
+  padding: var(--op-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--op-space-3);
+  box-shadow: var(--op-shadow-card);
+}
+.op-compare-head {
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+  padding-bottom: var(--op-space-3);
+}
+.op-compare-title   { font-weight: 600; font-size: 15px; }
+.op-compare-subtitle {
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+  font-size: 13px;
+  margin-top: var(--op-space-1);
+}
+.op-compare-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.op-compare-bullets li {
+  padding: var(--op-space-1) 0;
+  padding-left: var(--op-space-4);
+  position: relative;
+  font-size: 14px;
+  border-bottom: 1px solid var(--op-color-border, var(--op-color-surface-alt));
+}
+.op-compare-bullets li:last-child { border-bottom: none; }
+.op-compare-bullets li::before {
+  content: '–';
+  position: absolute;
+  left: 4px;
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+.op-compare-verdict {
+  padding: var(--op-space-2) var(--op-space-3);
+  border-radius: var(--op-radius-sm, calc(0.5rem - 2px));
+  font-weight: 500;
+  font-size: 12px;
+  text-align: center;
+  margin-top: auto;
+  border: 1px solid transparent;
+}
+.op-compare-verdict-winner {
+  background: var(--op-tone-success-bg);
+  color: var(--op-tone-success-fg);
+}
+.op-compare-verdict-loser {
+  background: var(--op-tone-danger-bg);
+  color: var(--op-tone-danger-fg);
+}
+.op-compare-verdict-neutral {
+  background: var(--op-color-muted, var(--op-color-surface-alt));
+  color: var(--op-color-muted-fg, var(--op-color-fg-muted));
+}
+
+
+/* ── Body / page reset for canvas full-bleed ── */
+body { margin: 0; padding: 0 !important; background: var(--op-color-bg); }
+
+/* ── Fixed nav with an always-on gradient boundary (mode-aware via bg) ── */
+.op-site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: linear-gradient(to bottom,
+    var(--op-color-bg) 0%,
+    color-mix(in oklab, var(--op-color-bg) 72%, transparent) 60%,
+    transparent 100%);
+  border-bottom: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  z-index: 50;
+}
+.op-site-header.op-scrolled {
+  background: color-mix(in oklab, var(--op-color-bg) 85%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--op-color-border);
+}
+
+/* ── Hero stage: force bg-color (not muted) for deep dark look ── */
+.op-hero-stage {
+  background: var(--op-color-bg) !important;
+}
+/* Bottom gradient + caption removed — the doc owns its title, index owns nav. */
+.op-hero-slide::after { display: none; }
+/* Keep the artifact's own title at the top of the document (above the first
+   section), but drop the lede/subtitle — title only. */
+.op-canvas-slide-inner .op-page-subtitle { display: none; }
+/* Slide-meta bottom-left label */
+.op-hero-slide-meta {
+  position: absolute;
+  left: clamp(20px, 3vw, 48px);
+  bottom: clamp(24px, 4vh, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--op-color-fg);
+  z-index: 2;
+}
+.op-hero-slide-subtitle {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--op-color-fg-muted);
+}
+.op-hero-slide-title {
+  font-size: clamp(24px, 3vw, 44px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.op-hero-slide-desc {
+  font-size: clamp(12px, 1.2vw, 14px);
+  color: var(--op-color-fg-muted);
+  line-height: 1.5;
+  max-width: 560px;
+  margin-top: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Counter bottom-right */
+.op-hero-counter {
+  font-family: var(--op-font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  color: var(--op-color-fg-muted);
+  background: color-mix(in oklab, var(--op-color-bg) 70%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 5px 12px;
+  border-radius: var(--op-radius);
+  border: 1px solid var(--op-color-border);
+}
+
+/* ── Directional slide enter animations ── */
+/* Outer slide handles opacity (hero-carousel.css crossfade).
+   Inner card only moves — visible through the parent's fade. */
+@keyframes op-slide-enter-next {
+  from { transform: translateY(40px); }
+  to   { transform: translateY(0);    }
+}
+@keyframes op-slide-enter-prev {
+  from { transform: translateY(-40px); }
+  to   { transform: translateY(0);     }
+}
+.op-hero-stage[data-dir="next"] .op-hero-slide-active .op-canvas-slide-inner {
+  animation: op-slide-enter-next 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.op-hero-stage[data-dir="prev"] .op-hero-slide-active .op-canvas-slide-inner {
+  animation: op-slide-enter-prev 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .op-hero-stage[data-dir] .op-hero-slide-active .op-canvas-slide-inner {
+    animation: none;
+  }
+}
+
+/* ── Slide body: centered content ── */
+.op-canvas-slide-body {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  /* Top-align: centering clips both ends of content taller than the viewport,
+     so the first/last sections become unreachable at full scroll. */
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(92px, 12vh, 124px) clamp(20px, 4vw, 80px) clamp(160px, 24vh, 280px);
+  overflow-y: auto;
+}
+
+/* Single-document deck (no history): flow as a normal article so the WINDOW
+   scrolls through every section. The nested 100lvh flex/absolute scroll model is
+   for the multi-slide carousel only — on a lone document it traps the content
+   and the page scroll skips past it, leaving the last sections unreachable.
+   !important + display:block force a plain, reliably-scrollable flow. */
+.op-hero-single .op-hero-stage {
+  height: auto !important;
+  min-height: 100lvh !important;
+  overflow: visible !important;
+  display: block !important;
+}
+.op-hero-single .op-hero-slide {
+  position: relative !important;
+  inset: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: none !important;
+  scroll-margin-top: clamp(56px, 8vh, 84px);
+}
+/* Stacked-document feed: hairline divider between successive documents. */
+.op-hero-single .op-hero-slide + .op-hero-slide {
+  border-top: 1px solid var(--op-color-border);
+}
+.op-hero-single .op-canvas-slide-body {
+  position: relative !important;
+  inset: auto !important;
+  display: block !important;
+  overflow: visible !important;
+  padding: clamp(96px, 13vh, 124px) clamp(20px, 4vw, 80px) clamp(48px, 8vh, 96px) !important;
+}
+.op-hero-single .op-canvas-slide-inner { margin: 0 auto !important; }
+/* 1/N counter is meaningless for a single document */
+.op-hero-single .op-hero-overlay { display: none !important; }
+
+/* ── Blog-article reading column (flat, single column, clean hierarchy) ── */
+.op-canvas-slide-inner {
+  width: 100%;
+  max-width: 760px;          /* ~comfortable measure for reading */
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+.op-canvas-slide-inner .op-page { max-width: none; padding: 0; margin: 0; }
+.op-canvas-slide-inner .op-page-main { padding: 0; max-width: none; }
+
+/* Article title (h1) */
+.op-canvas-slide-inner .op-page-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 700;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+  margin: 0 0 clamp(28px, 4vh, 44px);
+}
+
+/* Sections (default = newest document): full blog flow, all open, divider */
+.op-canvas-slide-inner .op-section {
+  max-width: none;
+  margin-top: clamp(40px, 6vh, 72px);
+  padding-top: clamp(40px, 6vh, 72px);
+  border-top: 1px solid var(--op-color-border);
+  scroll-margin-top: clamp(96px, 13vh, 132px);
+}
+.op-canvas-slide-inner .op-page-main > .op-section:first-child {
+  margin-top: 0; padding-top: 0; border-top: none;
+}
+.op-canvas-slide-inner .op-section-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+  text-transform: none;
+  color: var(--op-color-fg);
+  margin: 0 0 6px;
+  padding: 0;
+  border: none;
+}
+.op-canvas-slide-inner .op-section-lead {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--op-color-fg-muted);
+  margin: 0 0 18px;
+}
+.op-canvas-slide-inner .op-section-body { margin-top: 14px; }
+
+/* ── Hero-feed: selected document fills the hero; others are cards below ── */
+.op-hero-feed { position: relative; background: var(--op-color-bg); }
+.op-feed-hero { padding: clamp(96px, 13vh, 124px) clamp(20px, 4vw, 80px) clamp(40px, 6vh, 64px); }
+.op-feed-panel { display: none; }
+.op-feed-panel.op-feed-panel-active { display: block; }
+.op-feed-panel .op-canvas-slide-inner { max-width: 760px; margin: 0 auto; }
+
+.op-feed-cards {
+  border-top: 1px solid var(--op-color-border);
+  padding: clamp(36px, 5vh, 60px) clamp(20px, 4vw, 80px) clamp(80px, 12vh, 140px);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.op-feed-cards-eyebrow {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--op-color-fg-muted);
+  margin-bottom: 16px;
+}
+.op-feed-cards-grid { display: grid; gap: 14px; }
+.op-feed-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.4vw, 28px);
+  border: 1px solid var(--op-color-border);
+  border-radius: var(--op-radius-std, 12px);
+  /* Theme surface-alt: subtle grey in light, clearly lifted in dark — reads as
+     a card in both modes (the flat fg-tint vanished on near-black). */
+  background: var(--op-color-surface-alt, color-mix(in oklab, var(--op-color-fg) 5%, var(--op-color-bg)));
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+.op-feed-card:hover {
+  border-color: var(--op-color-fg-muted);
+  background: color-mix(in oklab, var(--op-color-fg) 6%, var(--op-color-surface-alt, var(--op-color-bg)));
+  transform: translateY(-2px);
+}
+.op-feed-card-hidden { display: none; }
+.op-fc-title {
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.op-fc-desc { font-size: 0.95rem; line-height: 1.5; color: var(--op-color-fg-muted); }
+.op-fc-meta {
+  font-family: var(--op-font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--op-color-fg-muted);
+}
+
+/* ── Older documents (op-doc-collapsed): one collapsed card per document ──
+   Collapsed shows only the document title + description; click to expand the
+   whole document (sections then render in normal full flow). */
+.op-doc-collapsed .op-canvas-slide-inner {
+  border: 1px solid var(--op-color-border);
+  border-radius: var(--op-radius-std, 12px);
+  background: var(--op-color-card, var(--op-color-surface));
+  padding: clamp(18px, 2.2vw, 26px) clamp(20px, 2.6vw, 32px);
+}
+.op-doc-collapsed.op-open .op-canvas-slide-inner { border-color: var(--op-color-fg-muted); }
+/* Header = clickable title row + description */
+.op-doc-collapsed .op-page-header { cursor: pointer; user-select: none; margin: 0; }
+.op-doc-collapsed .op-canvas-slide-inner .op-page-title {
+  font-size: clamp(20px, 2.4vw, 27px);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.op-doc-collapsed .op-canvas-slide-inner .op-page-title::after {
+  content: "";
+  flex: none;
+  width: 9px; height: 9px;
+  border-right: 2px solid var(--op-color-fg-muted);
+  border-bottom: 2px solid var(--op-color-fg-muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+  margin: 0 2px 4px 0;
+}
+.op-doc-collapsed.op-open .op-canvas-slide-inner .op-page-title::after {
+  transform: rotate(-135deg);
+  margin-bottom: 0;
+}
+/* Description (lede) — hidden on the featured doc, shown here as the summary */
+.op-doc-collapsed .op-canvas-slide-inner .op-page-subtitle {
+  display: block;
+  margin: 10px 0 0;
+  font-size: 0.97rem;
+  line-height: 1.55;
+  color: var(--op-color-fg-muted);
+}
+/* Body (all sections) collapses; expands when the document is open */
+.op-doc-collapsed .op-canvas-slide-inner .op-page-main { display: none; margin-top: clamp(22px, 3vh, 34px); }
+.op-doc-collapsed.op-open .op-canvas-slide-inner .op-page-main { display: block; }
+
+/* Subheadings + body rhythm */
+.op-canvas-slide-inner .op-heading-h3 {
+  font-size: clamp(17px, 1.8vw, 20px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 28px 0 8px;
+}
+.op-canvas-slide-inner .op-prose {
+  font-size: 1rem;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+.op-canvas-slide-inner .op-prose + .op-prose { margin-top: 0; }
+
+/* ── Right-rail section index (vertical, centered) ── */
+.op-canvas-section-index {
+  position: fixed;
+  right: clamp(14px, 2vw, 30px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 40;
+  text-align: right;
+  max-width: 30vw;
+}
+/* Only the in-view document's section group is shown. */
+.op-csi-group { display: none; flex-direction: column; gap: 4px; }
+.op-csi-group.op-csi-group-active { display: flex; }
+.op-csi-item {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 3px 0;
+  text-decoration: none;
+  color: var(--op-color-fg-muted);
+  opacity: 0.6;
+  transition: opacity 120ms ease, color 120ms ease;
+}
+.op-csi-item:hover { opacity: 1; color: var(--op-color-fg); }
+.op-csi-num {
+  font-family: var(--op-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.op-csi-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  transition: max-width 200ms ease, opacity 160ms ease;
+}
+.op-canvas-section-index:hover .op-csi-label,
+.op-csi-item.op-csi-active .op-csi-label {
+  max-width: 24vw;
+  opacity: 1;
+}
+.op-csi-item.op-csi-active {
+  opacity: 1;
+  color: var(--op-color-accent);
+}
+
+/* ── Fixed document-title tag, top-right just under the header (frameout) ── */
+.op-canvas-section-tag {
+  position: fixed;
+  right: 0;
+  top: clamp(56px, 7vh, 76px);
+  z-index: 41;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 16px;
+  background: var(--op-color-fg);
+  color: var(--op-color-bg);
+  border-radius: 0;
+  cursor: pointer;
+}
+.op-canvas-section-tag:hover { opacity: 0.9; }
+.op-cst-label {
+  writing-mode: vertical-rl;
+  font-family: var(--op-font-display, var(--op-font-sans));
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  max-height: 40vh;
+  overflow: hidden;
+}
+
+/* Shorter viewports (e.g. laptops): shrink the tag + tighten the rail so the
+   top tag and the vertically-centered rail don't collide on the right edge. */
+@media (max-height: 940px) {
+  /* Keep the tag L/R padding identical to large screens; only the text shrinks.
+     Pull the number rail closer to the edge so it needs less room. */
+  .op-cst-label { font-size: 13px; max-height: 30vh; }
+  .op-canvas-section-index { gap: 2px; right: 10px; }
+  .op-csi-num { font-size: 9px; }
+}
+
+@media (max-width: 900px) {
+  .op-canvas-section-index,
+  .op-canvas-section-tag { display: none; }
+}
+
+/* ── Sections below the hero ── */
+.op-section { border-top: 1px solid var(--op-color-border); }
+.op-section-title {
+  font-family: var(--op-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--op-color-fg-muted);
+  padding: clamp(40px, 5vh, 64px) clamp(20px, 4vw, 80px) 16px;
+}
+.op-section-body { padding: 0; }
+
+/* ── Nav: horizontal scroll when items overflow ── */
+.hs-site-header {
+  gap: 16px;
+}
+.hs-site-header-brand {
+  flex-shrink: 0;
+}
+.hs-site-header-nav {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.hs-site-header-nav::-webkit-scrollbar { display: none; }
+.hs-site-header-nav li { flex-shrink: 0; }
+
+/* ── Active nav link — plain text, no underline, no radius ── */
+.op-site-header-nav a {
+  border-radius: 0 !important;
+  white-space: nowrap;
+}
+.op-site-header-nav a.op-canvas-nav-active {
+  opacity: 1;
+  color: var(--op-color-fg);
+  background: transparent !important;
+  font-weight: 500;
+}
+
+/* ── Theme toggle button ── */
+.op-canvas-theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--op-color-border);
+  border-radius: var(--op-radius-sm);
+  color: var(--op-color-fg-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+.op-canvas-theme-toggle:hover {
+  background: var(--op-color-muted);
+  color: var(--op-color-fg);
+  border-color: var(--op-color-fg-muted);
+}
+
+/* ── Array content grid (used when history[].content is an array) ── */
+.hs-canvas-content-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: clamp(12px, 1.5vw, 20px);
+  width: 100%;
+}
+.hs-canvas-grid-item {
+  min-width: 0;
+}
+.hs-canvas-content-grid .hs-kpi {
+  margin: 0;
+  height: 100%;
+}
+
+/* List layout — for articles, steps, any vertically-flowing content */
+.op-canvas-content-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 720px;
+}
+.op-canvas-list-item {
+  min-width: 0;
+}
+
+/* ── Footer: per-document menu + user info ── */
+.op-canvas-footer {
+  border-top: 1px solid var(--op-color-border);
+  padding: clamp(28px, 4vh, 44px) clamp(20px, 4vw, 80px) clamp(40px, 6vh, 64px);
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+/* Full document list — horizontal row, scroll left/right to reach older docs. */
+.op-cf-menu {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 22px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+.op-cf-menu a {
+  flex: none;
+  white-space: nowrap;
+  scroll-snap-align: start;
+  font-size: 14px;
+  color: var(--op-color-fg-muted);
+  text-decoration: none;
+  padding: 3px 0;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.op-cf-menu a:hover { color: var(--op-color-fg); }
+.op-cf-menu a.op-canvas-nav-active {
+  color: var(--op-color-accent);
+  border-bottom-color: var(--op-color-accent);
+}
+.op-cf-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--op-color-fg-muted);
+  padding-top: 16px;
+  border-top: 1px solid var(--op-color-border);
+}
+.op-cf-id { display: flex; align-items: center; gap: 10px; }
+.op-cf-name { font-weight: 600; color: var(--op-color-fg); }
+.op-cf-email { color: var(--op-color-fg-muted); text-decoration: none; }
+.op-cf-email:hover { color: var(--op-color-accent); text-decoration: underline; }
+.op-cf-sep { opacity: 0.45; }
+.op-cf-brand { font-family: var(--op-font-mono); font-size: 11.5px; letter-spacing: 0.04em; opacity: 0.8; }
+
+/* ── Mode toggler hide ── */
+.op-mode-toggler { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="op-site-header">
+  <a class="op-site-header-brand">Artifact Organizer</a>
+  <ul class="op-site-header-nav">
+        <li><a href="#australia-move-plan-b" data-canvas-nav="0" class="op-canvas-nav-active">Australia Move — Plan B</a></li><li><a href="#oet-정리-호주-간호사-등록-기준" data-canvas-nav="1">OET 정리 — 호주 간호사 등록 기준</a></li><li><a href="#시드니-프로덕트-디자이너-연봉-타당선" data-canvas-nav="2">시드니 프로덕트 디자이너 연봉 타당선</a></li>
+      </ul>
+  <button class="op-canvas-theme-toggle" id="op-theme-toggle" aria-label="Toggle theme" type="button"></button>
+</header>
+
+
+<section class="op-hero-feed">
+  <div class="op-feed-hero">
+    <article class="op-feed-panel op-feed-panel-active" data-doc="0" data-slug="australia-move-plan-b"><div class="op-canvas-slide-inner"><article class="op-page"><header class="op-page-header"><h1 class="op-page-title">Australia Move — Plan B</h1><p class="op-page-subtitle">어학 지연을 가정한 1년 순연 플랜</p></header><main class="op-page-main"><section class="op-section" id="timeline"><h2 class="op-section-title">어학 → 이주 타임라인</h2><div class="op-section-body"><ol class="op-steps op-steps-numbered"><li class="op-step op-step-doing"><div class="op-step-meta"><span class="op-step-index">1</span><span class="op-step-indicator" aria-label="doing">●</span></div><div class="op-step-content"><div class="op-step-title">~2026.08 — PTE 소진</div><div class="op-step-body"><p>아내 PTE 남은 횟수 풀로 소진. 일하면서 준비 중이라 PTE 하나에만 집중.</p></div></div></li><li class="op-step op-step-todo"><div class="op-step-meta"><span class="op-step-index">2</span></div><div class="op-step-content"><div class="op-step-title">2026.09~ — OET 전환 (실패 시)</div><div class="op-step-body"><p>누적 3년 투자분 — OET까지 가면 통과로 봄.</p></div></div></li><li class="op-step op-step-todo"><div class="op-step-meta"><span class="op-step-index">3</span></div><div class="op-step-content"><div class="op-step-title">2027 — 출국 (+1년)</div><div class="op-step-body"><p>빠르면 5~9월, 늦으면 11월.</p></div></div></li><li class="op-step op-step-todo"><div class="op-step-meta"><span class="op-step-index">4</span></div><div class="op-step-content"><div class="op-step-title">~2030 — 아파트 매입 (+1년)</div><div class="op-step-body"><p>이주 따라 동반 순연.</p></div></div></li></ol><aside class="op-callout op-callout-note"><div class="op-callout-body"><p>회사엔 아직 미고지. 출국 카운트다운도 1년 미뤄 — 일찍 운 떼지 말 것.</p></div></aside></div></section><section class="op-section" id="year-use"><h2 class="op-section-title">밀린 1년 쓰는 법</h2><div class="op-section-body"><div class="op-prose"><p>공격적으로 안 짬 — <strong>프로덕트 키우기 · 소득/저축 · 여행 2회</strong>.</p>
+<p>리스크 거의 없는 지연: 어학 통과 전제 + 회사 미고지 + 되돌릴 것 없음. 별도 대응책 불필요. 사실상 전부 <strong>+1년 평행이동, 끝</strong>.</p></div></div></section><section class="op-section" id="assets"><h2 class="op-section-title">자산 플랜</h2><div class="op-section-body"><article class="op-kpi"><div class="op-kpi-label">바닥값 (p10 목표)</div><div class="op-kpi-value">2.1억</div><div class="op-kpi-hint">시장이 나빠도 남는 바닥선. 2.5억은 장이 받쳐주면 보너스.</div></article><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>출국 시점별 자산 시나리오 (현 1.7억, 월저축 350만 · 주식 연8.5%/변동성18% · 현금 3%)</caption><thead><tr><th class="op-td-left">출국 시점</th><th class="op-td-right">최악 p10</th><th class="op-td-right">중앙값</th><th class="op-td-right">최선 p90</th><th class="op-td-right">2.5억 확률</th></tr></thead><tbody><tr><td class="op-td-left">빠름 · 2027.05 (11개월)</td><td class="op-td-right">1.92억</td><td class="op-td-right">2.19억</td><td class="op-td-right">2.51억</td><td class="op-td-right">11%</td></tr><tr><td class="op-td-left">중간 · 2027.08 (14개월)</td><td class="op-td-right">2.01억</td><td class="op-td-right">2.32억</td><td class="op-td-right">2.72억</td><td class="op-td-right">27%</td></tr><tr><td class="op-td-left">늦음 · 2027.11 (17개월)</td><td class="op-td-right">2.11억</td><td class="op-td-right">2.46억</td><td class="op-td-right">2.92억</td><td class="op-td-right">45%</td></tr></tbody></table></div><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>자산 배분 계획</caption><thead><tr><th class="op-td-left">항목</th><th class="op-td-right">금액</th><th class="op-td-left">메모</th></tr></thead><tbody><tr><td class="op-td-left">학비 (잠금)</td><td class="op-td-right">5,000만</td><td class="op-td-left">어학 확정 6개월 전부터 분할 환전 → 호주달러 고정</td></tr><tr><td class="op-td-left">정착 버퍼</td><td class="op-td-right">5,000만</td><td class="op-td-left">급하면 현금, 여유 있으면 일부 굴림</td></tr><tr><td class="op-td-left">두고 굴릴 자산</td><td class="op-td-right">1.1억+</td><td class="op-td-left">한국 계좌 유지. 호주 CGT 회피하며 계속 운용</td></tr></tbody></table></div></div></section><section class="op-section" id="open"><h2 class="op-section-title">아직 안 정한 것</h2><div class="op-section-body"><ul class="op-steps"><li class="op-step op-step-todo"><div class="op-step-content"><div class="op-step-title">출국 정확 시점</div><div class="op-step-body"><p>어학 결과 확정 후 결정.</p></div></div></li><li class="op-step op-step-todo"><div class="op-step-content"><div class="op-step-title">본인 커리어 포지션</div><div class="op-step-body"><p>글로벌 원격/이직 vs 그 외. 이주와 엮이는 축, 별도 검토.</p></div></div></li><li class="op-step op-step-todo"><div class="op-step-content"><div class="op-step-title">OET 준비 세부</div><div class="op-step-body"><p>9월 이후. 지금은 아직 이름.</p></div></div></li></ul></div></section></main></article></div></article>
+<article class="op-feed-panel" data-doc="1" data-slug="oet-정리-호주-간호사-등록-기준"><div class="op-canvas-slide-inner"><article class="op-page"><header class="op-page-header"><h1 class="op-page-title">OET, 결국 어떻게 갈 것인가</h1></header><main class="op-page-main"><section class="op-section" id="conclusion"><h2 class="op-section-title">핵심 결론</h2><div class="op-section-body"><aside class="op-callout op-callout-info"><div class="op-callout-title">TL;DR</div><div class="op-callout-body"><p>진짜 관문은 석사 입학이 아니라 <strong>NMBA 등록 영어 기준</strong>이다. 등록 기준(OET B / IELTS 7 each / PTE 65 each)을 잡으면 입학 기준은 거의 자동 커버. 이미 PTE 58~63 + 의료직군이라면 <strong>OET 전환이 합리적</strong>. 단 스위치는 OET Writing 진단 한 세트에 걸어 결정.</p></div></aside><div class="op-prose"><ul><li><strong>목표선:</strong> 네 영역 전부 B (AND 게이트). 평균이 아니라 영역별 최저가 기준.</li><li><strong>분할 응시:</strong> 12개월 내 2회 결과 합산 가능 — 약한 1영역만 2차 보정 전략.</li><li><strong>병목:</strong> 대체로 Writing(장르) 또는 Listening/Reading(반복 미달).</li></ul></div></div></section><section class="op-section" id="scores"><h2 class="op-section-title">점수 기준 (2026.4 AHPRA 변경)</h2><div class="op-section-body"><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>OET 최소 점수 2026.4.23~ (AHPRA 공식 재확인 권장)</caption><thead><tr><th class="op-td-left">영역</th><th class="op-td-right">최소 점수</th><th class="op-td-center">등급</th></tr></thead><tbody><tr><td class="op-td-left">Listening</td><td class="op-td-right">350</td><td class="op-td-center">B</td></tr><tr><td class="op-td-left">Reading</td><td class="op-td-right">360</td><td class="op-td-center">B (바닥선 ↑)</td></tr><tr><td class="op-td-left">Writing</td><td class="op-td-right">350</td><td class="op-td-center">B</td></tr><tr><td class="op-td-left">Speaking</td><td class="op-td-right">360</td><td class="op-td-center">B (바닥선 ↑)</td></tr></tbody></table></div><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>IELTS · PTE · OET 환산 (Pearson 공식 concordance)</caption><thead><tr><th class="op-td-center">IELTS</th><th class="op-td-center">PTE Academic</th><th class="op-td-center">OET</th><th class="op-td-left">호주 이민 등급</th></tr></thead><tbody><tr><td class="op-td-center">6.0</td><td class="op-td-center">50</td><td class="op-td-center">—</td><td class="op-td-left">Competent</td></tr><tr><td class="op-td-center">6.5</td><td class="op-td-center">58</td><td class="op-td-center">—</td><td class="op-td-left">Competent+</td></tr><tr><td class="op-td-center">7.0</td><td class="op-td-center">65</td><td class="op-td-center">B ← 목표</td><td class="op-td-left">Proficient (이민 +10점)</td></tr><tr><td class="op-td-center">7.5</td><td class="op-td-center">73</td><td class="op-td-center">B</td><td class="op-td-left">—</td></tr><tr><td class="op-td-center">8.0</td><td class="op-td-center">79</td><td class="op-td-center">A/B</td><td class="op-td-left">Superior (이민 +20점)</td></tr></tbody></table></div></div></section><section class="op-section" id="pte-change"><h2 class="op-section-title">PTE 2025.8 개편 위험</h2><div class="op-section-body"><aside class="op-callout op-callout-warn"><div class="op-callout-title">PTE 전략 마진 붕괴 중</div><div class="op-callout-body"><p>AI가 암기 답안의 리듬 단조로움을 탐지. 신규 과제 2종(Respond to a Situation, Summarize Group Discussion) 추가. 비원어민이 임계선(58~63)에서 기대던 <strong>전략 마진을 Pearson이 의도적으로 죽이는 중</strong> — 움직이는 타깃.</p></div></aside></div></section><section class="op-section" id="decision"><h2 class="op-section-title">OET vs PTE 의사결정</h2><div class="op-section-body"><div class="op-compare op-compare-vs"><article class="op-compare-item"><div class="op-compare-head"><div class="op-compare-title">OET 유리</div></div><ul class="op-compare-bullets"><li>의료 우위: 롤플레이=업무, 의뢰서=실제 문서</li><li>포맷 안정 — 합격선 조정이지 전략 churn 아님</li><li>PTE 전략 자산 감가 중이라 전환비용 상쇄</li></ul><div class="op-compare-verdict op-compare-verdict-success">권장</div></article><article class="op-compare-item"><div class="op-compare-head"><div class="op-compare-title">주의 사항</div></div><ul class="op-compare-bullets"><li>Writing은 &#39;의료라서 유리&#39;가 절반만 맞음 — 장르 규칙 별도 학습 필요</li><li>2026.4 점수 바닥선 상향 (응시 전 확인)</li><li>36 컴포넌트 학습 비용 아닌, Writing 과녁은 고정·학습가능</li></ul><div class="op-compare-verdict op-compare-verdict-warn">경미한 단점</div></article></div><aside class="op-callout op-callout-success"><div class="op-callout-title">결정 규칙</div><div class="op-callout-body"><p>스위치는 딱 하나에 건다 — <strong>OET Writing 진단 한 세트를 채점 루브릭에 대고 쳐본다.</strong> B 근처 + 장르가 몇 주 내 학습 가능하면 전환 확정. 멀면 L/R/S는 어차피 OET 이득이니 전환하되 Writing에만 기간 추가 배정.</p></div></aside></div></section><section class="op-section" id="prep"><h2 class="op-section-title">준비 기간 &amp; 영역별 팁</h2><div class="op-section-body"><aside class="op-callout op-callout-info"><div class="op-callout-title">이 케이스 추정 (PTE 58~63 · 의료직군)</div><div class="op-callout-body"><p>주 10~15h 집중 → <strong>6~10주</strong> (3영역 B + Writing 2차 보정). 일하며 주 몇 시간 → <strong>3~5개월</strong>. 전체 일정은 <strong>Writing</strong>이 결정.</p></div></aside><ul class="op-steps"><li class="op-step"><div class="op-step-content"><div class="op-step-title">Writing — 합·불을 가름</div><div class="op-step-body"><p>referral letter 장르 학습이 8할. 정보 취사선택 + 영국식 격식 규칙. LLM에 채점 루브릭 프롬프트로 첨삭 → 학원 한 달 값보다 가성비.</p></div></div></li><li class="op-step"><div class="op-step-content"><div class="op-step-title">Speaking — 소통 &gt; 유창성</div><div class="op-step-body"><p>공감 표현+추임새(mhm, right)로 점수 챙김. 카드 항목 전부 다룰 필요 없음. 공식 FAQ + LLM 롤플레이 가성비.</p></div></div></li><li class="op-step"><div class="op-step-content"><div class="op-step-title">Listening — Part A 시간압박</div><div class="op-step-body"><p>15분 20문제, 다양한 억양(호주·영국·미국). 반복 미달 주요 원인.</p></div></div></li><li class="op-step"><div class="op-step-content"><div class="op-step-title">Reading — Part C 의견 독해</div><div class="op-step-body"><p>태도·의견 표현 독해가 키. 영국식 철자 주의.</p></div></div></li></ul><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>한국 응시 로지스틱스</caption><thead><tr><th class="op-td-left">방식</th><th class="op-td-left">장소</th><th class="op-td-left">특징</th></tr></thead><tbody><tr><td class="op-td-left">PBT</td><td class="op-td-left">렉시스 어학원 (강남)</td><td class="op-td-left">월 1회(월초). Speaking에 유리할 수 있음.</td></tr><tr><td class="op-td-left">CBT</td><td class="op-td-left">프로메트릭 (강남)</td><td class="op-td-left">Writing CBT 유리(복붙·자동 단어 수). 영역별 혼합 전략 가능.</td></tr></tbody></table></div></div></section></main></article></div></article>
+<article class="op-feed-panel" data-doc="2" data-slug="시드니-프로덕트-디자이너-연봉-타당선"><div class="op-canvas-slide-inner"><article class="op-page"><header class="op-page-header"><h1 class="op-page-title">시드니 프로덕트 디자이너, 얼마 받는 게 타당한가</h1></header><main class="op-page-main"><section class="op-section" id="conclusion"><h2 class="op-section-title">핵심 — $140k</h2><div class="op-section-body"><article class="op-kpi"><div class="op-kpi-label">외벌이 손익분기</div><div class="op-kpi-value">$140k</div><div class="op-kpi-hint">세후 $8,699/월(생활비+학비적립) 100% 커버. 이 밑은 자본 감소, 이 위는 유학 중 적립.</div></article><aside class="op-callout op-callout-info"><div class="op-callout-title">핵심</div><div class="op-callout-body"><p>시장 타당선 base $130~150k. 진짜 기준점은 cashflow 손익분기와 만나는 <strong>$140k</strong>. 앞 시뮬의 $135k는 방향 맞았고 미세하게 낮았을 뿐.</p></div></aside></div></section><section class="op-section" id="market"><h2 class="op-section-title">시드니 시장 실측 (base, 슈퍼 별도)</h2><div class="op-section-body"><div class="op-prose"><p>4년 차에 Staff 지향이면 호주 타이틀로는 Senior~Lead 구간. 호주 오퍼는 base에 슈퍼(퇴직연금) 12%가 별도로 얹히므로 무조건 <strong>base로 환산</strong>해서 봐야 한다.</p></div><div class="op-table-wrap"><table class="op-table op-table-standard"><caption>Senior Product Designer 시드니 base 범위 2026</caption><thead><tr><th class="op-td-left">출처</th><th class="op-td-right">base 범위</th><th class="op-td-left">비고</th></tr></thead><tbody><tr><td class="op-td-left">Robert Half 2026</td><td class="op-td-right">$125k / $147k / $164k</td><td class="op-td-left">25 / 50 / 75 퍼센타일</td></tr><tr><td class="op-td-left">Glassdoor AU</td><td class="op-td-right">$130k ~ $175k</td><td class="op-td-left">평균 $154.5k</td></tr><tr><td class="op-td-left">Morgan McKinley</td><td class="op-td-right">~$140k</td><td class="op-td-left">미드 레벨 PD 평균</td></tr><tr><td class="op-td-left">PayScale</td><td class="op-td-right">~$133k</td><td class="op-td-left">시니어 PD 평균</td></tr></tbody></table></div></div></section><section class="op-section" id="scenarios"><h2 class="op-section-title">연봉 × 자본 × 시장 포지션</h2><div class="op-section-body"><div class="op-table-wrap"><table class="op-table op-table-standard"><thead><tr><th class="op-td-right">세전 base</th><th class="op-td-left">유학 2년 자본 변화</th><th class="op-td-left">시장 포지션</th></tr></thead><tbody><tr><td class="op-td-right">$90k</td><td class="op-td-left">−$45~60k (잔고 $40~57k)</td><td class="op-td-left">미드 하단 · 저평가</td></tr><tr><td class="op-td-right">$110~120k</td><td class="op-td-left">−$27~41k (잔고 $60~75k)</td><td class="op-td-left">미드~시니어 진입 · 첫 직장 현실선</td></tr><tr><td class="op-td-right">$140k</td><td class="op-td-left">±0 (자본 보존)</td><td class="op-td-left">시니어 중위 (Robert Half 50th = $147k)</td></tr><tr><td class="op-td-right">$160k+</td><td class="op-td-left">흑자 (유학 중 적립)</td><td class="op-td-left">시니어 상위 · 첫 직장엔 난이도 높음</td></tr></tbody></table></div></div></section><section class="op-section" id="recs"><h2 class="op-section-title">세 줄 결론</h2><div class="op-section-body"><div class="op-compare op-compare-grid"><article class="op-compare-item"><div class="op-compare-head"><div class="op-compare-title">목표</div><div class="op-compare-subtitle">$140~150k</div></div><ul class="op-compare-bullets"><li>협상에서 끌어올릴 선</li><li>시장 시니어 중위~상위라 과욕 아님</li><li>잘 풀리면 자본 한 푼도 안 깎고 유학 통과</li></ul><div class="op-compare-verdict op-compare-verdict-success">추구</div></article><article class="op-compare-item"><div class="op-compare-head"><div class="op-compare-title">수용</div><div class="op-compare-subtitle">$110~120k</div></div><ul class="op-compare-bullets"><li>해외 첫 직장 디스카운트 감안</li><li>자본 $30~40k 까먹지만 허용 범위</li><li>첫 오퍼 여기 떨어질 확률 가장 높음</li></ul><div class="op-compare-verdict op-compare-verdict-warn">수락 가능</div></article><article class="op-compare-item"><div class="op-compare-head"><div class="op-compare-title">보류</div><div class="op-compare-subtitle">&lt; $100k</div></div><ul class="op-compare-bullets"><li>2년 뒤 잔고 $40k뿐 — 버퍼 너무 얇음</li><li>출국 미루거나 사이드 수입 먼저</li><li>영주권까지 갈 여력 X</li></ul><div class="op-compare-verdict op-compare-verdict-danger">재검토</div></article></div><aside class="op-callout op-callout-success"><div class="op-callout-title">전략적 우위 — 비자 앵커</div><div class="op-callout-body"><p>비자 앵커가 아내(학생→RN→영주권)라 Tommy는 배우자 풀타임 노동권. 스폰서십 구걸 불필요 — <strong>협상 카드</strong>.</p></div></aside><aside class="op-callout op-callout-note"><div class="op-callout-title">레버 — 연봉은 학비의 종속변수</div><div class="op-callout-body"><p>지방대($30k/년) 선택 시 외벌이 손익분기 <strong>$140k → $118k</strong>로 내려감. 연봉 깎는 것보다 학비에서 먼저 깎는 게 순서상 쉬움.</p></div></aside></div></section></main></article></div></article>
+  </div>
+  <aside class="op-feed-cards" aria-label="Documents"><div class="op-feed-cards-eyebrow">Other documents</div><div class="op-feed-cards-grid"><button type="button" class="op-feed-card op-feed-card-hidden" data-doc="0" data-slug="australia-move-plan-b"><span class="op-fc-title">Australia Move — Plan B</span><span class="op-fc-desc">어학 지연을 가정한 1년 순연 플랜</span><span class="op-fc-meta">2026-06-25  ·  4개 섹션</span></button>
+<button type="button" class="op-feed-card" data-doc="1" data-slug="oet-정리-호주-간호사-등록-기준"><span class="op-fc-title">OET 정리 — 호주 간호사 등록 기준</span><span class="op-fc-meta">2026-06  ·  5개 섹션</span></button>
+<button type="button" class="op-feed-card" data-doc="2" data-slug="시드니-프로덕트-디자이너-연봉-타당선"><span class="op-fc-title">시드니 프로덕트 디자이너 연봉 타당선</span><span class="op-fc-meta">2026-06  ·  4개 섹션</span></button></div></aside>
+  <nav class="op-canvas-section-index" aria-label="Sections"><div class="op-csi-group op-csi-group-active" data-slide="0" data-title="Australia Move — Plan B"><a class="op-csi-item" href="#timeline" data-csi="timeline"><span class="op-csi-num">01</span><span class="op-csi-label">어학 → 이주 타임라인</span></a><a class="op-csi-item" href="#year-use" data-csi="year-use"><span class="op-csi-num">02</span><span class="op-csi-label">밀린 1년 쓰는 법</span></a><a class="op-csi-item" href="#assets" data-csi="assets"><span class="op-csi-num">03</span><span class="op-csi-label">자산 플랜</span></a><a class="op-csi-item" href="#open" data-csi="open"><span class="op-csi-num">04</span><span class="op-csi-label">아직 안 정한 것</span></a></div><div class="op-csi-group" data-slide="1" data-title="OET 정리 — 호주 간호사 등록 기준"><a class="op-csi-item" href="#conclusion" data-csi="conclusion"><span class="op-csi-num">01</span><span class="op-csi-label">핵심 결론</span></a><a class="op-csi-item" href="#scores" data-csi="scores"><span class="op-csi-num">02</span><span class="op-csi-label">점수 기준 (2026.4 AHPRA 변경)</span></a><a class="op-csi-item" href="#pte-change" data-csi="pte-change"><span class="op-csi-num">03</span><span class="op-csi-label">PTE 2025.8 개편 위험</span></a><a class="op-csi-item" href="#decision" data-csi="decision"><span class="op-csi-num">04</span><span class="op-csi-label">OET vs PTE 의사결정</span></a><a class="op-csi-item" href="#prep" data-csi="prep"><span class="op-csi-num">05</span><span class="op-csi-label">준비 기간 &amp; 영역별 팁</span></a></div><div class="op-csi-group" data-slide="2" data-title="시드니 프로덕트 디자이너 연봉 타당선"><a class="op-csi-item" href="#conclusion" data-csi="conclusion"><span class="op-csi-num">01</span><span class="op-csi-label">핵심 — $140k</span></a><a class="op-csi-item" href="#market" data-csi="market"><span class="op-csi-num">02</span><span class="op-csi-label">시드니 시장 실측 (base, 슈퍼 별도)</span></a><a class="op-csi-item" href="#scenarios" data-csi="scenarios"><span class="op-csi-num">03</span><span class="op-csi-label">연봉 × 자본 × 시장 포지션</span></a><a class="op-csi-item" href="#recs" data-csi="recs"><span class="op-csi-num">04</span><span class="op-csi-label">세 줄 결론</span></a></div></nav>
+  <aside class="op-canvas-section-tag" role="button" tabindex="0" title="맨 위로"><span class="op-cst-label">Australia Move — Plan B</span></aside>
+</section>
+
+
+
+
+
+<footer class="op-canvas-footer"><nav class="op-cf-menu" aria-label="Documents"><a href="#australia-move-plan-b" data-canvas-nav="0" class="op-canvas-nav-active">Australia Move — Plan B</a><a href="#oet-정리-호주-간호사-등록-기준" data-canvas-nav="1">OET 정리 — 호주 간호사 등록 기준</a><a href="#시드니-프로덕트-디자이너-연봉-타당선" data-canvas-nav="2">시드니 프로덕트 디자이너 연봉 타당선</a></nav><div class="op-cf-meta"><div class="op-cf-brand">Made with <strong>Artifact Organizer</strong></div></div></footer>
+
+<script>/* Artifact Organizer interactive layer — pan/zoom for SVG diagrams.
+ * Any element tagged `.hs-zoomable` gets: mouse-drag pan, Ctrl/Cmd+wheel zoom,
+ * and a small control bar (＋ / − / ⟲ reset) docked to the top-right corner. */
+(function () {
+  function initZoom(container) {
+    if (container.dataset.hsZoomInit) return;
+    container.dataset.hsZoomInit = "1";
+
+    var stage = document.createElement("div");
+    stage.className = "hs-zoom-stage";
+    while (container.firstChild) stage.appendChild(container.firstChild);
+    container.appendChild(stage);
+
+    var controls = document.createElement("div");
+    controls.className = "hs-zoom-controls";
+    controls.innerHTML =
+      '<button type="button" class="hs-zoom-btn" data-zoom="in" aria-label="Zoom in" title="Zoom in (Ctrl/Cmd + wheel)">＋</button>' +
+      '<button type="button" class="hs-zoom-btn" data-zoom="out" aria-label="Zoom out" title="Zoom out">−</button>' +
+      '<button type="button" class="hs-zoom-btn" data-zoom="reset" aria-label="Reset zoom" title="Reset">⟲</button>';
+    container.appendChild(controls);
+
+    var scale = 1;
+    var tx = 0;
+    var ty = 0;
+    var MIN = 0.2;
+    var MAX = 5;
+
+    function apply() {
+      stage.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + scale + ")";
+    }
+
+    function clampScale(next) {
+      return Math.max(MIN, Math.min(MAX, next));
+    }
+
+    function zoomAt(newScale, cx, cy) {
+      var next = clampScale(newScale);
+      if (next === scale) return;
+      var ratio = next / scale;
+      tx = cx - (cx - tx) * ratio;
+      ty = cy - (cy - ty) * ratio;
+      scale = next;
+      apply();
+    }
+
+    function reset() {
+      scale = 1;
+      tx = 0;
+      ty = 0;
+      apply();
+    }
+
+    function center() {
+      return { cx: container.clientWidth / 2, cy: container.clientHeight / 2 };
+    }
+
+    controls.addEventListener("click", function (event) {
+      var btn = event.target.closest(".hs-zoom-btn");
+      if (!btn) return;
+      var op = btn.getAttribute("data-zoom");
+      var c = center();
+      if (op === "in") zoomAt(scale * 1.25, c.cx, c.cy);
+      else if (op === "out") zoomAt(scale / 1.25, c.cx, c.cy);
+      else reset();
+    });
+
+    container.addEventListener("wheel", function (event) {
+      if (!(event.ctrlKey || event.metaKey)) return;
+      event.preventDefault();
+      var rect = container.getBoundingClientRect();
+      var cx = event.clientX - rect.left;
+      var cy = event.clientY - rect.top;
+      var factor = event.deltaY < 0 ? 1.1 : 1 / 1.1;
+      zoomAt(scale * factor, cx, cy);
+    }, { passive: false });
+
+    var dragging = false;
+    var lastX = 0;
+    var lastY = 0;
+    var activePointer = null;
+
+    stage.addEventListener("pointerdown", function (event) {
+      if (event.button !== 0) return;
+      if (event.target.closest(".hs-zoom-controls")) return;
+      dragging = true;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      activePointer = event.pointerId;
+      try { stage.setPointerCapture(event.pointerId); } catch (_) {}
+    });
+
+    stage.addEventListener("pointermove", function (event) {
+      if (!dragging || event.pointerId !== activePointer) return;
+      tx += event.clientX - lastX;
+      ty += event.clientY - lastY;
+      lastX = event.clientX;
+      lastY = event.clientY;
+      apply();
+    });
+
+    function endDrag(event) {
+      if (event && event.pointerId !== activePointer) return;
+      dragging = false;
+      activePointer = null;
+      try { stage.releasePointerCapture(event.pointerId); } catch (_) {}
+    }
+
+    stage.addEventListener("pointerup", endDrag);
+    stage.addEventListener("pointercancel", endDrag);
+    stage.addEventListener("pointerleave", function () { dragging = false; });
+  }
+
+  function initAll(root) {
+    (root || document).querySelectorAll(".hs-zoomable").forEach(initZoom);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () { initAll(); });
+  } else {
+    initAll();
+  }
+
+  window.__hsInitZoom = initAll;
+})();
+</script>
+<script>(function () {
+  var html = document.documentElement;
+
+  // ── Light/dark toggle (flips data-mode, keeps the theme) ──
+  var toggleBtn = document.getElementById('op-theme-toggle');
+  var ICON_SUN  = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>';
+  var ICON_MOON = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>';
+  function applyMode(mode) {
+    html.setAttribute('data-mode', mode);
+    localStorage.setItem('artifact-organizer.mode', mode);
+    if (toggleBtn) {
+      toggleBtn.setAttribute('aria-label', mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      toggleBtn.innerHTML = mode === 'dark' ? ICON_SUN : ICON_MOON;
+    }
+  }
+  applyMode(localStorage.getItem('artifact-organizer.mode') || html.getAttribute('data-mode') || 'dark');
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', function () {
+      applyMode(html.getAttribute('data-mode') === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  // ── Frosted header on scroll ──
+  var hdr = document.querySelector('.op-site-header');
+  if (hdr) {
+    window.addEventListener('scroll', function () {
+      hdr.classList.toggle('op-scrolled', window.scrollY > 40);
+    }, { passive: true });
+  }
+
+  // ── Document selection: the chosen doc fills the hero, the rest are cards ──
+  var panels     = Array.from(document.querySelectorAll('.op-feed-panel'));
+  var cards      = Array.from(document.querySelectorAll('.op-feed-card'));
+  var navLinks   = Array.from(document.querySelectorAll('[data-canvas-nav]'));
+  var railGroups = Array.from(document.querySelectorAll('.op-csi-group'));
+  var tagLabel   = document.querySelector('.op-canvas-section-tag .op-cst-label');
+  var titleBySlide = {};
+  railGroups.forEach(function (g) { titleBySlide[g.getAttribute('data-slide')] = g.getAttribute('data-title') || ''; });
+
+  // Each document has a URL-hash slug, so a selection is a shareable link.
+  var slugByDoc = {}, docBySlug = {};
+  panels.forEach(function (p) {
+    var d = p.getAttribute('data-doc'), sl = p.getAttribute('data-slug');
+    if (sl) { slugByDoc[d] = sl; docBySlug[sl] = d; }
+  });
+  function hashSlug() { return decodeURIComponent((location.hash || '').replace(/^#/, '')); }
+  var current = -1;
+
+  function selectDoc(i, scroll, setHash) {
+    var si = String(i);
+    if (si === String(current)) { if (scroll) window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    current = i;
+    panels.forEach(function (p)   { p.classList.toggle('op-feed-panel-active', p.getAttribute('data-doc') === si); });
+    cards.forEach(function (c)    { c.classList.toggle('op-feed-card-hidden', c.getAttribute('data-doc') === si); });
+    navLinks.forEach(function (a) { a.classList.toggle('op-canvas-nav-active', a.getAttribute('data-canvas-nav') === si); });
+    railGroups.forEach(function (g) { g.classList.toggle('op-csi-group-active', g.getAttribute('data-slide') === si); });
+    if (tagLabel && titleBySlide[si] != null) tagLabel.textContent = titleBySlide[si];
+    if (setHash !== false && slugByDoc[si] && hashSlug() !== slugByDoc[si]) {
+      location.hash = slugByDoc[si];
+    }
+    if (scroll !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  cards.forEach(function (c) {
+    c.addEventListener('click', function () { selectDoc(c.getAttribute('data-doc')); });
+  });
+  navLinks.forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); selectDoc(a.getAttribute('data-canvas-nav')); });
+  });
+  // Back/forward or a pasted #slug link → switch the hero document.
+  window.addEventListener('hashchange', function () {
+    var d = docBySlug[hashSlug()];
+    if (d != null) selectDoc(d, true, false);
+  });
+
+  // ── Section rail: click to scroll + highlight the section in view ──
+  var csiItems = Array.from(document.querySelectorAll('.op-csi-item'));
+  var byId = {};
+  csiItems.forEach(function (a) {
+    var id = a.getAttribute('data-csi');
+    byId[id] = a;
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var el = document.getElementById(id);
+      if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  if ('IntersectionObserver' in window && csiItems.length) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        csiItems.forEach(function (x) { x.classList.remove('op-csi-active'); });
+        var a = byId[en.target.id];
+        if (a) a.classList.add('op-csi-active');
+      });
+    }, { root: null, rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+    Array.from(document.querySelectorAll('.op-feed-panel .op-section[id]')).forEach(function (el) { obs.observe(el); });
+  }
+
+  // ── Doc-title tag → scroll back to top ──
+  var tagEl = document.querySelector('.op-canvas-section-tag');
+  if (tagEl) {
+    function scrollTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    tagEl.addEventListener('click', scrollTop);
+    tagEl.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollTop(); }
+    });
+  }
+
+  // Open the document named in the URL hash (shared link), else the newest.
+  var initialDoc = docBySlug[hashSlug()];
+  selectDoc(initialDoc != null ? initialDoc : 0, false, false);
+}());</script>
+<div id="pw-gate" style="position:fixed;inset:0;z-index:9999;background:#1a1916;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif">
+  <div style="text-align:center;color:#e8e6e1">
+    <div style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#a39e98;margin-bottom:20px">Australia Move — Plan B</div>
+    <input id="pw-input" type="password" placeholder="비밀번호" autofocus
+      style="background:#2c2b29;border:1px solid #3d3b38;border-radius:6px;color:#e8e6e1;font-size:15px;padding:10px 16px;outline:none;width:200px;text-align:center;letter-spacing:.2em"
+      onkeydown="if(event.key==='Enter')document.getElementById('pw-btn').click()">
+    <br><br>
+    <button id="pw-btn" onclick="(function(){var h=0,s=document.getElementById('pw-input').value;for(var i=0;i<s.length;i++){h=(Math.imul(31,h)+s.charCodeAt(i))|0}if(h===1478196368){document.getElementById('pw-gate').remove();sessionStorage.setItem('ao-auth','1')}else{document.getElementById('pw-input').style.borderColor='#e03e3e';document.getElementById('pw-input').value='';document.getElementById('pw-input').focus()}})()"
+      style="background:#0075de;color:#fff;border:none;border-radius:6px;padding:10px 28px;font-size:14px;cursor:pointer">확인</button>
+  </div>
+</div>
+<script>(function(){if(sessionStorage.getItem('ao-auth')==='1')document.getElementById('pw-gate').remove();}());</script>
+</body>
+</html>
